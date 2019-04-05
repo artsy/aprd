@@ -17,16 +17,23 @@ defmodule Apr.Events do
       [%Event{}, ...]
 
   """
-  def list_events(), do: Repo.all(Event)
-  def list_events(%{mode: mode}) do
+  def list_events(criteria \\ []) do
     Event
-    |> filter_by_mode(mode)
+    |> IO.inspect(criteria)
+    |> filter_query(criteria)
     |> Repo.all
   end
 
-  defp filter_by_mode(query, mode) do
-    from event in query,
-      where: event.mode == ^mode
+  def filter_query(query, criteria), do: Enum.reduce(criteria, query, &event_query/2)
+
+  defp event_query({key, value}, query) when key in ~w(topic routing_key)a do
+    from e in query,
+      where: field(e, ^key) == ^value
+  end
+
+  defp event_query({:payload, value}, query) when is_map(value) do
+    from p in query,
+      where: fragment("(payload)::jsonb @> ?::jsonb", ^value)
   end
 
   @doc """
