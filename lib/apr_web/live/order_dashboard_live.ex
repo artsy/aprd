@@ -21,12 +21,12 @@ defmodule AprWeb.OrderDashboardLive do
   end
 
   def mount(_session, socket) do
-    #if connected?(socket), do: :timer.send_interval(5000, self(), :tick)
+    if connected?(socket), do: AprWeb.Endpoint.subscribe("events")
 
     {:ok, get_events(socket)}
   end
 
-  def handle_info(:tick, socket) do
+  def handle_info(%{event: "new_event", payload: _event}, socket) do
     {:noreply, get_events(socket)}
   end
 

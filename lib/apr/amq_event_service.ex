@@ -21,7 +21,7 @@ defmodule Apr.AmqEventService do
         {:ok, chan} = Channel.open(conn)
         Basic.qos(chan, prefetch_count: 10)
         Exchange.topic(chan, topic, durable: true)
-        queue_name = "ashkan_apr_#{topic}_queue"
+        queue_name = "apr_dashboard_#{topic}_queue"
         Queue.declare(chan, queue_name, durable: true)
         for routing_key <- routing_keys, do: Queue.bind(chan, queue_name, topic, routing_key: routing_key)
         {:ok, _consumer_tag} = Basic.consume(chan, queue_name)
@@ -65,10 +65,12 @@ defmodule Apr.AmqEventService do
 
   defp consume(channel, topic, tag, redelivered, payload, routing_key) do
     try do
-      IO.inspect(payload)
       Basic.ack channel, tag
       if acceptable_message?(payload), do: Task.async(fn ->
-        Apr.Events.create_event(%{payload: Poison.decode!(payload), topic: topic, routing_key: routing_key})
+        with {:ok, event} <- Apr.Events.create_event(%{payload: Poison.decode!(payload), topic: topic, routing_key: routing_key}) do
+          # notify others
+          AprWeb.Endpoint.broadcast("events", "new_event", event)
+        end
       end)
     rescue
       exception ->

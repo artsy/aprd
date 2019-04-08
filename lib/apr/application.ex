@@ -14,10 +14,10 @@ defmodule Apr.Application do
       AprWeb.Endpoint,
       # Starts a worker by calling: Apr.Worker.start_link(arg)
       # {Apr.Worker, arg},
-      # %{
-      #   id: :commerce,
-      #   start: {Apr.AmqEventService, :start_link, [%{topic: "commerce"}]}
-      # },
+      %{
+        id: :commerce,
+        start: {Apr.AmqEventService, :start_link, [%{topic: "commerce"}]}
+      },
     ]
 
     # See https://hexdocs.pm/elixir/Supervisor.html
