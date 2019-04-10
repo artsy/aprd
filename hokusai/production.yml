@@ -28,23 +28,34 @@ spec:
         imagePullPolicy: Always
         ports:
         - containerPort: 5000
+      affinity:
+        nodeAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+          - weight: 1
+            preference:
+              matchExpressions:
+              - key: tier
+                operator: In
+                values:
+                - foreground
 ---
 apiVersion: v1
 kind: Service
 metadata:
   labels:
     app: aprd
-    component: web
     layer: application
+    component: web
   name: aprd-web
   namespace: default
 spec:
   ports:
   - port: 80
-    protocol: TCP
     targetPort: 5000
+    protocol: TCP
   selector:
     app: aprd
-    component: web
     layer: application
-  type: ClusterIP
+    component: web
+  sessionAffinity: None
+  type: LoadBalancer
