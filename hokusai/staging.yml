@@ -1,0 +1,50 @@
+---
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: aprd-web
+  namespace: default
+spec:
+  replicas: 1
+  strategy:
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 0
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        app: aprd
+        component: web
+        layer: application
+      name: aprd-web
+    spec:
+      containers:
+      - name: aprd-web
+        envFrom:
+        - configMapRef:
+            name: aprd-environment
+        image: 585031190124.dkr.ecr.us-east-1.amazonaws.com/aprd:staging
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 5000
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: aprd
+    component: web
+    layer: application
+  name: aprd-web
+  namespace: default
+spec:
+  ports:
+  - port: 80
+    protocol: TCP
+    targetPort: 5000
+  selector:
+    app: aprd
+    component: web
+    layer: application
+  type: ClusterIP

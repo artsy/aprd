@@ -1,0 +1,8 @@
+---
+version: '2'
+services:
+  aprd:
+    build:
+      context: ../
+      args:
+        SECRET_KEY_BASE: ${SECRET_KEY_BASE}

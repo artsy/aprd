@@ -1,0 +1,8 @@
+---
+version: '2'
+services:
+  aprd:
+    command: ["bash", "test.sh"]
+    extends:
+      file: build.yml
+      service: aprd

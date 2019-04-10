@@ -1,0 +1,9 @@
+---
+version: '2'
+services:
+  aprd:
+    extends:
+      file: build.yml
+      service: aprd
+    ports:
+      - 80:80
