@@ -31,8 +31,13 @@ defmodule Apr.Events do
   end
 
   defp event_query({:payload, value}, query) when is_map(value) do
-    from p in query,
+    from _e in query,
       where: fragment("(payload)::jsonb @> ?::jsonb", ^value)
+  end
+
+  defp event_query({:day_threshold, value}, query) do
+    from e in query,
+      where: e.inserted_at > ago(^value, "day")
   end
 
   @doc """
