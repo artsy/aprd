@@ -13,7 +13,8 @@ defmodule Apr.AmqEventService do
   end
 
   defp rabbitmq_connect(opts) do
-    %{topic: topic, routing_keys: routing_keys } = Map.merge(%{ routing_keys: ["#"]}, opts)
+    %{topic: topic, routing_keys: routing_keys} = Map.merge(%{routing_keys: ["#"]}, opts)
+
     case Connection.open(Application.get_env(:apr, RabbitMQ)) do
       {:ok, conn} ->
         # Get notifications when the connection goes down
@@ -23,11 +24,15 @@ defmodule Apr.AmqEventService do
         Exchange.topic(chan, topic, durable: true)
         queue_name = "apr_dashboard_#{topic}_queue"
         Queue.declare(chan, queue_name, durable: true)
-        for routing_key <- routing_keys, do: Queue.bind(chan, queue_name, topic, routing_key: routing_key)
+
+        for routing_key <- routing_keys,
+            do: Queue.bind(chan, queue_name, topic, routing_key: routing_key)
+
         {:ok, _consumer_tag} = Basic.consume(chan, queue_name)
         {:ok, {chan, opts}}
+
       {:error, message} ->
-        IO.inspect message
+        IO.inspect(message)
         # Reconnection loop
         :timer.sleep(10000)
         rabbitmq_connect(opts)
@@ -58,34 +63,46 @@ defmodule Apr.AmqEventService do
   end
 
   @impl GenServer
-  def handle_info({:basic_deliver, payload, %{delivery_tag: tag, redelivered: redelivered, routing_key: routing_key}}, {chan, opts}) do
-    spawn fn -> consume(chan, opts.topic, tag, redelivered, payload, routing_key) end
+  def handle_info(
+        {:basic_deliver, payload,
+         %{delivery_tag: tag, redelivered: redelivered, routing_key: routing_key}},
+        {chan, opts}
+      ) do
+    spawn(fn -> consume(chan, opts.topic, tag, redelivered, payload, routing_key) end)
     {:noreply, {chan, opts}}
   end
 
   defp consume(channel, topic, tag, redelivered, payload, routing_key) do
     try do
-      Basic.ack channel, tag
-      if acceptable_message?(payload), do: Task.async(fn ->
-        with {:ok, event} <- Apr.Events.create_event(%{payload: Poison.decode!(payload), topic: topic, routing_key: routing_key}) do
-          # notify others
-          AprWeb.Endpoint.broadcast("events", "new_event", event)
-        end
-      end)
+      Basic.ack(channel, tag)
+
+      if acceptable_message?(payload),
+        do:
+          Task.async(fn ->
+            with {:ok, event} <-
+                   Apr.Events.create_event(%{
+                     payload: Poison.decode!(payload),
+                     topic: topic,
+                     routing_key: routing_key
+                   }) do
+              # notify others
+              AprWeb.Endpoint.broadcast("events", "new_event", event)
+            end
+          end)
     rescue
       exception ->
         # Requeue unless it's a redelivered message.
         # This means we will retry consuming a message once in case of exception
         # before we give up and have it moved to the error queue
-        Basic.reject channel, tag, requeue: not redelivered
-        IO.puts "Error parsing #{payload} #{exception}"
+        Basic.reject(channel, tag, requeue: not redelivered)
+        IO.puts("Error parsing #{payload} #{exception}")
     end
   end
 
   defp acceptable_message?(message) do
     try do
       Poison.decode!(message)
-        |> is_map
+      |> is_map
     rescue
       Poison.SyntaxError -> false
     end

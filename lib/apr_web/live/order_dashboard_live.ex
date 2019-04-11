@@ -32,15 +32,23 @@ defmodule AprWeb.OrderDashboardLive do
 
   def handle_event("filter", %{"mode" => mode, "state" => state}, socket) do
     events = Events.list_events(topic: "commerce", routing_key: mode <> "." <> state)
-    total_amounts = Enum.reduce(events,
-      %{amount_cents: 0, commission_cents: 0},
-      fn e, acc ->
-        %{amount_cents: acc.amount_cents + e.payload.properties.buyer_total_cents, commission_cents: acc.commission_cents + e.payload.properties.commission_cents}
-      end)
+
+    total_amounts =
+      Enum.reduce(
+        events,
+        %{amount_cents: 0, commission_cents: 0},
+        fn e, acc ->
+          %{
+            amount_cents: acc.amount_cents + e.payload.properties.buyer_total_cents,
+            commission_cents: acc.commission_cents + e.payload.properties.commission_cents
+          }
+        end
+      )
+
     {:noreply, assign(socket, events: events, total_amounts: total_amounts)}
   end
 
   defp get_events(socket) do
-    assign(socket, events: Events.list_events)
+    assign(socket, events: Events.list_events())
   end
 end
