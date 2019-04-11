@@ -17,7 +17,7 @@ defmodule Apr.Application do
       %{
         id: :commerce,
         start: {Apr.AmqEventService, :start_link, [%{topic: "commerce"}]}
-      },
+      }
     ]
 
     # See https://hexdocs.pm/elixir/Supervisor.html

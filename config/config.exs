@@ -18,7 +18,8 @@ config :apr, AprWeb.Endpoint,
   pubsub: [name: Apr.PubSub, adapter: Phoenix.PubSub.PG2],
   live_view: [
     signing_salt: System.get_env("SECRET_SALT")
-  ]
+  ],
+  check_origin: false
 
 # Configures Elixir's Logger
 config :logger, :console,
