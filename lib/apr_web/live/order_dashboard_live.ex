@@ -4,16 +4,13 @@ defmodule AprWeb.OrderDashboardLive do
 
   def render(assigns) do
     ~L"""
-    <form phx-change="filter">
-      <fieldset>
-        Order <input type="checkbox" name="mode" value="order"/>
-        Offer <input type="checkbox" name="mode" value="offer"/>
-      </fieldset>
-      <fieldset>
-        Submitted <input type="checkbox" name="state" value="submitted" checked/>
-        Approved <input type="checkbox" name="state" value="approved"/>
-      </fieldset>
-    </form>
+    <button phx-click="today">Today</button>
+    <button phx-click="last_week">Last 7 Days</button>
+    <button phx-click="last_month">Last Month</button>
+    <div>
+      Totals: <%= @totals.amount_cents %>
+      Commission Totals: <%= @totals.commission_cents %>
+    </div>
     <%= for event <- @events do %>
       <div><%= event.topic %> -> <%= event.routing_key %></div>
     <% end %>
@@ -26,29 +23,37 @@ defmodule AprWeb.OrderDashboardLive do
     {:ok, get_events(socket)}
   end
 
+  def handle_event("today", _, socket) do
+    {:noreply, get_events(socket, 1)}
+  end
+
+  def handle_event("last_week", _, socket) do
+    {:noreply, get_events(socket, 7)}
+  end
+
+  def handle_event("last_month", _, socket) do
+    {:noreply, get_events(socket, 30)}
+  end
+
   def handle_info(%{event: "new_event", payload: _event}, socket) do
     {:noreply, get_events(socket)}
   end
 
-  def handle_event("filter", %{"mode" => mode, "state" => state}, socket) do
-    events = Events.list_events(topic: "commerce", routing_key: mode <> "." <> state)
+  defp get_events(socket, day_threshold \\ 1) do
+    events = Events.list_events(routing_key: "order.approved", day_threshold: day_threshold)
+    assign(socket, events: events, totals: get_totals(events))
+  end
 
-    total_amounts =
-      Enum.reduce(
-        events,
+  defp get_totals(events) do
+    events
+    |> Enum.reduce(
         %{amount_cents: 0, commission_cents: 0},
         fn e, acc ->
           %{
-            amount_cents: acc.amount_cents + e.payload.properties.buyer_total_cents,
-            commission_cents: acc.commission_cents + e.payload.properties.commission_cents
+            amount_cents: acc.amount_cents + e.payload["properties"]["buyer_total_cents"],
+            commission_cents: acc.commission_cents + e.payload["properties"]["commission_fee_cents"]
           }
         end
       )
-
-    {:noreply, assign(socket, events: events, total_amounts: total_amounts)}
-  end
-
-  defp get_events(socket) do
-    assign(socket, events: Events.list_events())
   end
 end
