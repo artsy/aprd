@@ -22,6 +22,14 @@ defmodule AprWeb.Router do
     get "/dashboard", PageController, :dashboard
   end
 
+  scope "/auth", OAuth2Example do
+    pipe_through :browser
+
+    get "/:provider", AuthController, :index
+    get "/:provider/callback", AuthController, :callback
+    delete "/logout", AuthController, :delete
+  end
+
   # Other scopes may use custom stacks.
   # scope "/api", AprWeb do
   #   pipe_through :api
