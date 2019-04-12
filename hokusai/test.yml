@@ -16,6 +16,7 @@ services:
     - RABBITMQ_PORT=5672
     depends_on:
       - aprd-db
+      - aprd-rabbitmq
   aprd-db:
     image: postgres:9.6-alpine
   aprd-rabbitmq:
