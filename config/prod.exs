@@ -11,14 +11,12 @@ use Mix.Config
 # before starting your production server.
 config :apr, AprWeb.Endpoint,
   http: [:inet6, port: System.get_env("PORT") || 5000],
-  url: [scheme: "https", host: "aprd.artsy.net", port: 443],
-  force_ssl: [hsts: true],
+  url: [scheme: "https", host: System.get_env("APRD_HOST"), port: 443],
   cache_static_manifest: "priv/static/cache_manifest.json",
   secret_key_base: Map.fetch!(System.get_env(), "SECRET_KEY_BASE"),
   check_origin: [
     "//aprd.artsy.net",
-    "//aprd-staging.artsy.net",
-    "//aea9a139d5b9611e994041245486a78b-1791462094.us-east-1.elb.amazonaws.com/"
+    "//aprd-staging.artsy.net"
   ]
 
 # Do not print debug messages in production
