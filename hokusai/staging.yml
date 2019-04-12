@@ -20,14 +20,28 @@ spec:
       name: aprd-web
     spec:
       containers:
-      - name: aprd-web
-        envFrom:
-        - configMapRef:
-            name: aprd-environment
-        image: 585031190124.dkr.ecr.us-east-1.amazonaws.com/aprd:staging
-        imagePullPolicy: Always
-        ports:
-        - containerPort: 5000
+        - name: aprd-web
+          envFrom:
+            - configMapRef:
+                name: aprd-environment
+          image: 585031190124.dkr.ecr.us-east-1.amazonaws.com/aprd:staging
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 8080
+        - name: aprd-nginx
+          image: artsy/docker-nginx:latest
+          ports:
+            - containerPort: 8080
+          lifecycle:
+            preStop:
+              exec:
+                command: ["/usr/sbin/nginx", "-s", "quit"]
+          env:
+            - name: "NGINX_DEFAULT_CONF"
+              valueFrom:
+                configMapKeyRef:
+                  name: nginx-config
+                  key: default-websocket
       affinity:
         nodeAffinity:
           preferredDuringSchedulingIgnoredDuringExecution:
@@ -37,7 +51,7 @@ spec:
               - key: tier
                 operator: In
                 values:
-                - foreground
+                  - foreground
 ---
 apiVersion: v1
 kind: Service
@@ -48,12 +62,23 @@ metadata:
     component: web
   name: aprd-web
   namespace: default
+  annotations:
+    service.beta.kubernetes.io/aws-load-balancer-ssl-cert: "arn:aws:iam::585031190124:server-certificate/2018-01-17_artsy-net-wildcard"
+    service.beta.kubernetes.io/aws-load-balancer-backend-protocol: "http"
+    service.beta.kubernetes.io/aws-load-balancer-ssl-ports: "443"
+    service.beta.kubernetes.io/aws-load-balancer-cross-zone-load-balancing-enabled: "true"
+    service.beta.kubernetes.io/aws-load-balancer-connection-draining-enabled: "true"
+    service.beta.kubernetes.io/aws-load-balancer-connection-idle-timeout: "300"
 spec:
   ports:
   - port: 80
     protocol: TCP
     name: http
-    targetPort: 5000
+    targetPort: 80
+  - port: 443
+      protocol: TCP
+      name: https
+      targetPort: 80
   selector:
     app: aprd
     layer: application
