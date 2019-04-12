@@ -11,7 +11,7 @@ use Mix.Config
 # before starting your production server.
 config :apr, AprWeb.Endpoint,
   http: [:inet6, port: System.get_env("PORT") || 5000],
-  url: [scheme: "https", host: System.get_env("APRD_HOST"), port: 443],
+  url: [scheme: "http", host: System.get_env("APRD_HOST"), port: 80],
   cache_static_manifest: "priv/static/cache_manifest.json",
   secret_key_base: Map.fetch!(System.get_env(), "SECRET_KEY_BASE"),
   check_origin: [
