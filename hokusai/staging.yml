@@ -20,28 +20,57 @@ spec:
       name: aprd-web
     spec:
       containers:
-        - name: aprd-web
-          envFrom:
-            - configMapRef:
-                name: aprd-environment
-          image: 585031190124.dkr.ecr.us-east-1.amazonaws.com/aprd:staging
-          imagePullPolicy: Always
-          ports:
-            - containerPort: 8080
-        - name: aprd-nginx
-          image: artsy/docker-nginx:latest
-          ports:
-            - containerPort: 8080
-          lifecycle:
-            preStop:
-              exec:
-                command: ["/usr/sbin/nginx", "-s", "quit"]
-          env:
-            - name: "NGINX_DEFAULT_CONF"
-              valueFrom:
-                configMapKeyRef:
-                  name: nginx-config
-                  key: default-websocket
+      - name: aprd-web
+        envFrom:
+        - configMapRef:
+            name: aprd-environment
+        image: 585031190124.dkr.ecr.us-east-1.amazonaws.com/aprd:staging
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 8080
+      - name: aprd-nginx
+        image: artsy/docker-nginx:1.14.2
+        ports:
+          - containerPort: 80
+          - containerPort: 443
+        readinessProbe:
+          tcpSocket:
+            port: 80
+          initialDelaySeconds: 5
+          periodSeconds: 15
+          timeoutSeconds: 10
+        lifecycle:
+          preStop:
+            exec:
+              command: ["/usr/sbin/nginx", "-s", "quit"]
+        env:
+          - name: 'NGINX_DEFAULT_CONF'
+            valueFrom:
+              configMapKeyRef:
+                name: nginx-config
+                key: default-websocket
+        volumeMounts:
+          - name: nginx-secrets
+            mountPath: /etc/nginx/ssl
+      volumes:
+        - name: nginx-secrets
+          secret:
+            secretName: nginx-secrets
+            defaultMode: 420
+      dnsPolicy: ClusterFirst
+      dnsConfig:
+        options:
+        - name: ndots
+          value: "1"
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+            - matchExpressions:
+              - key: tier
+                operator: In
+                values:
+                - foreground
       affinity:
         nodeAffinity:
           preferredDuringSchedulingIgnoredDuringExecution:
@@ -51,7 +80,7 @@ spec:
               - key: tier
                 operator: In
                 values:
-                  - foreground
+                - foreground
 ---
 apiVersion: v1
 kind: Service
@@ -76,9 +105,9 @@ spec:
     name: http
     targetPort: 80
   - port: 443
-      protocol: TCP
-      name: https
-      targetPort: 80
+    protocol: TCP
+    name: https
+    targetPort: 80
   selector:
     app: aprd
     layer: application
