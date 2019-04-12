@@ -8,6 +8,7 @@ defmodule AprWeb.Router do
     plug Phoenix.LiveView.Flash
     plug :protect_from_forgery
     plug :put_secure_browser_headers
+    plug BasicAuth, use_config: {:apr, :authentication}
   end
 
   pipeline :api do
