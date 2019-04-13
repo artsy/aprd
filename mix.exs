@@ -60,7 +60,7 @@ defmodule Apr.MixProject do
     [
       "ecto.setup": ["ecto.create", "ecto.migrate", "run priv/repo/seeds.exs"],
       "ecto.reset": ["ecto.drop", "ecto.setup"],
-      test: ["ecto.migrate", "test --cover --color"]
+      test: ["ecto.create --quiet", "ecto.migrate", "test --cover --color"]
     ]
   end
 end
