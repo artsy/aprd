@@ -6,8 +6,8 @@ defmodule Apr.EventsTest do
   describe "events" do
     alias Apr.Events.Event
 
-    @valid_attrs %{payload: %{}}
-    @update_attrs %{payload: %{}}
+    @valid_attrs %{topic: "test", routing_key: "test.created", payload: %{}}
+    @update_attrs %{topic: "test", routing_key: "test.updated", payload: %{}}
     @invalid_attrs %{payload: nil}
 
     def event_fixture(attrs \\ %{}) do
