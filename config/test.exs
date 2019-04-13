@@ -11,8 +11,8 @@ config :logger, level: :warn
 
 # Configure your database
 config :apr, Apr.Repo,
-  username: "postgres",
-  password: "postgres",
-  database: "apr_test",
-  hostname: "localhost",
-  pool: Ecto.Adapters.SQL.Sandbox
+  pool: Ecto.Adapters.SQL.Sandbox,
+  username: System.get_env("DB_USER") || "postgres",
+  password: System.get_env("DB_PASSWORD") || "postgres",
+  hostname: System.get_env("DB_HOST") || "localhost",
+  database: "aprd_test"
