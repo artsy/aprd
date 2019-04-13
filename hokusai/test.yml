@@ -2,7 +2,6 @@
 version: '2'
 services:
   aprd:
-    entrypoint: /bin/bash
     command: ./hokusai/ci.sh
     extends:
       file: build.yml
@@ -17,6 +16,7 @@ services:
     - RABBITMQ_USER=guest
     - RABBITMQ_PASSWORD=guest
     - RABBITMQ_PORT=5672
+    - SECRET_SALT=https://gph.is/2jAtlPQ
     depends_on:
       - aprd-db
       - aprd-rabbitmq

@@ -8,7 +8,7 @@ WORKDIR /app
 
 # Set exposed ports
 EXPOSE 5000
-ENV PORT=5000 MIX_ENV=prod
+ENV PORT=5000
 
 # Cache elixir deps
 ADD mix.exs mix.lock ./
