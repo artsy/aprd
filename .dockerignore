@@ -17,3 +17,7 @@ env
 log
 *.log
 tmp
+_build
+deps
+assets/node_modules
+test
