@@ -13,7 +13,7 @@ config :logger, level: :warn
 config :apr, Apr.Repo,
   adapter: Ecto.Adapters.Postgres,
   pool: Ecto.Adapters.SQL.Sandbox,
-  username: System.get_env("DB_USER"),
-  password: System.get_env("DB_PASSWORD"),
-  database: "aprd_test",
-  hostname: System.get_env("DB_HOST") || "localhost"
+  username: System.get_env("DB_USER") || "postgres",
+  password: System.get_env("DB_PASSWORD") || "postgres",
+  hostname: System.get_env("DB_HOST") || "localhost",
+  database: "aprd_test"

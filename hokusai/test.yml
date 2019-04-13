@@ -2,14 +2,17 @@
 version: '2'
 services:
   aprd:
-    command: ["mix", "test"]
+    entrypoint: /bin/bash
+    command: ./hokusai/ci.sh
     extends:
       file: build.yml
       service: aprd
     environment:
     - MIX_ENV=test
     - DATABASE_HOST=aprd-db
-    - DATABASE_USER=postgres
+    - DB_HOST=aprd-db
+    - DB_USER-postgres
+    - DB_PASSWORD=postgres
     - RABBITMQ_HOST=aprd-rabbitmq
     - RABBITMQ_USER=guest
     - RABBITMQ_PASSWORD=guest
@@ -17,7 +20,14 @@ services:
     depends_on:
       - aprd-db
       - aprd-rabbitmq
+    links:
+      - aprd-db
+      - aprd-rabbitmq
   aprd-db:
     image: postgres:9.6-alpine
+    environment:
+    - POSTGRES_USER=postgres
+    - POSTGRES_PASSWORD=postgres
+    - POSTGRES_DB=postgres
   aprd-rabbitmq:
     image: rabbitmq:3.6-management-alpine
