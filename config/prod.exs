@@ -10,8 +10,8 @@ use Mix.Config
 # which you should run after static files are built and
 # before starting your production server.
 config :apr, AprWeb.Endpoint,
-  http: [:inet6, port: System.get_env("PORT") || 8080],
-  url: [scheme: "https", host: System.get_env("APRD_HOST"), port: 443],
+  http: [:inet6, port: {:system, "PORT"} || 8080],
+  url: [scheme: "https", host: {:system, "HOST"}, port: 443],
   cache_static_manifest: "priv/static/cache_manifest.json",
   secret_key_base: Map.fetch!(System.get_env(), "SECRET_KEY_BASE"),
   check_origin: [
