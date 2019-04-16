@@ -27,7 +27,49 @@ spec:
         image: 585031190124.dkr.ecr.us-east-1.amazonaws.com/aprd:staging
         imagePullPolicy: Always
         ports:
-        - containerPort: 5000
+        - containerPort: 8080
+      - name: aprd-nginx
+        image: artsy/docker-nginx:1.14.2
+        ports:
+          - containerPort: 80
+        readinessProbe:
+          tcpSocket:
+            port: 80
+          initialDelaySeconds: 5
+          periodSeconds: 15
+          timeoutSeconds: 10
+        lifecycle:
+          preStop:
+            exec:
+              command: ["/usr/sbin/nginx", "-s", "quit"]
+        env:
+          - name: 'NGINX_DEFAULT_CONF'
+            valueFrom:
+              configMapKeyRef:
+                name: nginx-config
+                key: default-websocket
+        volumeMounts:
+          - name: nginx-secrets
+            mountPath: /etc/nginx/ssl
+      volumes:
+        - name: nginx-secrets
+          secret:
+            secretName: nginx-secrets
+            defaultMode: 420
+      dnsPolicy: ClusterFirst
+      dnsConfig:
+        options:
+        - name: ndots
+          value: "1"
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+            - matchExpressions:
+              - key: tier
+                operator: In
+                values:
+                - foreground
       affinity:
         nodeAffinity:
           preferredDuringSchedulingIgnoredDuringExecution:
@@ -48,12 +90,23 @@ metadata:
     component: web
   name: aprd-web
   namespace: default
+  annotations:
+    service.beta.kubernetes.io/aws-load-balancer-ssl-cert: "arn:aws:iam::585031190124:server-certificate/2018-01-17_artsy-net-wildcard"
+    service.beta.kubernetes.io/aws-load-balancer-proxy-protocol: "*"
+    service.beta.kubernetes.io/aws-load-balancer-ssl-ports: "443"
+    service.beta.kubernetes.io/aws-load-balancer-cross-zone-load-balancing-enabled: "true"
+    service.beta.kubernetes.io/aws-load-balancer-connection-draining-enabled: "true"
+    service.beta.kubernetes.io/aws-load-balancer-connection-idle-timeout: "300"
 spec:
   ports:
   - port: 80
     protocol: TCP
     name: http
-    targetPort: 5000
+    targetPort: 80
+  - port: 443
+    protocol: TCP
+    name: https
+    targetPort: 80
   selector:
     app: aprd
     layer: application
