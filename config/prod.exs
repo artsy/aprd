@@ -14,7 +14,6 @@ config :apr, AprWeb.Endpoint,
   url: [scheme: "https", host: {:system, "HOST"}, port: 443],
   cache_static_manifest: "priv/static/cache_manifest.json",
   secret_key_base: Map.fetch!(System.get_env(), "SECRET_KEY_BASE"),
-  force_ssl: [rewrite_on: [:x_forwarded_proto], host: nil],
   check_origin: [
     "//aprd.artsy.net",
     "//aprd-staging.artsy.net"
