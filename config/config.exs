@@ -28,6 +28,10 @@ config :apr, authentication: [
   realm: System.get_env("AUTH_REALM")
 ]
 
+config :apr, :metaphysics,
+  url: ""
+
+
 # Configures Elixir's Logger
 config :logger, :console,
   format: "$time $metadata[$level] $message\n",
