@@ -13,13 +13,15 @@ defmodule AprWeb.OrderDashboardLive do
         <th> Commission </th>
       </tr>
       <tr>
-        <td><%= @totals.amount_cents %></td>
-        <td><%= @totals.commission_cents %> </td>
+        <td>$<%= @totals.amount_cents / 100 %></td>
+        <td>$<%= @totals.commission_cents / 100 %> </td>
       </td>
     </table>
     <%= for event <- @events do %>
       <div>
-        <%= event.payload["properties"]["buyer_total_cents"] %>
+        <div> <%= List.first(@artworks[event.payload["object"]["id"]])["title"] %> </div>
+        <div> <%= List.first(@artworks[event.payload["object"]["id"]])["artist_names"] %> </div>
+        <img src="<%= List.first(@artworks[event.payload["object"]["id"]])["imageUrl"] %>" />
       </div>
     <% end %>
     """
@@ -48,52 +50,81 @@ defmodule AprWeb.OrderDashboardLive do
   end
 
   defp get_events(socket, day_threshold \\ 1) do
-    with events <- Events.list_events(routing_key: "order.approved", day_threshold: day_threshold),
-        artworks <- fetch_artworks(events) do
+    with events <-
+           Events.list_events(routing_key: "order.approved", day_threshold: day_threshold),
+         artworks <- fetch_artworks(events) do
       assign(socket, events: events, artworks: artworks, totals: get_totals(events))
     end
   end
 
+  defp fetch_artworks([]), do: []
+
   defp fetch_artworks(order_events) do
     Neuron.Config.set(url: "https://metaphysics-staging.artsy.net/")
-    artwork_ids =
+
+    order_id_artwork_ids =
       order_events
-      |> Enum.map(fn e -> e["properties"]["line_items"]["artwork_id"] end)
-      |> Enum.uniq
-    fetch_response = Neuron.query("""
-        query orderArtworks($ids: [String]) {
-          artworks(ids: $ids) {
-            id
-            _id
-            title
-            artist {
-              name
+      |> Enum.reduce(%{}, fn e, acc ->
+        artwork_ids =
+          e.payload["properties"]["line_items"] |> Enum.map(fn li -> li["artwork_id"] end)
+
+        acc
+        |> Map.merge(%{e.payload["object"]["id"] => artwork_ids})
+      end)
+
+    uniq_artwork_ids =
+      order_id_artwork_ids |> Map.values() |> List.flatten() |> Enum.uniq()
+
+    fetch_response =
+      Neuron.query(
+        """
+          query orderArtworks($ids: [String]) {
+            artworks(ids: $ids) {
+              id
+              _id
+              title
+              artist {
+                name
+              }
+              partner {
+                name
+              }
+              imageUrl
             }
-            partner {
-              name
-            }
-            imageUrl
           }
-        }
-      """,
-      %{ids: artwork_ids})
+        """,
+        %{ids: uniq_artwork_ids}
+      )
+
     case fetch_response do
       {:ok, response} ->
-        response.body["data"]["artworks"] |> Enum.reduce(%{}, fn a, acc -> Map.merge(acc, %{a["_id"] => a}) end )
-      _ -> {:error}
+        artworks_map =
+          response.body["data"]["artworks"]
+          |> Enum.reduce(%{}, fn a, acc -> Map.merge(acc, %{a["_id"] => a}) end)
+
+        order_id_artwork_ids
+        |> Enum.reduce(%{}, fn {order_id, artwork_ids}, acc ->
+          acc
+          |> Map.merge(%{
+            order_id => Enum.map(artwork_ids, fn artwork_id -> artworks_map[artwork_id] end)
+          })
+        end)
+
+      _ ->
+        {:error}
     end
   end
 
   defp get_totals(events) do
     events
     |> Enum.reduce(
-        %{amount_cents: 0, commission_cents: 0},
-        fn e, acc ->
-          %{
-            amount_cents: acc.amount_cents + e.payload["properties"]["buyer_total_cents"],
-            commission_cents: acc.commission_cents + e.payload["properties"]["commission_fee_cents"]
-          }
-        end
-      )
+      %{amount_cents: 0, commission_cents: 0},
+      fn e, acc ->
+        %{
+          amount_cents: acc.amount_cents + e.payload["properties"]["buyer_total_cents"],
+          commission_cents: acc.commission_cents + e.payload["properties"]["commission_fee_cents"]
+        }
+      end
+    )
   end
 end
