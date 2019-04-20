@@ -4,26 +4,28 @@ defmodule AprWeb.OrderDashboardLive do
 
   def render(assigns) do
     ~L"""
-    <button phx-click="today">Today</button>
-    <button phx-click="last_week">Last 7 Days</button>
-    <button phx-click="last_month">Last Month</button>
-    <table>
-      <tr>
-        <th> GMV </th>
-        <th> Commission </th>
-      </tr>
-      <tr>
-        <td>$<%= @totals.amount_cents / 100 %></td>
-        <td>$<%= @totals.commission_cents / 100 %> </td>
-      </td>
-    </table>
-    <%= for event <- @events do %>
-      <div>
-        <div> <%= List.first(@artworks[event.payload["object"]["id"]])["title"] %> </div>
-        <div> <%= List.first(@artworks[event.payload["object"]["id"]])["artist_names"] %> </div>
-        <img src="<%= List.first(@artworks[event.payload["object"]["id"]])["imageUrl"] %>" />
+    <div class="main-live">
+      <div class="main-controllers">
+        <button phx-click="today">Today</button>
+        <button phx-click="last_week">Last 7 Days</button>
+        <button phx-click="last_month">Last Month</button>
       </div>
-    <% end %>
+      <div class="main-stats">
+        <div class="stat"> GMV: $<%= @totals.amount_cents / 100 %> </div>
+        <div class="stat"> Commission: $<%= @totals.commission_cents / 100 %> </div>
+      </div>
+      <div class="event-section">
+        <%= for event <- @events do %>
+          <div class="artwork-event">
+            <% artwork = List.first(@artworks[event.payload["object"]["id"]]) %>
+            <div> <%= artwork["title"] %> </div>
+            <div> <%= artwork["artist_names"] %> </div>
+            <img src="<%= artwork["imageUrl"] %>" />
+            <div> $<%= event.payload["properties"]["buyer_total_cents"] / 100 %> </div>
+          </div>
+        <% end %>
+      </div>
+    </div>
     """
   end
 
