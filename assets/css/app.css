@@ -1,4 +1,53 @@
 /* This file is for your main application css. */
 
-@import "./phoenix.css";
 @import "../../deps/phoenix_live_view/assets/css/live_view.css";
+
+.logo {
+  width: 100px;
+}
+
+.main-live{
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  align-items: center;
+}
+
+.main-controllers {
+  width: 50%;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  margin: 40px;
+}
+
+.main-stats {
+  display: flex;
+  flex-direction: row;
+  width: 50%;
+  justify-content: space-between;
+}
+.stat {
+  font-size: 18px;
+}
+
+.event-section {
+  margin: 30px;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  width: 90%;
+  flex-wrap: wrap;
+}
+
+.artwork-event {
+  display: flex;
+  flex-direction: column;
+  flex-shrink: 1;
+  justify-content: space-between;
+  width: 250px;
+  height: 300px;
+  border: 1px solid gray;
+  padding: 10px;
+}

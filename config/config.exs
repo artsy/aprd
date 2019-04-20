@@ -21,12 +21,14 @@ config :apr, AprWeb.Endpoint,
   ],
   check_origin: false
 
+config :apr,
+  authentication: [
+    username: System.get_env("AUTH_USER"),
+    password: System.get_env("AUTH_PASS"),
+    realm: System.get_env("AUTH_REALM")
+  ]
 
-config :apr, authentication: [
-  username: System.get_env("AUTH_USER"),
-  password: System.get_env("AUTH_PASS"),
-  realm: System.get_env("AUTH_REALM")
-]
+config :apr, :metaphysics, url: ""
 
 # Configures Elixir's Logger
 config :logger, :console,

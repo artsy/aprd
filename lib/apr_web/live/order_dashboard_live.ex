@@ -4,16 +4,28 @@ defmodule AprWeb.OrderDashboardLive do
 
   def render(assigns) do
     ~L"""
-    <button phx-click="today">Today</button>
-    <button phx-click="last_week">Last 7 Days</button>
-    <button phx-click="last_month">Last Month</button>
-    <div>
-      Totals: <%= @totals.amount_cents %>
-      Commission Totals: <%= @totals.commission_cents %>
+    <div class="main-live">
+      <div class="main-controllers">
+        <button phx-click="today">Today</button>
+        <button phx-click="last_week">Last 7 Days</button>
+        <button phx-click="last_month">Last Month</button>
+      </div>
+      <div class="main-stats">
+        <div class="stat"> GMV: $<%= @totals.amount_cents / 100 %> </div>
+        <div class="stat"> Commission: $<%= @totals.commission_cents / 100 %> </div>
+      </div>
+      <div class="event-section">
+        <%= for event <- @events do %>
+          <div class="artwork-event">
+            <% artwork = List.first(@artworks[event.payload["object"]["id"]]) %>
+            <div> <%= artwork["title"] %> </div>
+            <div> <%= artwork["artist_names"] %> </div>
+            <img src="<%= artwork["imageUrl"] %>" />
+            <div> $<%= event.payload["properties"]["buyer_total_cents"] / 100 %> </div>
+          </div>
+        <% end %>
+      </div>
     </div>
-    <%= for event <- @events do %>
-      <div><%= event.topic %> -> <%= event.routing_key %></div>
-    <% end %>
     """
   end
 
@@ -40,20 +52,81 @@ defmodule AprWeb.OrderDashboardLive do
   end
 
   defp get_events(socket, day_threshold \\ 1) do
-    events = Events.list_events(routing_key: "order.approved", day_threshold: day_threshold)
-    assign(socket, events: events, totals: get_totals(events))
+    with events <-
+           Events.list_events(routing_key: "order.approved", day_threshold: day_threshold),
+         artworks <- fetch_artworks(events) do
+      assign(socket, events: events, artworks: artworks, totals: get_totals(events))
+    end
+  end
+
+  defp fetch_artworks([]), do: []
+
+  defp fetch_artworks(order_events) do
+    Neuron.Config.set(url: "https://metaphysics-staging.artsy.net/")
+
+    order_id_artwork_ids =
+      order_events
+      |> Enum.reduce(%{}, fn e, acc ->
+        artwork_ids =
+          e.payload["properties"]["line_items"] |> Enum.map(fn li -> li["artwork_id"] end)
+
+        acc
+        |> Map.merge(%{e.payload["object"]["id"] => artwork_ids})
+      end)
+
+    uniq_artwork_ids =
+      order_id_artwork_ids |> Map.values() |> List.flatten() |> Enum.uniq()
+
+    fetch_response =
+      Neuron.query(
+        """
+          query orderArtworks($ids: [String]) {
+            artworks(ids: $ids) {
+              id
+              _id
+              title
+              artist {
+                name
+              }
+              partner {
+                name
+              }
+              imageUrl
+            }
+          }
+        """,
+        %{ids: uniq_artwork_ids}
+      )
+
+    case fetch_response do
+      {:ok, response} ->
+        artworks_map =
+          response.body["data"]["artworks"]
+          |> Enum.reduce(%{}, fn a, acc -> Map.merge(acc, %{a["_id"] => a}) end)
+
+        order_id_artwork_ids
+        |> Enum.reduce(%{}, fn {order_id, artwork_ids}, acc ->
+          acc
+          |> Map.merge(%{
+            order_id => Enum.map(artwork_ids, fn artwork_id -> artworks_map[artwork_id] end)
+          })
+        end)
+
+      _ ->
+        {:error}
+    end
   end
 
   defp get_totals(events) do
     events
     |> Enum.reduce(
-        %{amount_cents: 0, commission_cents: 0},
-        fn e, acc ->
-          %{
-            amount_cents: acc.amount_cents + e.payload["properties"]["buyer_total_cents"],
-            commission_cents: acc.commission_cents + e.payload["properties"]["commission_fee_cents"]
-          }
-        end
-      )
+      %{amount_cents: 0, commission_cents: 0},
+      fn e, acc ->
+        %{
+          amount_cents: acc.amount_cents + e.payload["properties"]["buyer_total_cents"],
+          commission_cents: acc.commission_cents + e.payload["properties"]["commission_fee_cents"]
+        }
+      end
+    )
   end
 end
