@@ -28,7 +28,7 @@ config :apr,
     realm: System.get_env("AUTH_REALM")
   ]
 
-config :apr, :metaphysics, url: ""
+config :apr, :metaphysics, url: System.get_env("METAPHYSICS_URL")
 
 # Configures Elixir's Logger
 config :logger, :console,

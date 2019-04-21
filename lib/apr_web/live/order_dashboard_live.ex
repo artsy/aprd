@@ -54,15 +54,17 @@ defmodule AprWeb.OrderDashboardLive do
   defp get_events(socket, day_threshold \\ 1) do
     with events <-
            Events.list_events(routing_key: "order.approved", day_threshold: day_threshold),
-         artworks <- fetch_artworks(events) do
+         {:ok, artworks} <- fetch_artworks(events) do
       assign(socket, events: events, artworks: artworks, totals: get_totals(events))
+    else
+      {:error, error} -> IO.inspect(error)
     end
   end
 
   defp fetch_artworks([]), do: []
 
   defp fetch_artworks(order_events) do
-    Neuron.Config.set(url: "https://metaphysics-staging.artsy.net/")
+    Neuron.Config.set(url: Application.get_env(:apr, :metaphysics)[:url])
 
     order_id_artwork_ids =
       order_events
@@ -74,8 +76,7 @@ defmodule AprWeb.OrderDashboardLive do
         |> Map.merge(%{e.payload["object"]["id"] => artwork_ids})
       end)
 
-    uniq_artwork_ids =
-      order_id_artwork_ids |> Map.values() |> List.flatten() |> Enum.uniq()
+    uniq_artwork_ids = order_id_artwork_ids |> Map.values() |> List.flatten() |> Enum.uniq()
 
     fetch_response =
       Neuron.query(
@@ -104,16 +105,19 @@ defmodule AprWeb.OrderDashboardLive do
           response.body["data"]["artworks"]
           |> Enum.reduce(%{}, fn a, acc -> Map.merge(acc, %{a["_id"] => a}) end)
 
-        order_id_artwork_ids
-        |> Enum.reduce(%{}, fn {order_id, artwork_ids}, acc ->
-          acc
-          |> Map.merge(%{
-            order_id => Enum.map(artwork_ids, fn artwork_id -> artworks_map[artwork_id] end)
-          })
-        end)
+        artworks_order_map =
+          order_id_artwork_ids
+          |> Enum.reduce(%{}, fn {order_id, artwork_ids}, acc ->
+            acc
+            |> Map.merge(%{
+              order_id => Enum.map(artwork_ids, fn artwork_id -> artworks_map[artwork_id] end)
+            })
+          end)
 
-      _ ->
-        {:error}
+        {:ok, artworks_order_map}
+
+      error ->
+        {:error, {:could_not_fetch, error}}
     end
   end
 
