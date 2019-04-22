@@ -1,5 +1,6 @@
 defmodule AprWeb.OrderDashboardLive do
   use Phoenix.LiveView
+  import Apr.ViewHelper
   alias Apr.Events
 
   def render(assigns) do
@@ -12,11 +13,11 @@ defmodule AprWeb.OrderDashboardLive do
       </div>
       <section class="main-stats">
         <div class="flex flex-direction-column text-align-center">
-          <div class="sans-8"> <%= Number.Currency.number_to_currency @totals.amount_cents / 100 %> </div>
+          <div class="sans-8"> <%= Money.to_string(Money.new(@totals.amount_cents, :USD)) %> </div>
           <span class="sans-3">GMV</span>
         </div>
         <div class="flex flex-direction-column text-align-center">
-          <div class="sans-8"> <%= Number.Currency.number_to_currency @totals.commission_cents / 100 %> </div>
+          <div class="sans-8"> <%= Money.to_string(Money.new(@totals.commission_cents, :USD)) %> </div>
           <span class="sans-3">Comission</span>
         </div>
       </section>
@@ -25,9 +26,11 @@ defmodule AprWeb.OrderDashboardLive do
           <div class="artwork-event">
             <% artwork = List.first(@artworks[event.payload["object"]["id"]]) %>
             <img class="mb-1" src="<%= artwork["imageUrl"] %>" />
-            <div class="mb-0_5 sans-2-medium"> <%= Number.Currency.number_to_currency event.payload["properties"]["buyer_total_cents"] / 100 %> </div>
-            <!-- div class="serif-2-semibold color-black60"> <%= artwork["artist_names"] %> </div -->
+            <div class="mb-0_5 sans-2-medium"> <%= Money.to_string(Money.new(event.payload["properties"]["buyer_total_cents"], :USD)) %> </div>
+            <div class="serif-2-semibold color-black60"> <%= artwork["artist_names"] %> </div>
             <div class="serif-2-italic color-black60"> <%= artwork["title"] %> </div>
+            <div class="serif-2 color-black60"> <%= artwork["partner"]["name"] %> </div>
+            <div class="serif-2 color-black30"> <a href="<%= exchange_link(event.payload["object"]["id"]) %>"> <%= event.payload["properties"]["code"] %></a></div>
           </div>
         <% end %>
       </div>

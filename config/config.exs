@@ -29,6 +29,7 @@ config :apr,
   ]
 
 config :apr, :metaphysics, url: System.get_env("METAPHYSICS_URL")
+config :apr, :exchange, url: System.get_env("EXCHANGE_URL")
 
 # Configures Elixir's Logger
 config :logger, :console,
@@ -43,6 +44,9 @@ config :apr, RabbitMQ,
 
 # Use Jason for JSON parsing in Phoenix
 config :phoenix, :json_library, Jason
+
+config :money,
+  default_currency: :USD
 
 # Import environment specific config. This must remain at the bottom
 # of this file so it overrides the configuration defined above.

@@ -48,7 +48,7 @@ defmodule Apr.MixProject do
       {:plug_cowboy, "~> 2.0"},
       {:basic_auth, "~> 2.2.2"},
       {:neuron, "~> 1.1.1"},
-      {:number, "~> 1.0.0"}
+      {:money, "~> 1.4"}
     ]
   end
 
