@@ -1,5 +1,6 @@
 defmodule AprWeb.OrderDashboardLive do
   use Phoenix.LiveView
+  import Apr.ViewHelper
   alias Apr.Events
 
   def render(assigns) do
@@ -11,17 +12,19 @@ defmodule AprWeb.OrderDashboardLive do
         <button phx-click="last_month">Last Month</button>
       </div>
       <div class="main-stats">
-        <div class="stat"> GMV: $<%= @totals.amount_cents / 100 %> </div>
-        <div class="stat"> Commission: $<%= @totals.commission_cents / 100 %> </div>
+        <div class="stat"> GMV: $<%=  Money.to_string(Money.new(@totals.amount_cents, :USD)) %> </div>
+        <div class="stat"> Commission: $<%= Money.to_string(Money.new(@totals.commission_cents, :USD)) %> </div>
       </div>
       <div class="event-section">
         <%= for event <- @events do %>
           <div class="artwork-event">
             <% artwork = List.first(@artworks[event.payload["object"]["id"]]) %>
+            <div> <a href="<%= exchange_link(event.payload["object"]["id"]) %>"> <%= event.payload["properties"]["code"] %></a></div>
             <div> <%= artwork["title"] %> </div>
             <div> <%= artwork["artist_names"] %> </div>
             <img src="<%= artwork["imageUrl"] %>" />
-            <div> $<%= event.payload["properties"]["buyer_total_cents"] / 100 %> </div>
+            <div> <%= artwork["partner"]["name"] %> </div>
+            <div> <%= Money.to_string(Money.new(event.payload["properties"]["buyer_total_cents"], :USD)) %> </div>
           </div>
         <% end %>
       </div>
