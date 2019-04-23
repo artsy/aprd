@@ -37,28 +37,5 @@ defmodule Apr.EventsTest do
     test "create_event/1 with invalid data returns error changeset" do
       assert {:error, %Ecto.Changeset{}} = Events.create_event(@invalid_attrs)
     end
-
-    test "update_event/2 with valid data updates the event" do
-      event = event_fixture()
-      assert {:ok, %Event{} = event} = Events.update_event(event, @update_attrs)
-      assert event.payload == %{}
-    end
-
-    test "update_event/2 with invalid data returns error changeset" do
-      event = event_fixture()
-      assert {:error, %Ecto.Changeset{}} = Events.update_event(event, @invalid_attrs)
-      assert event == Events.get_event!(event.id)
-    end
-
-    test "delete_event/1 deletes the event" do
-      event = event_fixture()
-      assert {:ok, %Event{}} = Events.delete_event(event)
-      assert_raise Ecto.NoResultsError, fn -> Events.get_event!(event.id) end
-    end
-
-    test "change_event/1 returns a event changeset" do
-      event = event_fixture()
-      assert %Ecto.Changeset{} = Events.change_event(event)
-    end
   end
 end

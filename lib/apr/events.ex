@@ -20,6 +20,7 @@ defmodule Apr.Events do
   def list_events(criteria \\ []) do
     Event
     |> filter_query(criteria)
+    |> order_by(desc: :inserted_at)
     |> Repo.all()
   end
 
@@ -38,6 +39,14 @@ defmodule Apr.Events do
   defp event_query({:day_threshold, value}, query) do
     from e in query,
       where: e.inserted_at > ago(^value, "day")
+  end
+
+
+  def pending_approval_orders do
+    query = from e in Event,
+      where: e.routing_key == "order.pending_approval",
+      where: fragment("not exists (select 1 from events where payload->'object'->> 'id' = e0.payload->'object'->>'id')")
+    Repo.all(query)
   end
 
   @doc """
@@ -74,50 +83,88 @@ defmodule Apr.Events do
     |> Repo.insert()
   end
 
-  @doc """
-  Updates a event.
-
-  ## Examples
-
-      iex> update_event(event, %{field: new_value})
-      {:ok, %Event{}}
-
-      iex> update_event(event, %{field: bad_value})
-      {:error, %Ecto.Changeset{}}
-
-  """
-  def update_event(%Event{} = event, attrs) do
-    event
-    |> Event.changeset(attrs)
-    |> Repo.update()
+  def get_order_events(status \\ "approved", day_threshold \\ 1) do
+    with events <- list_events(routing_key: "order.#{status}", day_threshold: day_threshold),
+         {:ok, artworks} <- fetch_artworks(events) do
+      {:ok, %{events: events, artworks: artworks, totals: get_totals(events)}}
+    else
+      # we can do lot better here, i think actual solution is to have get events return {:ok,...} {:error, ..} instead of doing assign
+      [] -> {:ok, events: [], totals: %{amount_cents: 0, commission_cents: 0}, artworks: %{}}
+      {:error, error} -> {:error, error}
+    end
   end
 
-  @doc """
-  Deletes a Event.
 
-  ## Examples
+  defp fetch_artworks([]), do: []
 
-      iex> delete_event(event)
-      {:ok, %Event{}}
+  defp fetch_artworks(order_events) do
+    Neuron.Config.set(url: Application.get_env(:apr, :metaphysics)[:url])
 
-      iex> delete_event(event)
-      {:error, %Ecto.Changeset{}}
+    order_id_artwork_ids =
+      order_events
+      |> Enum.reduce(%{}, fn e, acc ->
+        artwork_ids =
+          e.payload["properties"]["line_items"] |> Enum.map(fn li -> li["artwork_id"] end)
 
-  """
-  def delete_event(%Event{} = event) do
-    Repo.delete(event)
+        acc
+        |> Map.merge(%{e.payload["object"]["id"] => artwork_ids})
+      end)
+
+    uniq_artwork_ids = order_id_artwork_ids |> Map.values() |> List.flatten() |> Enum.uniq()
+
+    fetch_response =
+      Neuron.query(
+        """
+          query orderArtworks($ids: [String]) {
+            artworks(ids: $ids) {
+              id
+              _id
+              title
+              artist {
+                name
+              }
+              partner {
+                name
+              }
+              imageUrl
+            }
+          }
+        """,
+        %{ids: uniq_artwork_ids}
+      )
+
+    case fetch_response do
+      {:ok, response} ->
+        artworks_map =
+          response.body["data"]["artworks"]
+          |> Enum.reduce(%{}, fn a, acc -> Map.merge(acc, %{a["_id"] => a}) end)
+
+        artworks_order_map =
+          order_id_artwork_ids
+          |> Enum.reduce(%{}, fn {order_id, artwork_ids}, acc ->
+            acc
+            |> Map.merge(%{
+              order_id => Enum.map(artwork_ids, fn artwork_id -> artworks_map[artwork_id] end)
+            })
+          end)
+
+        {:ok, artworks_order_map}
+
+      error ->
+        {:error, {:could_not_fetch, error}}
+    end
   end
 
-  @doc """
-  Returns an `%Ecto.Changeset{}` for tracking event changes.
-
-  ## Examples
-
-      iex> change_event(event)
-      %Ecto.Changeset{source: %Event{}}
-
-  """
-  def change_event(%Event{} = event) do
-    Event.changeset(event, %{})
+  defp get_totals(events) do
+    events
+    |> Enum.reduce(
+      %{amount_cents: 0, commission_cents: 0},
+      fn e, acc ->
+        %{
+          amount_cents: acc.amount_cents + e.payload["properties"]["buyer_total_cents"],
+          commission_cents: acc.commission_cents + e.payload["properties"]["commission_fee_cents"]
+        }
+      end
+    )
   end
 end
