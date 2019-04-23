@@ -2,6 +2,10 @@
 
 @import "../../deps/phoenix_live_view/assets/css/live_view.css";
 
+html, body {
+  margin: 0;
+}
+
 /* START:Atoms... maybe move to palette? */
 
 .flex {
@@ -40,21 +44,29 @@
 .main-stats {
   display: flex;
   flex-direction: row;
-  width: 50%;
-  justify-content: space-between;
+  width: 100%;
+  justify-content: space-around;
+  color: white;
+  background-color: var(--color-black100);
+  padding: var(--space-2) 0;
 }
 .stat {
   font-size: 18px;
 }
 
-.event-section {
+section.event {
   margin: 30px;
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
   justify-content: space-between;
-  align-items: center;
+  align-items: flex-start;
   width: 90%;
   flex-wrap: wrap;
+}
+
+section.artworks {
+  display: flex;
+  flex-direction: row;
 }
 
 .artwork-event {

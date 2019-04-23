@@ -1,9 +1,10 @@
 // We need to import the CSS so that webpack will load it.
 // The MiniCssExtractPlugin is used to separate it out into
 // its own CSS file.
-import "./app.css"
 import "@artsy/palette/dist/styles.css"
+import "./app.css"
 import "./components/button.html"
+import "./components/jumbo.html"
 
 // webpack automatically bundles all modules in your
 // entry points. Those entry points can be configured

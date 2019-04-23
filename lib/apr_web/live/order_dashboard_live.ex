@@ -7,53 +7,53 @@ defmodule AprWeb.OrderDashboardLive do
     ~L"""
     <div class="main-live">
       <section class="main-stats">
-        <div class="flex flex-direction-column text-align-center">
-          <div class="sans-8"> <%= Money.to_string(Money.new(@approved_orders.totals.amount_cents, :USD)) %> </div>
-          <span class="sans-3">GMV</span>
-        </div>
-        <div class="flex flex-direction-column text-align-center">
-          <div class="sans-8"> <%= Money.to_string(Money.new(@approved_orders.totals.commission_cents, :USD)) %> </div>
-          <span class="sans-3">Comission</span>
-        </div>
+        <palette-jumbo label="GMV (last 24 hrs)">
+          <%= currency(@approved_orders.totals.amount_cents) %>
+        </palette-jumbo>
+        <palette-jumbo label="Commission (last 24 hrs)">
+          <%= currency(@approved_orders.totals.commission_cents) %>
+        </palette-jumbo>
+        <palette-jumbo label="Pending Approval GMV">
+          <%= currency(@pending_approvals.totals.amount_cents) %>
+        </palette-jumbo>
+        <palette-jumbo label="Pending Approval Commision">
+          <%= currency(@pending_approvals.totals.commission_cents) %>
+        </palette-jumbo>
       </section>
-      <section class="main-stats">
-        <div class="flex flex-direction-column text-align-center">
-          <div class="sans-8"> <%= Money.to_string(Money.new(@pending_approvals.totals.amount_cents, :USD)) %> </div>
-          <span class="sans-3">Pending GMV</span>
-        </div>
-        <div class="flex flex-direction-column text-align-center">
-          <div class="sans-8"> <%= Money.to_string(Money.new(@pending_approvals.totals.commission_cents, :USD)) %> </div>
-          <span class="sans-3">Pending Comission</span>
-        </div>
-      </section>
-      <div class="event-section">
-        <h3> Approved </h3>
+      <section class="event">
+        <h2 class="sans-6"> Approved (<%= @approved_orders.count %>) </h2>
+        <section class="artworks">
         <%= for event <- @approved_orders.events do %>
           <div class="artwork-event">
             <% artwork = List.first(@artworks[event.payload["object"]["id"]]) %>
             <img class="mb-1" src="<%= artwork["imageUrl"] %>" />
-            <div class="mb-0_5 sans-2-medium"> <%= Money.to_string(Money.new(event.payload["properties"]["buyer_total_cents"], :USD)) %> </div>
+            <div class="mb-0_5 sans-2-medium"> <%= currency(event.payload["properties"]["buyer_total_cents"]) %> </div>
             <div class="serif-2-semibold color-black60"> <%= artwork["artist_names"] %> </div>
             <div class="serif-2-italic color-black60"> <%= artwork["title"] %> </div>
             <div class="serif-2 color-black60"> <%= artwork["partner"]["name"] %> </div>
             <div class="serif-2 color-black30"> <a href="<%= exchange_link(event.payload["object"]["id"]) %>"> <%= event.payload["properties"]["code"] %></a></div>
           </div>
         <% end %>
-      </div>
-      <div class="event-section">
-        <h3> Pending Approval </h3>
-        <%= for event <- @pending_approvals.events do %>
-          <div class="artwork-event">
-            <% artwork = List.first(@artworks[event.payload["object"]["id"]]) %>
-            <img class="mb-1" src="<%= artwork["imageUrl"] %>" />
-            <div class="mb-0_5 sans-2-medium"> <%= Money.to_string(Money.new(event.payload["properties"]["buyer_total_cents"], :USD)) %> </div>
-            <div class="serif-2-semibold color-black60"> <%= artwork["artist_names"] %> </div>
-            <div class="serif-2-italic color-black60"> <%= artwork["title"] %> </div>
-            <div class="serif-2 color-black60"> <%= artwork["partner"]["name"] %> </div>
-            <div class="serif-2 color-black30"> <a href="<%= exchange_link(event.payload["object"]["id"]) %>"> <%= event.payload["properties"]["code"] %></a></div>
-          </div>
-        <% end %>
-      </div>
+        </section>
+      </section>
+      <%= if !Enum.empty?(@pending_approvals.events) do %>
+        <section class="event">
+          <h2 class="sans-6"> Pending Approval </h2>
+          <section class="artworks">
+          <%= for event <- @pending_approvals.events do %>
+            <div class="artwork-event">
+              <% artwork = List.first(@artworks[event.payload["object"]["id"]]) %>
+              <img class="mb-1" src="<%= artwork["imageUrl"] %>" />
+              <div class="mb-0_5 sans-2-medium"> <%= currency(event.payload["properties"]["buyer_total_cents"]) %> </div>
+              <div class="serif-2-semibold color-black60"> <%= artwork["artist_names"] %> </div>
+              <div class="serif-2-italic color-black60"> <%= artwork["title"] %> </div>
+              <div class="serif-2 color-black60"> <%= artwork["partner"]["name"] %> </div>
+              <div class="serif-2 color-black30"> <a href="<%= exchange_link(event.payload["object"]["id"]) %>"> <%= event.payload["properties"]["code"] %></a></div>
+            </div>
+          <% end %>
+          </section>
+        </section>
+      <% end %>
     </div>
     """
   end
@@ -66,8 +66,8 @@ defmodule AprWeb.OrderDashboardLive do
 
     {:ok,
      assign(socket,
-       approved_orders: %{events: [], totals: %{amount_cents: 0, commission_cents: 0}},
-       pending_approvals: %{events: [], totals: %{amount_cents: 0, commission_cents: 0}},
+       approved_orders: %{events: [], totals: %{amount_cents: 0, commission_cents: 0}, count: 0},
+       pending_approvals: %{events: [], totals: %{amount_cents: 0, commission_cents: 0}, count: 0},
        artworks: %{}
      )}
   end
@@ -94,7 +94,8 @@ defmodule AprWeb.OrderDashboardLive do
   defp aggregated_data(events) do
     %{
       events: events,
-      totals: Events.get_totals(events)
+      totals: Events.get_totals(events),
+      count: Enum.count(events)
     }
   end
 end
