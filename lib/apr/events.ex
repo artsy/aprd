@@ -75,17 +75,6 @@ defmodule Apr.Events do
     |> Repo.insert()
   end
 
-  def get_order_events(status \\ "approved", day_threshold \\ 1) do
-    with events <- list_events(routing_key: "order.#{status}", day_threshold: day_threshold),
-         {:ok, artworks} <- fetch_artworks(events) do
-      {:ok, %{events: events, artworks: artworks, totals: get_totals(events)}}
-    else
-      # we can do lot better here, i think actual solution is to have get events return {:ok,...} {:error, ..} instead of doing assign
-      [] -> {:ok, events: [], totals: %{amount_cents: 0, commission_cents: 0}, artworks: %{}}
-      {:error, error} -> {:error, error}
-    end
-  end
-
   def fetch_artworks([]), do: []
 
   def fetch_artworks(order_events) do
