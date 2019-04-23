@@ -47,7 +47,7 @@ spec:
             valueFrom:
               configMapKeyRef:
                 name: nginx-config
-                key: default-websocket
+                key: default-websockets
         volumeMounts:
           - name: nginx-secrets
             mountPath: /etc/nginx/ssl
