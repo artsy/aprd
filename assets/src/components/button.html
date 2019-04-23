@@ -1,0 +1,91 @@
+<svelte:options tag="palette-button"/>
+
+<!-- This is temporary until I can figure out how to disable the shadow-dom -->
+<link rel="stylesheet" href="https://unpkg.com/@artsy/palette@4.10.0/dist/styles.css"/>
+<link rel="stylesheet" href="https://webfonts.artsy.net/all-webfonts.css"/>
+
+<script>
+    export let size = "medium"; // small, medium, large
+    export let variant = "primaryBlack"; // primaryBlack, primaryWhite, secondaryGray, secondaryOutline, noOutline
+    const sizeMap = {
+      small: '2',
+      medium: '3t',
+      large: '3t'
+    }
+    
+    $: classes = [size, variant, `sans-${sizeMap[size]}-medium`].join(' ')
+  </script>
+  
+  <button class={classes}><slot/></button>
+  
+  <style>
+    button {
+      border: 1px;
+      border-radius: 3px;
+    }
+    .small {
+      height: 26px;
+      padding-left: var(--space-1);
+      padding-right: var(--space-1);
+    }
+    .medium {
+      height: 41px;
+      padding-left: var(--space-2);
+      padding-right: var(--space-2);
+    }
+    .large {
+      height: 50px;
+      padding-left: var(--space-3);
+      padding-right: var(--space-3);
+    }
+    
+    .primaryBlack {
+      background-color: var(--color-black100);
+      border-color: var(--color-black100);
+      color: var(--color-white100);
+    }
+    .primaryBlack:hover {
+      background-color: var(--color-purple100);
+      border-color: var(--color-purple100);
+      color: var(--color-white100);
+    }
+    
+    .primaryWhite {
+      background-color: var(--color-white100);
+      border-color: var(--color-white100);
+      color: var(--color-black100);
+    }
+    .primaryWhite:hover {
+      background-color: var(--color-purple100);
+      border-color: var(--color-purple100);
+      color: var(--color-white100);
+    }
+    
+    .secondaryGray {
+      background-color: var(--color-black10);
+      border-color: var(--color-black10);
+      color: var(--color-black100);
+    }
+    .secondaryGray:hover {
+      background-color: var(--color-black30);
+      border-color: var(--color-black30);
+      color: var(--color-black100);
+    }
+    
+    .secondaryOutline {
+      background-color: var(--color-white100);
+      border-color: var(--color-black10);
+      color: var(--color-black100);
+    }
+    .secondaryOutline:hover {
+      background-color: var(--color-white100);
+      border-color: var(--color-black100);
+      color: var(--color-black100);
+    }
+    
+    .noOutline {
+      background-color: transparent;
+      border-color: transparent;
+      color: var(--color-black60);
+    }
+  </style>
