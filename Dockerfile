@@ -2,6 +2,8 @@ FROM bitwalker/alpine-elixir-phoenix:latest
 
 ARG SECRET_KEY_BASE
 
+RUN apk add yarn
+
 RUN mkdir /app
 ADD . /app
 WORKDIR /app
@@ -17,7 +19,7 @@ RUN mix do deps.get, deps.compile
 # Same with npm deps
 ADD assets/package.json assets/
 RUN cd assets && \
-    npm install
+    yarn install
 
 ADD . .
 
