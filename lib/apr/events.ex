@@ -41,14 +41,6 @@ defmodule Apr.Events do
       where: e.inserted_at > ago(^value, "day")
   end
 
-
-  def pending_approval_orders do
-    query = from e in Event,
-      where: e.routing_key == "order.pending_approval",
-      where: fragment("not exists (select 1 from events where payload->'object'->> 'id' = e0.payload->'object'->>'id')")
-    Repo.all(query)
-  end
-
   @doc """
   Gets a single event.
 
@@ -94,10 +86,9 @@ defmodule Apr.Events do
     end
   end
 
+  def fetch_artworks([]), do: []
 
-  defp fetch_artworks([]), do: []
-
-  defp fetch_artworks(order_events) do
+  def fetch_artworks(order_events) do
     Neuron.Config.set(url: Application.get_env(:apr, :metaphysics)[:url])
 
     order_id_artwork_ids =
@@ -155,7 +146,7 @@ defmodule Apr.Events do
     end
   end
 
-  defp get_totals(events) do
+  def get_totals(events) do
     events
     |> Enum.reduce(
       %{amount_cents: 0, commission_cents: 0},
@@ -166,5 +157,29 @@ defmodule Apr.Events do
         }
       end
     )
+  end
+
+  def pending_approval_orders do
+    query =
+      from e in Event,
+        where: e.routing_key == "order.pending_approval",
+        where:
+          fragment(
+            "e0.routing_key = (select distinct on (payload->'object'->> 'id') routing_key from events where payload->'object'->> 'id' = e0.payload->'object'->>'id' order by payload->'object'->> 'id', events.inserted_at)"
+          )
+
+    Repo.all(query)
+  end
+
+  def pending_offer_response_orders do
+    query =
+      from e in Event,
+        where: e.routing_key == "offer.pending_response",
+        where:
+          fragment(
+            "e0.routing_key = (select distinct on (payload->'object'->> 'id') routing_key from events where payload->'object'->> 'id' = e0.payload->'object'->>'id' order by payload->'object'->> 'id', events.inserted_at)"
+          )
+
+    Repo.all(query)
   end
 end
