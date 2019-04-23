@@ -1,0 +1,28 @@
+<svelte:options tag="palette-jumbo"/>
+
+<!-- This is temporary until I can figure out how to disable the shadow-dom -->
+<link rel="stylesheet" href="https://unpkg.com/@artsy/palette@4.10.0/dist/styles.css"/>
+<link rel="stylesheet" href="https://webfonts.artsy.net/all-webfonts.css"/>
+
+<script>
+  export let label;
+</script>
+
+<div class="flex flex-direction-column text-align-center">
+  <div class="sans-8"><slot/></div>
+  <span class="sans-3">{label}</span>
+</div>
+
+<style>
+.flex {
+  display: flex;
+}
+
+.flex-direction-column {
+  flex-direction: column;
+}
+
+.text-align-center {
+  text-align: center;
+}
+</style>

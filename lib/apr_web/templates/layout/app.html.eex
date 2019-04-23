@@ -9,11 +9,6 @@
     <link rel="stylesheet" href="https://webfonts.artsy.net/all-webfonts.css">
   </head>
   <body>
-    <header>
-      <section class="container">
-        <img class="logo" src="<%= Routes.static_path(@conn, "/images/APR.png") %>" alt="APR-Dashboard"/>
-      </section>
-    </header>
     <main role="main" class="container">
       <p class="alert alert-info" role="alert"><%= get_flash(@conn, :info) %></p>
       <p class="alert alert-danger" role="alert"><%= get_flash(@conn, :error) %></p>
