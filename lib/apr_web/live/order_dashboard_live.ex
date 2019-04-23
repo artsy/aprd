@@ -7,9 +7,9 @@ defmodule AprWeb.OrderDashboardLive do
     ~L"""
     <div class="main-live">
       <div class="main-controllers">
-        <button phx-click="today">Today</button>
-        <button phx-click="last_week">Last 7 Days</button>
-        <button phx-click="last_month">Last Month</button>
+        <palette-button phx-click="today">Today</palette-button>
+        <palette-button phx-click="last_week">Last 7 Days</palette-button>
+        <palette-button phx-click="last_month">Last Month</palette-button>
       </div>
       <section class="main-stats">
         <div class="flex flex-direction-column text-align-center">
