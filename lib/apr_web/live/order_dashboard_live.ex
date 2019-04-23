@@ -77,14 +77,12 @@ defmodule AprWeb.OrderDashboardLive do
   def handle_info(%{event: "new_event", payload: _event}, socket), do: repopulate(socket)
 
   defp repopulate(socket) do
-    with approved_orders_events <-
-           Events.list_events(routing_key: "order.approved", day_threshold: 1),
-         pending_approval_orders <- Events.pending_approval_orders(),
-         {:ok, artworks} <-
-           Events.fetch_artworks(approved_orders_events ++ pending_approval_orders) do
+    approved_order_events = Events.list_events(routing_key: "order.approved", day_threshold: 1)
+    pending_approval_orders = Events.pending_approval_orders()
+    with {:ok, artworks} <- Events.fetch_artworks(approved_order_events ++ pending_approval_orders) do
       {:noreply,
        assign(socket,
-         approved_orders: aggregated_data(approved_orders_events),
+         approved_orders: aggregated_data(approved_order_events),
          pending_approvals: aggregated_data(pending_approval_orders),
          artworks: artworks
        )}
