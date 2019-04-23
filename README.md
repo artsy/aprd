@@ -1,20 +1,52 @@
-# Apr
+# APRd (Artsy Real-time Dashboard) [![CircleCI](https://circleci.com/gh/artsy/apr-dashboard/tree/master.svg?style=svg)](https://circleci.com/gh/artsy/apr-dashboard/tree/master)
+APRd (aka. APR dashboard), is a real-time dashboard built in [Elixir](https://elixir-lang.org/) on [Phoenix Framework](https://phoenixframework.org/). For it's real-time dashboard it's using [Phoenix Live View](https://github.com/phoenixframework/phoenix_live_view) to be able to provide websocket based pages that can update in real-time based on updates on the server side.
 
-To start your Phoenix server:
+## Meta
 
-  * Install dependencies with `mix deps.get`
-  * Create and migrate your database with `mix ecto.setup`
-  * Install Node.js dependencies with `cd assets && npm install`
-  * Start Phoenix endpoint with `mix phx.server`
+* State: production
+* Production: https://aprd.artsy.net/dashboard
+* Staging: https://aprd-staging.artsy.net/dashboard
+* GitHub: https://github.com/artsy/apr-dashboard/
+* Point People: [@ashkan18][ashkan18], [@zephraph][zephraph]
 
-Now you can visit [`localhost:4000`](http://localhost:4000) from your browser.
 
-Ready to run in production? Please [check our deployment guides](https://hexdocs.pm/phoenix/deployment.html).
+## Deployment
+### Staging
+PRs merged to `master` are automatically deployed to staging by CI.
 
-## Learn more
+### Production
+Mention in #dev slack channel that you are going to deploy and then run:
+```
+hokusai pipeline promote --git-remote upstream
+```
+Assuming `upstream` points to Artsy's repository.
 
-  * Official website: http://www.phoenixframework.org/
-  * Guides: https://hexdocs.pm/phoenix/overview.html
-  * Docs: https://hexdocs.pm/phoenix
-  * Mailing list: http://groups.google.com/group/phoenix-talk
-  * Source: https://github.com/phoenixframework/phoenix
+
+## Setup
+
+* Fork the project to your GitHub account
+
+* Clone your fork:
+  ```
+  $ git clone git@github.com:your-github-username/apr-dashboard.git
+  ```
+* Install dependencies with `mix deps.get`
+* Create and migrate your database with `mix ecto.setup`
+* Install Node.js dependencies with `cd assets && npm install`
+* Copy `.env.example` to `.env`
+* We use [Phoenix Live View](https://github.com/phoenixframework/phoenix_live_view) for our real-time data presentation. Make sure to set `SECRET_SALT` in your `.env`. Generate a secret salt with:
+  * `mix phx.gen.secret 32`
+* Make set your RabbitMQ setting in `.env`
+* Start Phoenix endpoint with `mix phx.server`
+
+Now you can visit [`localhost:4000/dashboard`](http://localhost:4000/dashboard) from your browser.
+
+
+## Architecture
+APRd listens on RabbitMQ for different topics. Once it receives a new event, it will store a copy of that event locally in it's database so we can later process the data and provide detailed and aggregated data.
+
+Whenever we receive a new event, after storing the event locally, we use Phoenix's local PUB/SUB to broadcast we received an event. And then our websocket live views are listening on this internal PUB/SUB and they update the data on listening Webosckets reflecting the latest event updated.
+
+
+[ashkan18]: https://github.com/ashkan18
+[zephraph]: https://github.com/zephraph
