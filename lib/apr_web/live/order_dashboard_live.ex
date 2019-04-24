@@ -79,7 +79,9 @@ defmodule AprWeb.OrderDashboardLive do
   defp repopulate(socket) do
     approved_order_events = Events.list_events(routing_key: "order.approved", day_threshold: 1)
     pending_approval_orders = Events.pending_approval_orders()
-    with {:ok, artworks} <- Events.fetch_artworks(approved_order_events ++ pending_approval_orders) do
+
+    with {:ok, artworks} <-
+           Events.fetch_artworks(approved_order_events ++ pending_approval_orders) do
       {:noreply,
        assign(socket,
          approved_orders: aggregated_data(approved_order_events),
@@ -87,6 +89,7 @@ defmodule AprWeb.OrderDashboardLive do
          artworks: artworks
        )}
     else
+      [] -> {:noreply, socket}
       {:error, error} -> raise error
     end
   end

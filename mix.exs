@@ -45,10 +45,11 @@ defmodule Apr.MixProject do
       {:phoenix_live_view, github: "phoenixframework/phoenix_live_view"},
       {:gettext, "~> 0.11"},
       {:jason, "~> 1.0"},
+      {:joken, "~> 2.0"},
       {:plug_cowboy, "~> 2.0"},
-      {:basic_auth, "~> 2.2.2"},
       {:neuron, "~> 1.1.1"},
-      {:money, "~> 1.4"}
+      {:money, "~> 1.4"},
+      {:oauth2, "~> 1.0"}
     ]
   end
 

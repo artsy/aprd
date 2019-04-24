@@ -6,6 +6,6 @@ defmodule Apr.ViewHelper do
   def currency(amount, currency \\ :USD) do
     amount
     |> Money.new(currency)
-    |> Money.to_string
+    |> Money.to_string()
   end
 end

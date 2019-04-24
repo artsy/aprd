@@ -21,13 +21,6 @@ config :apr, AprWeb.Endpoint,
   ],
   check_origin: false
 
-config :apr,
-  authentication: [
-    username: System.get_env("AUTH_USER"),
-    password: System.get_env("AUTH_PASS"),
-    realm: System.get_env("AUTH_REALM")
-  ]
-
 config :apr, :metaphysics, url: System.get_env("METAPHYSICS_URL")
 config :apr, :exchange, url: System.get_env("EXCHANGE_URL")
 
@@ -47,6 +40,18 @@ config :phoenix, :json_library, Jason
 
 config :money,
   default_currency: :USD
+
+config :apr, ArtsyOAuth,
+  client_id: System.get_env("ARTSY_CLIENT_ID"),
+  client_secret: System.get_env("ARTSY_CLIENT_SECRET"),
+  jwt_aud: System.get_env("ARTSY_TOKEN_AUD"),
+  redirect_uri: Map.get(System.get_env(), "HOST", "http://localhost:4000") <> "/auth/callback",
+  site: System.get_env("ARTSY_URL"),
+  authorize_url: "/oauth2/authorize",
+  token_url: "/oauth2/access_token"
+
+config :joken,
+  default_signer: System.get_env("ARTSY_INTERNAL_SECRET")
 
 # Import environment specific config. This must remain at the bottom
 # of this file so it overrides the configuration defined above.
