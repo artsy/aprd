@@ -8,7 +8,6 @@ defmodule AprWeb.Router do
     plug Phoenix.LiveView.Flash
     plug :protect_from_forgery
     plug :put_secure_browser_headers
-    plug BasicAuth, use_config: {:apr, :authentication}
   end
 
   pipeline :api do
@@ -22,16 +21,11 @@ defmodule AprWeb.Router do
     get "/dashboard", PageController, :dashboard
   end
 
-  scope "/auth", OAuth2Example do
+  scope "/auth", AprWeb do
     pipe_through :browser
 
     get "/:provider", AuthController, :index
     get "/:provider/callback", AuthController, :callback
     delete "/logout", AuthController, :delete
   end
-
-  # Other scopes may use custom stacks.
-  # scope "/api", AprWeb do
-  #   pipe_through :api
-  # end
 end

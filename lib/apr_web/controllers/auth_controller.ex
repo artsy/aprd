@@ -42,26 +42,14 @@ defmodule AprWeb.AuthController do
     |> redirect(to: "/")
   end
 
-  defp authorize_url!("github"),   do: GitHub.authorize_url!
-  defp authorize_url!("google"),   do: Google.authorize_url!(scope: "https://www.googleapis.com/auth/userinfo.email")
-  defp authorize_url!("facebook"), do: Facebook.authorize_url!(scope: "user_photos")
+  defp authorize_url!("artsy"),   do: Artsy.authorize_url!
   defp authorize_url!(_), do: raise "No matching provider available"
 
   defp get_token!("artsy", code),   do: GitHub.get_token!(code: code)
-  defp get_token!("google", code),   do: Google.get_token!(code: code)
-  defp get_token!("facebook", code), do: Facebook.get_token!(code: code)
   defp get_token!(_, _), do: raise "No matching provider available"
 
-  defp get_user!("github", client) do
-    %{body: user} = OAuth2.Client.get!(client, "/user")
+  defp get_user!("artsy", client) do
+    %{body: user} = OAuth2.Client.get!(client, "/api/current_user'")
     %{name: user["name"], avatar: user["avatar_url"]}
-  end
-  defp get_user!("google", client) do
-    %{body: user} = OAuth2.Client.get!(client, "https://www.googleapis.com/plus/v1/people/me/openIdConnect")
-    %{name: user["name"], avatar: user["picture"]}
-  end
-  defp get_user!("facebook", client) do
-    %{body: user} = OAuth2.Client.get!(client, "/me", fields: "id,name")
-    %{name: user["name"], avatar: "https://graph.facebook.com/#{user["id"]}/picture"}
   end
 end

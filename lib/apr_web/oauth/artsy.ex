@@ -6,27 +6,20 @@ defmodule Artsy do
 
   alias OAuth2.Strategy.AuthCode
 
-  defp config do
-    [strategy: GitHub,
-     site: "https://api.github.com",
-     authorize_url: "https://github.com/login/oauth/authorize",
-     token_url: "https://github.com/login/oauth/access_token"]
-  end
-
   # Public API
 
   def client do
-    Application.get_env(:apr, GitHub)
-    |> Keyword.merge(config())
+    Application.get_env(:apr, ArtsyOAuth)
+    |> IO.inspect
     |> OAuth2.Client.new()
   end
 
-  def authorize_url!(params \\ []) do
-    OAuth2.Client.authorize_url!(client(), params)
+  def authorize_url! do
+    OAuth2.Client.authorize_url!(client(), scope: "offline_access")
   end
 
   def get_token!(params \\ [], headers \\ []) do
-    OAuth2.Client.get_token!(client(), Keyword.merge(params, client_secret: client().client_secret))
+    OAuth2.Client.get_token!(client(), Keyword.merge(params, client_secret: client().client_secret, scope: "offline_access", grant_type: "authorization_code"))
   end
 
   # Strategy Callbacks
