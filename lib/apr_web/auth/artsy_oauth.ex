@@ -1,4 +1,4 @@
-defmodule Artsy do
+defmodule ArtsyOauth do
   @moduledoc """
   An OAuth2 strategy for Artsy.
   """
@@ -10,7 +10,6 @@ defmodule Artsy do
 
   def client do
     Application.get_env(:apr, ArtsyOAuth)
-    |> IO.inspect
     |> OAuth2.Client.new()
   end
 
@@ -19,7 +18,14 @@ defmodule Artsy do
   end
 
   def get_token!(params \\ [], headers \\ []) do
-    OAuth2.Client.get_token!(client(), Keyword.merge(params, client_secret: client().client_secret, scope: "offline_access", grant_type: "authorization_code"))
+    OAuth2.Client.get_token!(
+      client(),
+      Keyword.merge(params,
+        client_secret: client().client_secret,
+        scope: "offline_access",
+        grant_type: "authorization_code"
+      )
+    )
   end
 
   # Strategy Callbacks

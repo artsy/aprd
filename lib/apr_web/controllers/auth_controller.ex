@@ -6,7 +6,7 @@ defmodule AprWeb.AuthController do
   based on the chosen strategy.
   """
   def index(conn, _params) do
-    redirect conn, external: authorize_url!("artsy")
+    redirect(conn, external: ArtsyOauth.authorize_url!())
   end
 
   def delete(conn, _params) do
@@ -24,10 +24,10 @@ defmodule AprWeb.AuthController do
   """
   def callback(conn, %{"code" => code}) do
     # Exchange an auth code for an access token
-    client = get_token!("artsy", code)
+    client = ArtsyOauth.get_token!(code: code)
 
     # Request the user's data with the access token
-    #user = get_user!("artsy", client)
+    # user = get_user!("artsy", client)
 
     # Store the user in the session under `:current_user` and redirect to /.
     # In most cases, we'd probably just store the user's ID that can be used
@@ -36,14 +36,9 @@ defmodule AprWeb.AuthController do
     #
     # If you need to make additional resource requests, you may want to store
     # the access token as well.
+    {:ok, %{"access_token" => access_token}} = Jason.decode(client.token.access_token)
     conn
-    |> put_session(:access_token, client.token.access_token)
+    |> put_session(:access_token, access_token)
     |> redirect(to: "/dashboard")
   end
-
-  defp authorize_url!("artsy"),   do: Artsy.authorize_url!
-  defp authorize_url!(_), do: raise "No matching provider available"
-
-  defp get_token!("artsy", code),   do: Artsy.get_token!(code: code)
-  defp get_token!(_, _), do: raise "No matching provider available"
 end
