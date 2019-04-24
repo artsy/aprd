@@ -5,8 +5,8 @@ defmodule AprWeb.AuthController do
   This action is reached via `/auth/:provider` and redirects to the OAuth2 provider
   based on the chosen strategy.
   """
-  def index(conn, %{"provider" => provider}) do
-    redirect conn, external: authorize_url!(provider)
+  def index(conn, _params) do
+    redirect conn, external: authorize_url!("artsy")
   end
 
   def delete(conn, _params) do
@@ -22,12 +22,12 @@ defmodule AprWeb.AuthController do
   be used to request an access token. The access token will then be used to
   access protected resources on behalf of the user.
   """
-  def callback(conn, %{"provider" => provider, "code" => code}) do
+  def callback(conn, %{"code" => code}) do
     # Exchange an auth code for an access token
-    client = get_token!(provider, code)
+    client = get_token!("artsy", code)
 
     # Request the user's data with the access token
-    user = get_user!(provider, client)
+    #user = get_user!("artsy", client)
 
     # Store the user in the session under `:current_user` and redirect to /.
     # In most cases, we'd probably just store the user's ID that can be used
@@ -37,19 +37,13 @@ defmodule AprWeb.AuthController do
     # If you need to make additional resource requests, you may want to store
     # the access token as well.
     conn
-    |> put_session(:current_user, user)
     |> put_session(:access_token, client.token.access_token)
-    |> redirect(to: "/")
+    |> redirect(to: "/dashboard")
   end
 
   defp authorize_url!("artsy"),   do: Artsy.authorize_url!
   defp authorize_url!(_), do: raise "No matching provider available"
 
-  defp get_token!("artsy", code),   do: GitHub.get_token!(code: code)
+  defp get_token!("artsy", code),   do: Artsy.get_token!(code: code)
   defp get_token!(_, _), do: raise "No matching provider available"
-
-  defp get_user!("artsy", client) do
-    %{body: user} = OAuth2.Client.get!(client, "/api/current_user'")
-    %{name: user["name"], avatar: user["avatar_url"]}
-  end
 end

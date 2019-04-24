@@ -44,7 +44,7 @@ config :money,
 config :apr, ArtsyOAuth,
   client_id: System.get_env("ARTSY_CLIENT_ID"),
   client_secret: System.get_env("ARTSY_CLIENT_SECRET"),
-  redirect_url: "http://localhost:4000/auth/callback",
+  redirect_uri: "http://localhost:4000/auth/artsy/callback",
   site: "https://stagingapi.artsy.net",
   authorize_url: "/oauth2/authorize",
   token_url: "/oauth2/access_token"
