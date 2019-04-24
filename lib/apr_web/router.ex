@@ -19,7 +19,7 @@ defmodule AprWeb.Router do
 
     get "/", AuthController, :index
     get "/callback", AuthController, :callback
-    delete "/logout", AuthController, :delete
+    get "/logout", AuthController, :delete
   end
 
   scope "/", AprWeb do
