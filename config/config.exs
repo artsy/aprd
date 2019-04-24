@@ -44,11 +44,11 @@ config :money,
 config :apr, ArtsyOAuth,
   client_id: System.get_env("ARTSY_CLIENT_ID"),
   client_secret: System.get_env("ARTSY_CLIENT_SECRET"),
-  jwt_aud: System.get_env("ARTSY_TOKEN_AUD")
-  redirect_uri: Map.fetch!(System.get_env(), "HOST", "http://localhost:4000") <> "/auth/callback",
+  jwt_aud: System.get_env("ARTSY_TOKEN_AUD"),
+  redirect_uri: Map.get(System.get_env(), "HOST", "http://localhost:4000") <> "/auth/callback",
   site: System.get_env("ARTSY_URL"),
   authorize_url: "/oauth2/authorize",
-  token_url: "/oauth2/access_token",
+  token_url: "/oauth2/access_token"
 
 config :joken,
   default_signer: System.get_env("ARTSY_INTERNAL_SECRET")
