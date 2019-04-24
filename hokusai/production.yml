@@ -5,7 +5,7 @@ metadata:
   name: aprd-web
   namespace: default
 spec:
-  replicas: 2
+  replicas: 1
   strategy:
     rollingUpdate:
       maxSurge: 1
