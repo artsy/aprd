@@ -166,7 +166,27 @@ defmodule Apr.Events do
         where: e.routing_key == "offer.pending_response",
         where:
           fragment(
-            "e0.routing_key = (select distinct on (payload->'object'->> 'id') routing_key from events where payload->'object'->> 'id' = e0.payload->'object'->>'id' order by payload->'object'->> 'id', events.inserted_at)"
+            "e0.routing_key = (
+              select distinct on (payload->'object'->> 'id') routing_key
+              from events as last_event
+              where last_event.payload->'object'->> 'id' = e0.payload->'object'->>'id'
+              order by last_event.payload->'object'->> 'id', last_event.inserted_at desc)"
+          )
+
+    Repo.all(query)
+  end
+
+  def active_orders do
+    query =
+      from e in Event,
+        where: e.routing_key == "order.submitted",
+        where:
+          fragment(
+            "e0.routing_key = (
+              select distinct on (payload->'object'->> 'id') routing_key
+              from events as last_event
+              where last_event.payload->'object'->> 'id' = e0.payload->'object'->> 'id'
+              order by last_event.payload->'object'->> 'id', last_event.inserted_at desc)"
           )
 
     Repo.all(query)
