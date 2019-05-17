@@ -16,7 +16,7 @@ defmodule AprWeb.OrderDashboardLive do
         <palette-jumbo label="Pending Approval GMV">
           <%= currency(@pending_approvals.totals.amount_cents) %>
         </palette-jumbo>
-        <palette-jumbo label="Pending Approval Commision">
+        <palette-jumbo label="Pending Approval Commission">
           <%= currency(@pending_approvals.totals.commission_cents) %>
         </palette-jumbo>
       </section>
