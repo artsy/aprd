@@ -41,14 +41,15 @@ config :phoenix, :json_library, Jason
 config :money,
   default_currency: :USD
 
-config :apr, ArtsyOAuth,
+config :artsy_auth_ex,
+  token_aud: System.get_env("ARTSY_TOKEN_AUD"),
   client_id: System.get_env("ARTSY_CLIENT_ID"),
   client_secret: System.get_env("ARTSY_CLIENT_SECRET"),
-  jwt_aud: System.get_env("ARTSY_TOKEN_AUD"),
   redirect_uri: Map.get(System.get_env(), "HOST_URL", "http://localhost:4000") <> "/auth/callback",
   site: System.get_env("ARTSY_URL"),
   authorize_url: "/oauth2/authorize",
-  token_url: "/oauth2/access_token"
+  token_url: "/oauth2/access_token",
+  allowed_roles: ["sales_admin"]
 
 config :joken,
   default_signer: System.get_env("ARTSY_INTERNAL_SECRET")
