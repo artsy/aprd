@@ -4,6 +4,6 @@ defmodule AprWeb.PageControllerTest do
   test "GET /", %{conn: conn} do
     conn = get(conn, "/")
 
-    assert html_response(conn, 302) =~ "redirected"
+    assert response(conn, 302) =~ "redirected"
   end
 end
