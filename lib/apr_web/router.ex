@@ -10,8 +10,8 @@ defmodule AprWeb.Router do
     plug :put_secure_browser_headers
   end
 
-  pipeline :auth do
-    plug AprWeb.AuthPlug
+  pipeline :authenticated do
+    plug Artsy.Auth.Plug
   end
 
   scope "/auth", AprWeb do
@@ -19,13 +19,13 @@ defmodule AprWeb.Router do
 
     get "/", AuthController, :index
     get "/callback", AuthController, :callback
-    get "/logout", AuthController, :delete
+    get "/signout", AuthController, :delete
   end
 
   scope "/", AprWeb do
-    pipe_through [:browser, :auth]
+    pipe_through [:browser, :authenticated]
 
-    get "/", PageController, :index
+    get "/", PageController, :dashboard
     get "/dashboard", PageController, :dashboard
   end
 end
