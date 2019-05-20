@@ -188,7 +188,8 @@ defmodule Apr.Events do
               where last_event.payload->'object'->> 'id' = e0.payload->'object'->> 'id'
               order by last_event.payload->'object'->> 'id', last_event.inserted_at desc)"
           )
-
-    Repo.all(query)
+    query
+    |> order_by(desc: :inserted_at)
+    |> Repo.all()
   end
 end
