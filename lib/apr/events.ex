@@ -141,7 +141,7 @@ defmodule Apr.Events do
       %{amount_cents: 0, commission_cents: 0},
       fn e, acc ->
         %{
-          amount_cents: acc.amount_cents + e.payload["properties"]["buyer_total_cents"],
+          amount_cents: acc.amount_cents + e.payload["properties"]["items_total_cents"],
           commission_cents: acc.commission_cents + e.payload["properties"]["commission_fee_cents"]
         }
       end
