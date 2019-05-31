@@ -19,6 +19,14 @@ defmodule AprWeb.OrderDashboardLive do
         <palette-jumbo label="Pending Approval Commission">
           <%= currency(@active_orders.totals.commission_cents) %>
         </palette-jumbo>
+
+        <palette-jumbo label="Approved Yesterday GMV">
+          <%= currency(@approved_yesterday.totals.amount_cents) %>
+        </palette-jumbo>
+
+        <palette-jumbo label="Approved Today GMV">
+          <%= currency(@approved_today.totals.amount_cents) %>
+        </palette-jumbo>
       </section>
       <section class="event">
         <h2 class="sans-6"> Approved (<%= @approved_orders.count %>) </h2>
@@ -68,6 +76,8 @@ defmodule AprWeb.OrderDashboardLive do
      assign(socket,
        approved_orders: %{events: [], totals: %{amount_cents: 0, commission_cents: 0}, count: 0},
        active_orders: %{events: [], totals: %{amount_cents: 0, commission_cents: 0}, count: 0},
+       approved_yesterday: %{events: [], totals: %{amount_cents: 0, commission_cents: 0}, count: 0},
+       approved_today: %{events: [], totals: %{amount_cents: 0, commission_cents: 0}, count: 0},
        artworks: %{}
      )}
   end
@@ -78,14 +88,17 @@ defmodule AprWeb.OrderDashboardLive do
 
   defp repopulate(socket) do
     approved_order_events = Events.list_events(routing_key: "order.approved", day_threshold: 1)
+    approved_yesterday = Apr.Events.list_events(routing_key: "order.approved", start_date: Date.add(Date.utc_today, -1), end_date: Date.utc_today)
+    approved_today = Apr.Events.list_events(routing_key: "order.approved", start_date: Date.utc_today)
     active_orders = Events.active_orders()
-
     with {:ok, artworks} <-
            Events.fetch_artworks(approved_order_events ++ active_orders) do
       {:noreply,
        assign(socket,
          approved_orders: aggregated_data(approved_order_events),
          active_orders: aggregated_data(active_orders),
+         approved_today: aggregated_data(approved_today),
+         approved_yesterday: aggregated_data(approved_yesterday),
          artworks: artworks
        )}
     else
