@@ -41,6 +41,18 @@ defmodule Apr.Events do
       where: e.inserted_at > ago(^value, "day")
   end
 
+  defp event_query({:start_date, value}, query) do
+    {:ok, datetime} = NaiveDateTime.new(value, ~T[05:00:00])
+    from e in query,
+      where: e.inserted_at >= ^datetime
+  end
+
+  defp event_query({:end_date, value}, query) do
+    {:ok, datetime} = NaiveDateTime.new(value, ~T[05:00:00])
+    from e in query,
+      where: e.inserted_at < ^datetime
+  end
+
   @doc """
   Gets a single event.
 
@@ -146,34 +158,6 @@ defmodule Apr.Events do
         }
       end
     )
-  end
-
-  def pending_approval_orders do
-    query =
-      from e in Event,
-        where: e.routing_key == "order.pending_approval",
-        where:
-          fragment(
-            "e0.routing_key = (select distinct on (payload->'object'->> 'id') routing_key from events where payload->'object'->> 'id' = e0.payload->'object'->>'id' order by payload->'object'->> 'id', events.inserted_at)"
-          )
-
-    Repo.all(query)
-  end
-
-  def pending_offer_response_orders do
-    query =
-      from e in Event,
-        where: e.routing_key == "offer.pending_response",
-        where:
-          fragment(
-            "e0.routing_key = (
-              select distinct on (payload->'object'->> 'id') routing_key
-              from events as last_event
-              where last_event.payload->'object'->> 'id' = e0.payload->'object'->>'id'
-              order by last_event.payload->'object'->> 'id', last_event.inserted_at desc)"
-          )
-
-    Repo.all(query)
   end
 
   def active_orders do
