@@ -21,12 +21,11 @@ defmodule AprWeb.OrderDashboardLive do
         </palette-jumbo>
       </section>
       <section class="main-stats">
-        <palette-jumbo label="Yesterday's GMV">
-          <%= currency(@approved_yesterday.totals.amount_cents) %>
-        </palette-jumbo>
-
         <palette-jumbo label="Today's GMV">
           <%= currency(@approved_today.totals.amount_cents) %>
+        </palette-jumbo>
+        <palette-jumbo label="Yesterday's GMV">
+          <%= currency(@approved_yesterday.totals.amount_cents) %>
         </palette-jumbo>
       </section>
       <section class="stats-details">
