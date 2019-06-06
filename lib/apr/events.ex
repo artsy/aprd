@@ -42,15 +42,13 @@ defmodule Apr.Events do
   end
 
   defp event_query({:start_date, value}, query) do
-    {:ok, datetime} = NaiveDateTime.new(value, ~T[05:00:00])
     from e in query,
-      where: e.inserted_at >= ^datetime
+      where: fragment("?::date", e.inserted_at) >= ^value
   end
 
   defp event_query({:end_date, value}, query) do
-    {:ok, datetime} = NaiveDateTime.new(value, ~T[05:00:00])
     from e in query,
-      where: e.inserted_at < ^datetime
+      where: fragment("?::date", e.inserted_at) < ^value
   end
 
   @doc """

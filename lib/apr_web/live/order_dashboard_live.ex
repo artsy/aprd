@@ -27,6 +27,9 @@ defmodule AprWeb.OrderDashboardLive do
         <palette-jumbo label="Yesterday's GMV">
           <%= currency(@approved_yesterday.totals.amount_cents) %>
         </palette-jumbo>
+        <palette-jumbo label="Current Month's GMV">
+          <%= currency(@current_month.totals.amount_cents) %>
+        </palette-jumbo>
       </section>
       <section class="stats-details">
         <section class="event">
@@ -80,6 +83,7 @@ defmodule AprWeb.OrderDashboardLive do
        active_orders: %{events: [], totals: %{amount_cents: 0, commission_cents: 0}, count: 0},
        approved_yesterday: %{events: [], totals: %{amount_cents: 0, commission_cents: 0}, count: 0},
        approved_today: %{events: [], totals: %{amount_cents: 0, commission_cents: 0}, count: 0},
+       current_month: %{events: [], totals: %{amount_cents: 0, commission_cents: 0}, count: 0},
        artworks: %{}
      )}
   end
@@ -89,9 +93,11 @@ defmodule AprWeb.OrderDashboardLive do
   def handle_info(%{event: "new_event", payload: _event}, socket), do: repopulate(socket)
 
   defp repopulate(socket) do
+    nyc_time = NaiveDateTime.add(NaiveDateTime.utc_now, -4 * 60 * 60, :second)
     approved_order_events = Events.list_events(routing_key: "order.approved", day_threshold: 1)
-    approved_yesterday = Apr.Events.list_events(routing_key: "order.approved", start_date: Date.add(Date.utc_today, -1), end_date: Date.utc_today)
-    approved_today = Apr.Events.list_events(routing_key: "order.approved", start_date: Date.utc_today)
+    approved_yesterday = Apr.Events.list_events(routing_key: "order.approved", start_date: Date.add(nyc_time, -1), end_date: NaiveDateTime.to_date(nyc_time))
+    approved_today = Apr.Events.list_events(routing_key: "order.approved", start_date: NaiveDateTime.to_date(nyc_time))
+    current_month = Apr.Events.list_events(routing_key: "order.approved", start_date: %{NaiveDateTime.to_date(nyc_time) | day: 1})
     active_orders = Events.active_orders()
     with {:ok, artworks} <-
            Events.fetch_artworks(approved_order_events ++ active_orders) do
@@ -101,6 +107,7 @@ defmodule AprWeb.OrderDashboardLive do
          active_orders: aggregated_data(active_orders),
          approved_today: aggregated_data(approved_today),
          approved_yesterday: aggregated_data(approved_yesterday),
+         current_month: aggregated_data(current_month),
          artworks: artworks
        )}
     else
