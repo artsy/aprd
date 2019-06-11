@@ -27,15 +27,18 @@ spec:
         image: 585031190124.dkr.ecr.us-east-1.amazonaws.com/aprd:production
         imagePullPolicy: Always
         ports:
-        - containerPort: 8080
+        - name: aprd-http
+          containerPort: 8080
       - name: aprd-nginx
         image: artsy/docker-nginx:1.14.2
         ports:
-          - containerPort: 80
-          - containerPort: 8443
+          - name: nginx-http
+            containerPort: 80
+          - name: nginx-https
+            containerPort: 8443
         readinessProbe:
           tcpSocket:
-            port: 80
+            port: nginx-http
           initialDelaySeconds: 5
           periodSeconds: 15
           timeoutSeconds: 10
@@ -103,11 +106,11 @@ spec:
   - port: 80
     protocol: TCP
     name: http
-    targetPort: 80
+    targetPort: nginx-http
   - port: 443
     protocol: TCP
     name: https
-    targetPort: 8443
+    targetPort: nginx-https
   selector:
     app: aprd
     layer: application
