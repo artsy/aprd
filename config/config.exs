@@ -8,7 +8,12 @@
 use Mix.Config
 
 config :apr,
-  ecto_repos: [Apr.Repo]
+  ecto_repos: [Apr.Repo],
+  gravity_api: Gravity
+
+config :apr, Gravity,
+  api_url: System.get_env("GRAVITY_API_URL") || "https://stagingapi.artsy.net",
+  api_token: System.get_env("GRAVITY_API_TOKEN")
 
 # Configures the endpoint
 config :apr, AprWeb.Endpoint,

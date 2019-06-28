@@ -81,3 +81,31 @@ section.artworks {
   height: 300px;
   padding: 10px;
 }
+
+input[type=text] {
+  width: 100%;
+  padding: 12px 20px;
+  margin: 8px 0;
+  display: inline-block;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-sizing: border-box;
+}
+
+.partnerItem {
+  width: 100%;
+  padding: 5px;
+  font-size: 14;
+}
+
+.partnerItem:hover {
+  font-weight: bold;
+  cursor: pointer;
+  border: 1px solid #444444
+}
+
+.autocomplete{
+  width: 90%;
+  margin: 20px;
+}
+
