@@ -5,6 +5,7 @@
 html, body {
   margin: 0;
 }
+a { color: inherit; } 
 
 /* START:Atoms... maybe move to palette? */
 
@@ -92,16 +93,15 @@ input[type=text] {
   box-sizing: border-box;
 }
 
-.partnerItem {
+.autocompleteItem {
   width: 100%;
   padding: 5px;
   font-size: 14;
 }
 
-.partnerItem:hover {
+.autocompleteItem:hover {
   font-weight: bold;
   cursor: pointer;
-  border: 1px solid #444444
 }
 
 .autocomplete{
