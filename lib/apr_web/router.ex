@@ -27,5 +27,6 @@ defmodule AprWeb.Router do
 
     get "/", PageController, :dashboard
     get "/dashboard", PageController, :dashboard
+    live "/partner_selection", OrderByPartner, session: [:access_token]
   end
 end
