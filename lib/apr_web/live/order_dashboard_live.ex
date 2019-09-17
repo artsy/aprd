@@ -21,14 +21,25 @@ defmodule AprWeb.OrderDashboardLive do
         </palette-jumbo>
       </section>
       <section class="main-stats">
-        <palette-jumbo label="Today's GMV">
-          <%= currency(@approved_today.totals.amount_cents) %>
+        <palette-jumbo label="Today's USD GMV">
+          <%= currency(@approved_today_usd.totals.amount_cents) %>
         </palette-jumbo>
-        <palette-jumbo label="Yesterday's GMV">
-          <%= currency(@approved_yesterday.totals.amount_cents) %>
+        <palette-jumbo label="Yesterday's USD GMV">
+          <%= currency(@approved_yesterday_usd.totals.amount_cents) %>
         </palette-jumbo>
-        <palette-jumbo label="Current Month's GMV">
-          <%= currency(@current_month.totals.amount_cents) %>
+        <palette-jumbo label="Current Month's USD GMV">
+          <%= currency(@current_month_usd.totals.amount_cents) %>
+        </palette-jumbo>
+      </section>
+      <section class="main-stats">
+        <palette-jumbo label="Today's GBP GMV">
+          <%= currency(@approved_today_gbp.totals.amount_cents, "GBP") %>
+        </palette-jumbo>
+        <palette-jumbo label="Yesterday's GBP GMV">
+          <%= currency(@approved_yesterday_gbp.totals.amount_cents, "GBP") %>
+        </palette-jumbo>
+        <palette-jumbo label="Current Month's GBP GMV">
+          <%= currency(@current_month_gbp.totals.amount_cents, "GBP") %>
         </palette-jumbo>
       </section>
       <section class="stats-details">
@@ -81,9 +92,12 @@ defmodule AprWeb.OrderDashboardLive do
      assign(socket,
        approved_orders: %{events: [], totals: %{amount_cents: 0, commission_cents: 0}, count: 0},
        active_orders: %{events: [], totals: %{amount_cents: 0, commission_cents: 0}, count: 0},
-       approved_yesterday: %{events: [], totals: %{amount_cents: 0, commission_cents: 0}, count: 0},
-       approved_today: %{events: [], totals: %{amount_cents: 0, commission_cents: 0}, count: 0},
-       current_month: %{events: [], totals: %{amount_cents: 0, commission_cents: 0}, count: 0},
+       approved_yesterday_usd: %{events: [], totals: %{amount_cents: 0, commission_cents: 0}, count: 0},
+       approved_today_usd: %{events: [], totals: %{amount_cents: 0, commission_cents: 0}, count: 0},
+       current_month_usd: %{events: [], totals: %{amount_cents: 0, commission_cents: 0}, count: 0},
+       approved_yesterday_gbp: %{events: [], totals: %{amount_cents: 0, commission_cents: 0}, count: 0},
+       approved_today_gbp: %{events: [], totals: %{amount_cents: 0, commission_cents: 0}, count: 0},
+       current_month_gbp: %{events: [], totals: %{amount_cents: 0, commission_cents: 0}, count: 0},
        artworks: %{}
      )}
   end
@@ -95,9 +109,12 @@ defmodule AprWeb.OrderDashboardLive do
   defp repopulate(socket) do
     nyc_time = NaiveDateTime.add(NaiveDateTime.utc_now, -4 * 60 * 60, :second)
     approved_order_events = Events.list_events(routing_key: "order.approved", day_threshold: 1)
-    approved_yesterday = Apr.Events.list_events(routing_key: "order.approved", start_date: Date.add(nyc_time, -1), end_date: NaiveDateTime.to_date(nyc_time))
-    approved_today = Apr.Events.list_events(routing_key: "order.approved", start_date: NaiveDateTime.to_date(nyc_time))
-    current_month = Apr.Events.list_events(routing_key: "order.approved", start_date: %{NaiveDateTime.to_date(nyc_time) | day: 1})
+    approved_yesterday_usd = Events.list_events(routing_key: "order.approved", payload: %{properties: %{currency_code: "USD"}}, start_date: Date.add(nyc_time, -1), end_date: NaiveDateTime.to_date(nyc_time))
+    approved_today_usd = Events.list_events(routing_key: "order.approved", payload: %{properties: %{currency_code: "USD"}}, start_date: NaiveDateTime.to_date(nyc_time))
+    current_month_usd = Events.list_events(routing_key: "order.approved", payload: %{properties: %{currency_code: "USD"}}, start_date: %{NaiveDateTime.to_date(nyc_time) | day: 1})
+    approved_yesterday_gbp = Events.list_events(routing_key: "order.approved", payload: %{properties: %{currency_code: "GBP"}}, start_date: Date.add(nyc_time, -1), end_date: NaiveDateTime.to_date(nyc_time))
+    approved_today_gbp = Events.list_events(routing_key: "order.approved", payload: %{properties: %{currency_code: "GBP"}}, start_date: NaiveDateTime.to_date(nyc_time))
+    current_month_gbp = Events.list_events(routing_key: "order.approved", payload: %{properties: %{currency_code: "GBP"}}, start_date: %{NaiveDateTime.to_date(nyc_time) | day: 1})
     active_orders = Events.active_orders()
     with {:ok, artworks} <-
            Events.fetch_artworks(approved_order_events ++ active_orders) do
@@ -105,9 +122,12 @@ defmodule AprWeb.OrderDashboardLive do
        assign(socket,
          approved_orders: aggregated_data(approved_order_events),
          active_orders: aggregated_data(active_orders),
-         approved_today: aggregated_data(approved_today),
-         approved_yesterday: aggregated_data(approved_yesterday),
-         current_month: aggregated_data(current_month),
+         approved_today_usd: aggregated_data(approved_today_usd),
+         approved_yesterday_usd: aggregated_data(approved_yesterday_usd),
+         current_month_usd: aggregated_data(current_month_usd),
+         approved_today_gbp: aggregated_data(approved_today_gbp),
+         approved_yesterday_gbp: aggregated_data(approved_yesterday_gbp),
+         current_month_gbp: aggregated_data(current_month_gbp),
          artworks: artworks
        )}
     else
