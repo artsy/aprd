@@ -106,31 +106,86 @@ defmodule AprWeb.OrderDashboardLive do
 
   def handle_info(%{event: "new_event", payload: _event}, socket), do: repopulate(socket)
 
-  defp repopulate(socket) do
-    nyc_time = NaiveDateTime.add(NaiveDateTime.utc_now, -4 * 60 * 60, :second)
+  def handle_info(:usd_numbers, socket) do
+    nyc_time = NaiveDateTime.add(NaiveDateTime.utc_now(), -4 * 60 * 60, :second)
+
+    approved_yesterday_usd =
+      Events.list_events(
+        routing_key: "order.approved",
+        payload: %{properties: %{currency_code: "USD"}},
+        start_date: Date.add(nyc_time, -1),
+        end_date: NaiveDateTime.to_date(nyc_time)
+      )
+
+    approved_today_usd =
+      Events.list_events(
+        routing_key: "order.approved",
+        payload: %{properties: %{currency_code: "USD"}},
+        start_date: NaiveDateTime.to_date(nyc_time)
+      )
+
+    current_month_usd =
+      Events.list_events(
+        routing_key: "order.approved",
+        payload: %{properties: %{currency_code: "USD"}},
+        start_date: %{NaiveDateTime.to_date(nyc_time) | day: 1}
+      )
+
+    {:noreply,
+     assign(socket,
+       approved_today_usd: aggregated_data(approved_today_usd),
+       approved_yesterday_usd: aggregated_data(approved_yesterday_usd),
+       current_month_usd: aggregated_data(current_month_usd)
+     )}
+  end
+
+  def handle_info(:gbp_numbers, socket) do
+    nyc_time = NaiveDateTime.add(NaiveDateTime.utc_now(), -4 * 60 * 60, :second)
+
+    approved_yesterday_gbp =
+      Events.list_events(
+        routing_key: "order.approved",
+        payload: %{properties: %{currency_code: "GBP"}},
+        start_date: Date.add(nyc_time, -1),
+        end_date: NaiveDateTime.to_date(nyc_time)
+      )
+
+    approved_today_gbp =
+      Events.list_events(
+        routing_key: "order.approved",
+        payload: %{properties: %{currency_code: "GBP"}},
+        start_date: NaiveDateTime.to_date(nyc_time)
+      )
+
+    current_month_gbp =
+      Events.list_events(
+        routing_key: "order.approved",
+        payload: %{properties: %{currency_code: "GBP"}},
+        start_date: %{NaiveDateTime.to_date(nyc_time) | day: 1}
+      )
+
+    {:noreply,
+     assign(socket,
+       approved_today_gbp: aggregated_data(approved_today_gbp),
+       approved_yesterday_gbp: aggregated_data(approved_yesterday_gbp),
+       current_month_gbp: aggregated_data(current_month_gbp)
+     )}
+  end
+
+  def handle_info(:active_pending_orders, socket) do
     approved_order_events = Events.list_events(routing_key: "order.approved", day_threshold: 1)
-    approved_yesterday_usd = Events.list_events(routing_key: "order.approved", payload: %{properties: %{currency_code: "USD"}}, start_date: Date.add(nyc_time, -1), end_date: NaiveDateTime.to_date(nyc_time))
-    approved_today_usd = Events.list_events(routing_key: "order.approved", payload: %{properties: %{currency_code: "USD"}}, start_date: NaiveDateTime.to_date(nyc_time))
-    current_month_usd = Events.list_events(routing_key: "order.approved", payload: %{properties: %{currency_code: "USD"}}, start_date: %{NaiveDateTime.to_date(nyc_time) | day: 1})
-    approved_yesterday_gbp = Events.list_events(routing_key: "order.approved", payload: %{properties: %{currency_code: "GBP"}}, start_date: Date.add(nyc_time, -1), end_date: NaiveDateTime.to_date(nyc_time))
-    approved_today_gbp = Events.list_events(routing_key: "order.approved", payload: %{properties: %{currency_code: "GBP"}}, start_date: NaiveDateTime.to_date(nyc_time))
-    current_month_gbp = Events.list_events(routing_key: "order.approved", payload: %{properties: %{currency_code: "GBP"}}, start_date: %{NaiveDateTime.to_date(nyc_time) | day: 1})
     active_orders = Events.active_orders()
-    active_orders_grouped = Enum.group_by(active_orders, fn e -> e.payload["properties"]["currency_code"] end)
-    with {:ok, artworks} <-
-           Events.fetch_artworks(approved_order_events ++ active_orders) do
+
+    active_orders_grouped =
+      Enum.group_by(active_orders, fn e -> e.payload["properties"]["currency_code"] end)
+
+    with {:ok, artworks} <- Events.fetch_artworks(approved_order_events ++ active_orders) do
       {:noreply,
        assign(socket,
          approved_orders_one_day: aggregated_data(approved_order_events),
          active_orders: aggregated_data(active_orders),
          active_orders_usd: aggregated_data(active_orders_grouped["USD"]),
          active_orders_gbp: aggregated_data(active_orders_grouped["GBP"]),
-         approved_today_usd: aggregated_data(approved_today_usd),
-         approved_yesterday_usd: aggregated_data(approved_yesterday_usd),
-         current_month_usd: aggregated_data(current_month_usd),
-         approved_today_gbp: aggregated_data(approved_today_gbp),
-         approved_yesterday_gbp: aggregated_data(approved_yesterday_gbp),
-         current_month_gbp: aggregated_data(current_month_gbp),
          artworks: artworks
        )}
     else
@@ -139,7 +194,16 @@ defmodule AprWeb.OrderDashboardLive do
     end
   end
 
-  defp aggregated_data(nil), do: %{events: [], totals:  %{amount_cents: 0, commission_cents: 0}, count: 0}
+  defp repopulate(socket) do
+    send(self(), :usd_numbers)
+    send(self(), :gbp_numbers)
+    send(self(), :active_pending_orders)
+    {:noreply, socket}
+  end
+
+  defp aggregated_data(nil),
+    do: %{events: [], totals: %{amount_cents: 0, commission_cents: 0}, count: 0}
+
   defp aggregated_data(events) do
     %{
       events: events,

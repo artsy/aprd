@@ -50,7 +50,8 @@ defmodule AprWeb.OrderByPartner do
     {:noreply, assign(socket, partner_matches: partner_matches)}
   end
 
-  def handle_event("suggest_partner", _, socket), do: {:noreply, assign(socket, partner_matches: [])}
+  def handle_event("suggest_partner", _, socket),
+    do: {:noreply, assign(socket, partner_matches: [])}
 
   def handle_event("suggest_user", %{"term" => term}, socket) when byte_size(term) >= 3 do
     user_matches = @gravity_api.match_users(term, socket.assigns.access_token)

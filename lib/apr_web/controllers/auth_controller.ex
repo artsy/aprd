@@ -25,6 +25,7 @@ defmodule AprWeb.AuthController do
   def callback(conn, %{"code" => code}) do
     # Exchange an auth code for an access token
     client = Artsy.Auth.OauthStrategy.get_token!(code: code)
+
     conn
     |> put_session(:access_token, client.token.access_token)
     |> redirect(to: "/")

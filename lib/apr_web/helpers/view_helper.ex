@@ -14,13 +14,13 @@ defmodule Apr.ViewHelper do
   @spec exchange_user_orders_link(String.t()) :: String.t()
   def exchange_user_orders_link(user_id) do
     "#{exchange_url()}/admin/orders?q[buyer_id_eq]=#{user_id}"
-    |> URI.encode
+    |> URI.encode()
   end
 
   @spec exchange_partner_orders_link(String.t()) :: String.t()
   def exchange_partner_orders_link(partner_id) do
     "#{exchange_url()}/admin/orders?q[seller_id_eq]=#{partner_id}"
-    |> URI.encode
+    |> URI.encode()
   end
 
   defp exchange_url do
