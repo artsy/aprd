@@ -7,19 +7,37 @@ defmodule AprWeb.OrderDashboardLive do
     ~L"""
     <div class="main-live">
       <section class="main-stats">
-      </section>
-      <section class="main-stats">
+        <palette-jumbo label="">
+          🇺🇸
+        </palette-jumbo>
         <palette-jumbo label="Pending Approval GMV">
-          <%= currency(@active_orders_usd.totals.amount_cents) %> + <%= currency(@active_orders_gbp.totals.amount_cents, "GBP") %>
+          <%= currency(@active_orders_usd.totals.amount_cents) %>
         </palette-jumbo>
         <palette-jumbo label="Today's GMV">
-          <%= currency(@approved_today_usd.totals.amount_cents) %> + <%= currency(@approved_today_gbp.totals.amount_cents, "GBP") %>
+          <%= currency(@approved_today_usd.totals.amount_cents) %>
         </palette-jumbo>
         <palette-jumbo label="Yesterday's GMV">
-          <%= currency(@approved_yesterday_usd.totals.amount_cents) %> + <%= currency(@approved_yesterday_gbp.totals.amount_cents, "GBP") %>
+          <%= currency(@approved_yesterday_usd.totals.amount_cents) %>
         </palette-jumbo>
         <palette-jumbo label="Current Month's GMV">
-          <%= currency(@current_month_usd.totals.amount_cents) %> + <%= currency(@current_month_gbp.totals.amount_cents, "GBP") %>
+          <%= currency(@current_month_usd.totals.amount_cents) %>
+        </palette-jumbo>
+      </section>
+      <section class="main-stats">
+        <palette-jumbo label="">
+          🇬🇧🇸
+        </palette-jumbo>
+        <palette-jumbo label="Pending Approval GMV">
+          <%= currency(@active_orders_gbp.totals.amount_cents, "GBP") %>
+        </palette-jumbo>
+        <palette-jumbo label="Today's GMV">
+          <%= currency(@approved_today_gbp.totals.amount_cents, "GBP") %>
+        </palette-jumbo>
+        <palette-jumbo label="Yesterday's GMV">
+          <%= currency(@approved_yesterday_gbp.totals.amount_cents, "GBP") %>
+        </palette-jumbo>
+        <palette-jumbo label="Current Month's GMV">
+          <%= currency(@current_month_gbp.totals.amount_cents, "GBP") %>
         </palette-jumbo>
       </section>
       <section class="stats-details">
