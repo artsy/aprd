@@ -162,10 +162,9 @@ defmodule Apr.Events do
     query =
       from e in Event,
         where: e.routing_key == "order.submitted",
-        where: fragment("e0.routing_key = (
-              select distinct on (payload->'object'->> 'id') routing_key
+        where: fragment("e0.id in (
+              select distinct on (payload->'object'->> 'id') id
               from events as last_event
-              where last_event.payload->'object'->> 'id' = e0.payload->'object'->> 'id'
               order by last_event.payload->'object'->> 'id', last_event.inserted_at desc)")
 
     query
