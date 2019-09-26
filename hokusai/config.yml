@@ -1,3 +1,5 @@
 ---
 project-name: aprd
-pre-deploy: 'mix ecto.migrate'
+pre-deploy: "mix ecto.migrate"
+git-remote: git@github.com:artsy/apr-dashboard.git
+hokusai-required-version: "~=0.5"
