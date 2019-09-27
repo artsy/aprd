@@ -1,5 +1,5 @@
 defmodule Apr.Views.ConversationSlackView do
-  import Apr.ViewHelper
+  import Apr.Views.Helper
 
   def render(event) do
     case event["verb"] do

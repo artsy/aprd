@@ -1,7 +1,7 @@
 defmodule Apr.Views.ConsignmentsSlackView do
-  @gravity_api Application.get_env(:Apr, :gravity_api)
+  @gravity_api Application.get_env(:apr, :gravity_api)
 
-  import Apr.ViewHelper
+  import Apr.Views.Helper
 
   def render(event) do
     artist_data = fetch_artist(event["properties"]["artist_id"])

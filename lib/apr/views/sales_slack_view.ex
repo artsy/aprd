@@ -1,8 +1,8 @@
 defmodule Apr.Views.SalesSlackView do
-  @gravity_api Application.get_env(:Apr, :gravity_api)
+  @gravity_api Application.get_env(:apr, :gravity_api)
   @sales_survey_link "https://docs.google.com/forms/d/e/1FAIpQLSeFjhuqrmTglW0K96GiwEjdEpxd3RuLk__LuNgoUfKbFgdNUg/viewform"
 
-  import Apr.ViewHelper
+  import Apr.Views.Helper
 
   def render(event, routing_key) do
     sale = fetch_sale(event["properties"]["id"])

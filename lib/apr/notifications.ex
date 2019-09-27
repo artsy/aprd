@@ -1,6 +1,7 @@
 defmodule Apr.Notifications do
   import Ecto.Query
-  alias Aprb.{Repo, Topic, Subscriber, Subscription, Service.SummaryService, SubscriptionHelper}
+  alias Apr.{Repo, Service.SummaryService, SubscriptionHelper}
+  alias Apr.Subscriptions.{Topic, Subscriber, Subscription}
 
   def receive_event(event, topic, routing_key) do
     event
@@ -14,37 +15,37 @@ defmodule Apr.Notifications do
 
     case topic.name do
       "subscriptions" ->
-        Aprb.Views.SubscriptionSlackView.render(event)
+        Apr.Views.SubscriptionSlackView.render(event)
 
       "inquiries" ->
-        Aprb.Views.InquirySlackView.render(event)
+        Apr.Views.InquirySlackView.render(event)
 
       "purchases" ->
-        Aprb.Views.PurchaseSlackView.render(event)
+        Apr.Views.PurchaseSlackView.render(event)
 
       "auctions" ->
-        Aprb.Views.BiddingSlackView.render(event)
+        Apr.Views.BiddingSlackView.render(event)
 
       "radiation.messages" ->
-        Aprb.Views.RadiationMessageSlackView.render(event)
+        Apr.Views.RadiationMessageSlackView.render(event)
 
       "conversations" ->
-        Aprb.Views.ConversationSlackView.render(event)
+        Apr.Views.ConversationSlackView.render(event)
 
       "invoices" ->
-        Aprb.Views.InvoiceSlackView.render(event, routing_key)
+        Apr.Views.InvoiceSlackView.render(event, routing_key)
 
       "consignments" ->
-        Aprb.Views.ConsignmentsSlackView.render(event)
+        Apr.Views.ConsignmentsSlackView.render(event)
 
       "feedbacks" ->
-        Aprb.Views.FeedbacksSlackView.render(event)
+        Apr.Views.FeedbacksSlackView.render(event)
 
       "sales" ->
-        Aprb.Views.SalesSlackView.render(event, routing_key)
+        Apr.Views.SalesSlackView.render(event, routing_key)
 
       "commerce" ->
-        Aprb.Views.CommerceSlackView.render(event, routing_key)
+        Apr.Views.CommerceSlackView.render(event, routing_key)
     end
   end
 

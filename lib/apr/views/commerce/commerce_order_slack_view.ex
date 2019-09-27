@@ -1,6 +1,6 @@
 # https://github.com/artsy/exchange/blob/master/app/events/order_event.rb
 defmodule Apr.Views.CommerceOrderSlackView do
-  import Apr.ViewHelper
+  import Apr.Views.Helper
 
   alias Apr.Views.CommerceHelper
 

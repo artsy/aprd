@@ -65,10 +65,6 @@ defmodule Apr.Application do
       %{
         id: :feedbacks,
         start: {Aprb.Service.AmqEventService, :start_link, [%{topic: "feedbacks"}]}
-      },
-      %{
-        id: :commerce,
-        start: {Aprb.Service.AmqEventService, :start_link, [%{topic: "commerce"}]}
       }
     ]
 

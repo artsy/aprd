@@ -1,7 +1,7 @@
 # https://github.com/artsy/exchange/blob/master/app/events/application_error_event.rb
 
 defmodule Apr.Views.CommerceErrorSlackView do
-  import Apr.ViewHelper
+  import Apr.Views.Helper
 
   def render(event, _routing_key) do
     %{

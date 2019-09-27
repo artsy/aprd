@@ -1,5 +1,6 @@
 defmodule Apr.Commands do
-  alias Apr.{Repo, Subscriber, Topic, Subscription}
+  alias Apr.Repo
+  alias Apr.Subscriptions.{Subscriber, Topic, Subscription}
   import Ecto.Query
 
   def process_command(params) do
@@ -126,28 +127,6 @@ defmodule Apr.Commands do
   end
 
   defp summary(command) do
-    command_parts = String.split(command, ~r{\s}) |> Enum.drop(1)
-
-    if Enum.count(command_parts) > 0 do
-      topic = Repo.get_by(Topic, name: Enum.at(command_parts, 0))
-
-      date =
-        if Enum.count(command_parts) > 1,
-          do: Calendar.Date.Parse.iso8601(Enum.at(command_parts, 1)),
-          else: Calendar.Date.today!("America/New_York")
-
-      summaries =
-        Repo.all(
-          from s in Summary,
-            where: s.summary_date == ^date and s.topic_id == ^topic.id
-        )
-
-      summaries_text =
-        summaries
-        |> Enum.map(fn s -> "*#{s.verb}*: #{s.total_count}" end)
-        |> Enum.join(" \r\n ")
-
-      ":chart_with_upwards_trend: Summaries for #{date}: \r\n #{summaries_text}"
-    end
+    ":sadbot: not supported for now, we will be back soon!"
   end
 end

@@ -1,5 +1,5 @@
 defmodule Apr.Views.SubscriptionSlackView do
-  import Apr.ViewHelper
+  import Apr.Views.Helper
 
   def render(event) do
     %{

@@ -1,7 +1,7 @@
 defmodule Apr.Views.BiddingSlackView do
-  @gravity_api Application.get_env(:Apr, :gravity_api)
+  @gravity_api Application.get_env(:apr, :gravity_api)
 
-  import Apr.ViewHelper
+  import Apr.Views.Helper
 
   def render(event) do
     artwork_data = fetch_sale_artwork(event["lotId"])

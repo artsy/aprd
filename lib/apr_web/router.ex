@@ -22,6 +22,11 @@ defmodule AprWeb.Router do
     get "/signout", AuthController, :delete
   end
 
+  scope "/api", AprWeb do
+    get "/ping", PingController, :ping
+    post "/slack", SlackCommandController, :command
+  end
+
   scope "/", AprWeb do
     pipe_through [:browser, :authenticated]
 

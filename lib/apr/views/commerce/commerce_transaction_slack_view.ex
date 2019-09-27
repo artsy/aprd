@@ -1,5 +1,5 @@
 defmodule Apr.Views.CommerceTransactionSlackView do
-  import Apr.ViewHelper
+  import Apr.Views.Helper
   alias Apr.Views.CommerceHelper
   alias Stripe.PaymentIntent
 
