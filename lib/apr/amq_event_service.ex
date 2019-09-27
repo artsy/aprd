@@ -87,6 +87,7 @@ defmodule Apr.AmqEventService do
                    }) do
               # notify others
               AprWeb.Endpoint.broadcast("events", "new_event", event)
+              Apr.Notifications.receive_event(payload, topic, routing_key)
             end
           end)
     rescue

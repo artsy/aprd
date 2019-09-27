@@ -44,7 +44,12 @@
   "ranch": {:hex, :ranch, "1.7.1", "6b1fab51b49196860b733a49c07604465a47bdb78aa10c1c16a3d199f7f8c881", [:rebar3], [], "hexpm"},
   "ranch_proxy_protocol": {:hex, :ranch_proxy_protocol, "2.1.1", "3c4723327166d2d63c0405f4914e2e471c6de362cc844e9b203af5763e7c9d25", [:rebar3], [{:ranch, "1.6.2", [hex: :ranch, repo: "hexpm", optional: false]}], "hexpm"},
   "recon": {:hex, :recon, "2.5.0", "2f7fcbec2c35034bade2f9717f77059dc54eb4e929a3049ca7ba6775c0bd66cd", [:mix, :rebar3], [], "hexpm"},
+  "sentient": {:git, "https://github.com/rdalin82/sentient.git", "ab1b4a6344d44b6e7011ee25dfc259d14db093fc", []},
+  "slack": {:hex, :slack, "0.15.0", "abe600b19e53af481540c176ae5b6433b225b083659b790d2e14853aaa65ab84", [:mix], [{:httpoison, "~> 1.2", [hex: :httpoison, repo: "hexpm", optional: false]}, {:poison, "~> 3.0", [hex: :poison, repo: "hexpm", optional: false]}, {:websocket_client, "~> 1.2.4", [hex: :websocket_client, repo: "hexpm", optional: false]}], "hexpm"},
   "ssl_verify_fun": {:hex, :ssl_verify_fun, "1.1.4", "f0eafff810d2041e93f915ef59899c923f4568f4585904d010387ed74988e77b", [:make, :mix, :rebar3], [], "hexpm"},
+  "stripity_stripe": {:hex, :stripity_stripe, "2.4.0", "ab9c0e7787e7edfef55e43be46c78fc96ceacba043d5b29f9acebbb66292ef1f", [:mix], [{:hackney, "~> 1.15", [hex: :hackney, repo: "hexpm", optional: false]}, {:jason, "~> 1.1", [hex: :jason, repo: "hexpm", optional: false]}, {:uri_query, "~> 0.1.2", [hex: :uri_query, repo: "hexpm", optional: false]}], "hexpm"},
   "telemetry": {:hex, :telemetry, "0.4.0", "8339bee3fa8b91cb84d14c2935f8ecf399ccd87301ad6da6b71c09553834b2ab", [:rebar3], [], "hexpm"},
   "unicode_util_compat": {:hex, :unicode_util_compat, "0.4.1", "d869e4c68901dd9531385bb0c8c40444ebf624e60b6962d95952775cac5e90cd", [:rebar3], [], "hexpm"},
+  "uri_query": {:hex, :uri_query, "0.1.2", "ae35b83b472f3568c2c159eee3f3ccf585375d8a94fb5382db1ea3589e75c3b4", [:mix], [], "hexpm"},
+  "websocket_client": {:hex, :websocket_client, "1.2.4", "14ec1ca4b6d247b44ccd9a80af8f6ca98328070f6c1d52a5cb00bc9d939d63b8", [:rebar3], [], "hexpm"},
 }

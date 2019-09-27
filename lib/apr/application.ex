@@ -17,6 +17,58 @@ defmodule Apr.Application do
       %{
         id: :commerce,
         start: {Apr.AmqEventService, :start_link, [%{topic: "commerce"}]}
+      },
+      %{
+        id: :conversations,
+        start:
+          {Aprb.Service.AmqEventService, :start_link,
+           [%{topic: "conversations", routing_keys: ["conversation.*"]}]}
+      },
+      %{
+        id: :inquiries,
+        start: {Aprb.Service.AmqEventService, :start_link, [%{topic: "inquiries"}]}
+      },
+      %{
+        id: :messages,
+        start:
+          {Aprb.Service.AmqEventService, :start_link,
+           [
+             %{
+               topic: "radiation.messages",
+               routing_keys: ["delivery.spamreport", "delivery.bounce"]
+             }
+           ]}
+      },
+      %{
+        id: :subscriptions,
+        start: {Aprb.Service.AmqEventService, :start_link, [%{topic: "subscriptions"}]}
+      },
+      %{
+        id: :auctions,
+        start:
+          {Aprb.Service.AmqEventService, :start_link,
+           [%{topic: "auctions", routing_keys: ["SecondPriceBidPlaced"]}]}
+      },
+      %{
+        id: :purchases,
+        start: {Aprb.Service.AmqEventService, :start_link, [%{topic: "purchases"}]}
+      },
+      %{id: :sales, start: {Aprb.Service.AmqEventService, :start_link, [%{topic: "sales"}]}},
+      %{
+        id: :invoices,
+        start: {Aprb.Service.AmqEventService, :start_link, [%{topic: "invoices"}]}
+      },
+      %{
+        id: :consignments,
+        start: {Aprb.Service.AmqEventService, :start_link, [%{topic: "consignments"}]}
+      },
+      %{
+        id: :feedbacks,
+        start: {Aprb.Service.AmqEventService, :start_link, [%{topic: "feedbacks"}]}
+      },
+      %{
+        id: :commerce,
+        start: {Aprb.Service.AmqEventService, :start_link, [%{topic: "commerce"}]}
       }
     ]
 

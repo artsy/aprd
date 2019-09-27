@@ -6,6 +6,5 @@ defmodule Apr.Repo.Migrations.AddEventIndex do
     create index(:events, [:topic], comment: "Index topid")
     create index(:events, [:inserted_at], comment: "Index inserted_at")
     create index(:events, [:payload], using: :gin, comment: "Index payload")
-
   end
 end
