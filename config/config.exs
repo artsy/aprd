@@ -60,6 +60,8 @@ config :artsy_auth_ex,
 config :joken,
   default_signer: System.get_env("ARTSY_INTERNAL_SECRET")
 
+config :slack, api_token: System.get_env("SLACK_API_TOKEN")
+
 # Import environment specific config. This must remain at the bottom
 # of this file so it overrides the configuration defined above.
 import_config "#{Mix.env()}.exs"

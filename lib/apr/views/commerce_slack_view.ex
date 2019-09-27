@@ -1,5 +1,3 @@
-# https://github.com/artsy/exchange/blob/master/app/events/order_event.rb#L1
-
 defmodule Apr.Views.CommerceSlackView do
   alias Apr.Views.{
     CommerceTransactionSlackView,
@@ -21,6 +19,7 @@ defmodule Apr.Views.CommerceSlackView do
 
       routing_key =~ "error." ->
         CommerceErrorSlackView.render(event, routing_key)
+      true -> nil
     end
   end
 end
