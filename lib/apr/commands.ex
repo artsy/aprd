@@ -1,23 +1,24 @@
 defmodule Apr.Commands do
   alias Apr.Repo
-  alias Apr.Subscriptions.{Subscriber, Topic, Subscription}
-  import Ecto.Query
+  alias Apr.Subscriptions
+  alias Apr.Subscriptions.{Subscription}
 
   def process_command(params) do
-    response =
-      find_or_create_subscriber(params)
+    response = params
+      |> Subscriptions.find_or_create_subscriber()
       |> parse_command(params)
 
     %{response_type: "in_channel", text: response}
   end
 
-  defp parse_command(subscriber, params) do
+  defp parse_command(subscriber, %{"text" => command}) do
     cond do
-      params[:text] == "topics" ->
-        Repo.all(from topics in Topic, select: topics.name)
+      command == "topics" ->
+        Subscriptions.list_topics()
+        |> Enum.map(fn t -> t.name end)
         |> Enum.join("\n")
 
-      params[:text] == "subscriptions" ->
+      command == "subscriptions" ->
         current_subscriptions =
           Repo.preload(subscriber, :subscriptions).subscriptions
           |> Enum.map(fn s ->
@@ -28,8 +29,8 @@ defmodule Apr.Commands do
 
         "Subscribed topics: #{current_subscriptions}"
 
-      params[:text] =~ ~r/unsubscribe/ ->
-        [_command | topic_names] = String.split(params[:text], ~r{\s}, parts: 2)
+      command =~ ~r/unsubscribe/ ->
+        [_command | topic_names] = String.split(command, ~r{\s}, parts: 2)
         # add subscriptions
         removed_topics =
           List.first(topic_names)
@@ -45,17 +46,18 @@ defmodule Apr.Commands do
           "Can't find a matching subscription to unsubscribe!"
         end
 
-      params[:text] =~ ~r/subscribe/ ->
-        subscribed_topics =
-          params[:text]
+      command =~ ~r/subscribe/ ->
+        subscribed_topics = command
           |> String.split()
           |> Enum.drop(1)
           |> Enum.map(fn topic_name -> subscribe_to(subscriber, topic_name) end)
+          |> Enum.reject(&is_nil/1)
+          |> Enum.map(&(&1.topic))
 
         ":+1: Subscribed to #{Enum.join(subscribed_topics, " ")}"
 
-      params[:text] =~ ~r/summary/ ->
-        summary(params[:text])
+      command =~ ~r/summary/ ->
+        summary(command)
 
       true ->
         help_message()
@@ -75,46 +77,17 @@ defmodule Apr.Commands do
     """
   end
 
-  defp find_or_create_subscriber(params) do
-    with nil <- Repo.get_by(Subscriber, channel_id: params[:channel_id]) do
-      # create new subscriber
-      sub_changeset =
-        Subscriber.changeset(
-          %Subscriber{},
-          Map.take(params, [
-            :team_id,
-            :team_domain,
-            :channel_id,
-            :channel_name,
-            :user_id,
-            :user_name
-          ])
-        )
-
-      with {:ok, new_subscriber} <- Repo.insert(sub_changeset) do
-        new_subscriber
-      end
-    else
-      existing_subscriber -> existing_subscriber
-    end
-  end
-
   defp subscribe_to(subscriber, topic_str) do
-    [topic_name | routing_key] = String.split(topic_str, ":", parts: 2)
-    routing_key = List.first(routing_key) || "#"
-    topic = Repo.get_by(Topic, name: topic_name)
-
-    if topic do
-      subscription =
-        Ecto.build_assoc(subscriber, :subscriptions, topic_id: topic.id, routing_key: routing_key)
-
-      Repo.insert!(subscription)
-      topic_str
+    with [topic_name | routing_key] = String.split(topic_str, ":", parts: 2),
+          topic when not is_nil(topic) <- Subscriptions.get_topic_by_name(topic_name),
+          routing_key <- List.first(routing_key),
+          {:ok, subscription} <- Subscriptions.create_subscription(%{topic_id: topic.id, subscriber_id: subscriber.id, routing_key: routing_key || "#"}) do
+      %{topic: topic_name, subscription: subscription}
     end
   end
 
   defp unsubscribe(subscriber, topic_name) do
-    topic = Repo.get_by(Topic, name: topic_name)
+    topic = Subscriptions.get_topic_by_name(topic_name)
 
     if topic do
       subscription = Repo.get_by(Subscription, subscriber_id: subscriber.id, topic_id: topic.id)
@@ -126,7 +99,7 @@ defmodule Apr.Commands do
     end
   end
 
-  defp summary(command) do
+  defp summary(_command) do
     ":sadbot: not supported for now, we will be back soon!"
   end
 end

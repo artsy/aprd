@@ -10,6 +10,9 @@ defmodule Apr.Subscriptions.Subscriber do
     field :user_id, :string
     field :user_name, :string
 
+    has_many :subscriptions, Apr.Subscriptions.Subscription
+    has_many :topics, through: [:subscriptions, :topic]
+
     timestamps()
   end
 
@@ -25,5 +28,6 @@ defmodule Apr.Subscriptions.Subscriber do
       :user_id,
       :user_name
     ])
+    |> unique_constraint(:channel_id, name: :subscribers_channel_id_uniq_idx)
   end
 end

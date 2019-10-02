@@ -8,6 +8,22 @@ defmodule Apr.Events do
 
   alias Apr.Events.Event
 
+  def consume_incoming_event(%{topic: topic, store: store}, payload, routing_key) do
+    Task.async(fn ->
+      decoded_payload = Poison.decode!(payload)
+      if store do
+        with {:ok, event} <- create_event(%{ payload: decoded_payload, topic: topic, routing_key: routing_key}) do
+          # notify others
+          AprWeb.Endpoint.broadcast("events", "new_event", event)
+        end
+      end
+      Apr.Notifications.receive_event(decoded_payload, topic, routing_key)
+    end)
+  end
+  def consume_incoming_event(%{topic: topic}, payload, routing_key) do
+    consume_incoming_event(%{topic: topic, store: false}, payload, routing_key)
+  end
+
   @doc """
   Returns the list of events.
 

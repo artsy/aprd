@@ -2,11 +2,31 @@ defmodule Apr.Subscriptions do
   @moduledoc """
   The Subscriptions context.
   """
+  require Logger
 
   import Ecto.Query, warn: false
   alias Apr.Repo
 
-  alias Apr.Subscriptions.Topic
+  alias Apr.Subscriptions.{Topic, Subscription}
+
+  @doc """
+  Creates a Topic.
+
+  ## Examples
+
+      iex> create_topic(%{field: value})
+      {:ok, %Subscriber{}}
+
+      iex> create_topic(%{field: bad_value})
+      {:error, %Ecto.Changeset{}}
+
+  """
+  def create_topic(attrs \\ %{}) do
+    %Topic{}
+    |> Topic.changeset(attrs)
+    |> Repo.insert()
+  end
+
 
   @doc """
   Returns the list of topics.
@@ -36,6 +56,8 @@ defmodule Apr.Subscriptions do
 
   """
   def get_topic!(id), do: Repo.get!(Topic, id)
+
+  def get_topic_by_name(name), do: Repo.get_by(Topic, name: name)
 
   alias Apr.Subscriptions.Subscriber
 
@@ -67,6 +89,38 @@ defmodule Apr.Subscriptions do
 
   """
   def get_subscriber!(id), do: Repo.get!(Subscriber, id)
+
+
+  def get_topic_subscribers(topic_name, routing_key) do
+    Repo.all(from s in Subscriber,
+      join: sc in Subscription,
+      on: s.id == sc.subscriber_id,
+      join: t in Topic,
+      on: t.id == sc.topic_id,
+      where: t.name == ^topic_name,
+      where: sc.routing_key == ^routing_key or is_nil(sc.routing_key) or sc.routing_key == "#")
+  end
+
+
+  def find_or_create_subscriber(params = %{"channel_id" =>  channel_id}) do
+    response = Repo.get_by(Subscriber, channel_id: channel_id)
+
+    with nil <- Repo.get_by(Subscriber, channel_id: channel_id),
+        {:ok, new_subscriber} <- create_subscriber(Map.take(params, ["team_id", "team_domain", "channel_id", "channel_name", "user_id", "user_name"])) do
+      new_subscriber
+    else
+      existing_subscriber -> existing_subscriber
+    end
+  end
+
+  def unsubscribe(subscriber, topic_name) do
+    with topic when not is_nil(topic) <- get_topic_by_name(topic_name),
+        subscription when not is_nil(subscription)<- Repo.get_by(Subscription, subscriber_id: subscriber.id, topic_id: topic.id) do
+      delete_subscription(subscription)
+    else
+      _ -> Logger.warn("could not delete subscription.")
+    end
+  end
 
   @doc """
   Creates a subscriber.
@@ -105,6 +159,22 @@ defmodule Apr.Subscriptions do
     |> Subscription.changeset(attrs)
     |> Repo.insert()
   end
+
+  @doc """
+  Gets a single subscription.
+
+  Raises `Ecto.NoResultsError` if the Subscription does not exist.
+
+  ## Examples
+
+      iex> get_subscription!(123)
+      %Topic{}
+
+      iex> get_subscription!(456)
+      ** (Ecto.NoResultsError)
+
+  """
+  def get_subscription!(id), do: Repo.get!(Subscription, id)
 
   @doc """
   Updates a subscription.

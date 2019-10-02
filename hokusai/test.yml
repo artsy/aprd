@@ -10,8 +10,6 @@ services:
     - MIX_ENV=test
     - DATABASE_HOST=aprd-db
     - DB_HOST=aprd-db
-    - DB_USER-postgres
-    - DB_PASSWORD=postgres
     - RABBITMQ_HOST=aprd-rabbitmq
     - RABBITMQ_USER=guest
     - RABBITMQ_PASSWORD=guest
@@ -26,8 +24,6 @@ services:
   aprd-db:
     image: postgres:9.6-alpine
     environment:
-    - POSTGRES_USER=postgres
-    - POSTGRES_PASSWORD=postgres
     - POSTGRES_DB=postgres
   aprd-rabbitmq:
     image: rabbitmq:3.6-management-alpine

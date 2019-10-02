@@ -3,7 +3,7 @@ defmodule AprWeb.SlackCommandController do
 
   alias Apr.Commands
 
-  def command(conn, params = %{token: token}) do
+  def command(conn, params = %{"token" => token}) do
     # check that token matches, that the POST comes from our slack integration
     if System.get_env("SLACK_SLASH_COMMAND_TOKEN") != token do
       conn
@@ -13,4 +13,5 @@ defmodule AprWeb.SlackCommandController do
       json(conn, Commands.process_command(params))
     end
   end
+  def command(conn, _), do: send_resp(conn, 403, "Access Denied")
 end

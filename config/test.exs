@@ -4,15 +4,19 @@ use Mix.Config
 # you can enable the server option below.
 config :apr, AprWeb.Endpoint,
   http: [port: 4002],
-  server: false
+  server: false,
+  live_view: [
+    signing_salt: "saltysalt"
+  ]
 
 # Print only warnings and errors during test
 config :logger, level: :warn
 
 # Configure your database
 config :apr, Apr.Repo,
-  pool: Ecto.Adapters.SQL.Sandbox,
+  database: "aprd_test",
   username: System.get_env("DB_USER") || "postgres",
   password: System.get_env("DB_PASSWORD") || "postgres",
   hostname: System.get_env("DB_HOST") || "localhost",
-  database: "aprd_test"
+  adapter: Ecto.Adapters.Postgres,
+  pool: Ecto.Adapters.SQL.Sandbox

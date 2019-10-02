@@ -12,5 +12,6 @@ defmodule Apr.Repo.Migrations.CreateSubscribers do
 
       timestamps()
     end
+    create unique_index(:subscribers, [:channel_id], name: :subscribers_channel_id_uniq_idx)
   end
 end
