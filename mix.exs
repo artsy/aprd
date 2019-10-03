@@ -33,22 +33,25 @@ defmodule Apr.MixProject do
   # Type `mix help deps` for examples and options.
   defp deps do
     [
-      {:phoenix, "~> 1.4.3"},
-      {:phoenix_pubsub, "~> 1.1"},
-      {:phoenix_ecto, "~> 4.0"},
-      {:ecto_sql, "~> 3.0"},
-      {:postgrex, ">= 0.0.0"},
       {:amqp, "~> 1.0"},
-      {:poison, "~> 3.1"},
+      {:artsy_auth_ex, "~> 0.1"},
+      {:ecto_sql, "~> 3.0"},
+      {:gettext, "~> 0.11"},
+      {:jason, "~> 1.0"},
+      {:money, "~> 1.4"},
+      {:neuron, "~> 1.1.1"},
+      {:phoenix_ecto, "~> 4.0"},
       {:phoenix_html, "~> 2.11"},
       {:phoenix_live_reload, "~> 1.2", only: :dev},
       {:phoenix_live_view, github: "phoenixframework/phoenix_live_view"},
-      {:gettext, "~> 0.11"},
-      {:jason, "~> 1.0"},
+      {:phoenix_pubsub, "~> 1.1"},
+      {:phoenix, "~> 1.4.3"},
       {:plug_cowboy, "~> 2.0"},
-      {:neuron, "~> 1.1.1"},
-      {:money, "~> 1.4"},
-      {:artsy_auth_ex, "~> 0.1"}
+      {:poison, "~> 3.1", override: true},
+      {:postgrex, ">= 0.0.0"},
+      {:sentient, git: "https://github.com/rdalin82/sentient.git"},
+      {:slack, "~> 0.15.0"},
+      {:stripity_stripe, "~> 2.4.0"}
     ]
   end
 
