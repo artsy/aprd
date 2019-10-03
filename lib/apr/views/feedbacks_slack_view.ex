@@ -1,11 +1,11 @@
 defmodule Apr.Views.FeedbacksSlackView do
   import Apr.Views.Helper
-  alias Apr.Service.SentimentAnalysisService
+  alias Apr.Service.SentimentAnalysis
 
   def emoji(message) do
     message
-    |> SentimentAnalysisService.sentiment_score()
-    |> SentimentAnalysisService.sentiment_face_emoji()
+    |> SentimentAnalysis.sentiment_score()
+    |> SentimentAnalysis.sentiment_face_emoji()
   end
 
   def prefix(event) do

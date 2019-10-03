@@ -1,4 +1,4 @@
-defmodule Apr.Service.SentimentAnalysisService do
+defmodule Apr.SentimentAnalysis do
   def sentiment_score(text) do
     Sentient.analyze(text)
   end
