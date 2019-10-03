@@ -16,22 +16,22 @@ defmodule Apr.Application do
       # {Apr.Worker, arg},
       %{
         id: :commerce,
-        start: {Apr.AmqEventService, :start_link, [%{topic: "commerce"}]}
+        start: {Apr.AmqEventService, :start_link, [%{topic: "commerce", store: true}]}
       },
       %{
         id: :conversations,
         start:
-          {Aprb.Service.AmqEventService, :start_link,
+          {Apr.AmqEventService, :start_link,
            [%{topic: "conversations", routing_keys: ["conversation.*"]}]}
       },
       %{
         id: :inquiries,
-        start: {Aprb.Service.AmqEventService, :start_link, [%{topic: "inquiries"}]}
+        start: {Apr.AmqEventService, :start_link, [%{topic: "inquiries"}]}
       },
       %{
         id: :messages,
         start:
-          {Aprb.Service.AmqEventService, :start_link,
+          {Apr.AmqEventService, :start_link,
            [
              %{
                topic: "radiation.messages",
@@ -41,30 +41,30 @@ defmodule Apr.Application do
       },
       %{
         id: :subscriptions,
-        start: {Aprb.Service.AmqEventService, :start_link, [%{topic: "subscriptions"}]}
+        start: {Apr.AmqEventService, :start_link, [%{topic: "subscriptions", store: true}]}
       },
       %{
         id: :auctions,
         start:
-          {Aprb.Service.AmqEventService, :start_link,
-           [%{topic: "auctions", routing_keys: ["SecondPriceBidPlaced"]}]}
+          {Apr.AmqEventService, :start_link,
+           [%{topic: "auctions", routing_keys: ["SecondPriceBidPlaced"], store: true}]}
       },
       %{
         id: :purchases,
-        start: {Aprb.Service.AmqEventService, :start_link, [%{topic: "purchases"}]}
+        start: {Apr.AmqEventService, :start_link, [%{topic: "purchases", store: true}]}
       },
-      %{id: :sales, start: {Aprb.Service.AmqEventService, :start_link, [%{topic: "sales"}]}},
+      %{id: :sales, start: {Apr.AmqEventService, :start_link, [%{topic: "sales", store: true}]}},
       %{
         id: :invoices,
-        start: {Aprb.Service.AmqEventService, :start_link, [%{topic: "invoices"}]}
+        start: {Apr.AmqEventService, :start_link, [%{topic: "invoices"}]}
       },
       %{
         id: :consignments,
-        start: {Aprb.Service.AmqEventService, :start_link, [%{topic: "consignments"}]}
+        start: {Apr.AmqEventService, :start_link, [%{topic: "consignments", store: true}]}
       },
       %{
         id: :feedbacks,
-        start: {Aprb.Service.AmqEventService, :start_link, [%{topic: "feedbacks"}]}
+        start: {Apr.AmqEventService, :start_link, [%{topic: "feedbacks"}]}
       }
     ]
 
