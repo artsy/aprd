@@ -30,7 +30,7 @@ defmodule AprWeb.Router do
   scope "/", AprWeb do
     pipe_through [:browser, :authenticated]
 
-    live "/", OrderDashboard, session: [:access_token]
+    live "/", OrderDashboardLive, session: [:access_token]
     live "/partner_selection", OrderByPartner, session: [:access_token]
   end
 end
