@@ -7,6 +7,7 @@ defmodule Apr.Events do
   alias Apr.Repo
 
   alias Apr.Events.Event
+  require Logger
 
   def consume_incoming_event(%{topic: topic, store: store}, payload, routing_key) do
     Task.async(fn ->
@@ -161,6 +162,7 @@ defmodule Apr.Events do
         {:ok, artworks_order_map}
 
       error ->
+        Logger.warn("Could not fetch artworks #{error}")
         {:error, {:could_not_fetch, error}}
     end
   end
