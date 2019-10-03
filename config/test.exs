@@ -12,6 +12,9 @@ config :apr, AprWeb.Endpoint,
 # Print only warnings and errors during test
 config :logger, level: :warn
 
+config :apr,
+  gravity_api: GravityMock
+
 # Configure your database
 config :apr, Apr.Repo,
   database: "aprd_test",

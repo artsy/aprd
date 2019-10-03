@@ -27,7 +27,6 @@ defmodule Apr.Subscriptions do
     |> Repo.insert()
   end
 
-
   @doc """
   Returns the list of topics.
 
@@ -90,23 +89,33 @@ defmodule Apr.Subscriptions do
   """
   def get_subscriber!(id), do: Repo.get!(Subscriber, id)
 
-
   def get_topic_subscribers(topic_name, routing_key) do
-    Repo.all(from s in Subscriber,
-      join: sc in Subscription,
-      on: s.id == sc.subscriber_id,
-      join: t in Topic,
-      on: t.id == sc.topic_id,
-      where: t.name == ^topic_name,
-      where: sc.routing_key == ^routing_key or is_nil(sc.routing_key) or sc.routing_key == "#")
+    Repo.all(
+      from s in Subscriber,
+        join: sc in Subscription,
+        on: s.id == sc.subscriber_id,
+        join: t in Topic,
+        on: t.id == sc.topic_id,
+        where: t.name == ^topic_name,
+        where: sc.routing_key == ^routing_key or is_nil(sc.routing_key) or sc.routing_key == "#"
+    )
   end
 
-
-  def find_or_create_subscriber(params = %{"channel_id" =>  channel_id}) do
+  def find_or_create_subscriber(params = %{"channel_id" => channel_id}) do
     response = Repo.get_by(Subscriber, channel_id: channel_id)
 
     with nil <- Repo.get_by(Subscriber, channel_id: channel_id),
-        {:ok, new_subscriber} <- create_subscriber(Map.take(params, ["team_id", "team_domain", "channel_id", "channel_name", "user_id", "user_name"])) do
+         {:ok, new_subscriber} <-
+           create_subscriber(
+             Map.take(params, [
+               "team_id",
+               "team_domain",
+               "channel_id",
+               "channel_name",
+               "user_id",
+               "user_name"
+             ])
+           ) do
       new_subscriber
     else
       existing_subscriber -> existing_subscriber
@@ -115,7 +124,8 @@ defmodule Apr.Subscriptions do
 
   def unsubscribe(subscriber, topic_name) do
     with topic when not is_nil(topic) <- get_topic_by_name(topic_name),
-        subscription when not is_nil(subscription)<- Repo.get_by(Subscription, subscriber_id: subscriber.id, topic_id: topic.id) do
+         subscription when not is_nil(subscription) <-
+           Repo.get_by(Subscription, subscriber_id: subscriber.id, topic_id: topic.id) do
       delete_subscription(subscription)
     else
       _ -> Logger.warn("could not delete subscription.")

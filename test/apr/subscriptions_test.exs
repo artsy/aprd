@@ -71,6 +71,7 @@ defmodule Apr.SubscriptionsTest do
     alias Apr.Subscriptions.Subscription
     alias Apr.Subscriptions
     alias Apr.Fixtures
+
     setup do
       [
         subscriber: Fixtures.create(:subscriber, %{channel_id: "subscription_test"}),
@@ -84,15 +85,23 @@ defmodule Apr.SubscriptionsTest do
       assert_raise Ecto.NoResultsError, fn -> Subscriptions.get_subscription!(subscription.id) end
     end
 
-    test "create_subscription/1 with valid data creates a subscription", %{topic: topic, subscriber: subscriber} do
+    test "create_subscription/1 with valid data creates a subscription", %{
+      topic: topic,
+      subscriber: subscriber
+    } do
       assert {:ok, %Subscription{} = subscription} =
-               Subscriptions.create_subscription(%{topic_id: topic.id, subscriber_id: subscriber.id, routing_key: "some routing_key"})
+               Subscriptions.create_subscription(%{
+                 topic_id: topic.id,
+                 subscriber_id: subscriber.id,
+                 routing_key: "some routing_key"
+               })
 
       assert subscription.routing_key == "some routing_key"
     end
 
     test "create_subscription/1 with invalid data returns error changeset" do
-      assert {:error, %Ecto.Changeset{}} = Subscriptions.create_subscription(%{routing_key: "something"})
+      assert {:error, %Ecto.Changeset{}} =
+               Subscriptions.create_subscription(%{routing_key: "something"})
     end
   end
 end

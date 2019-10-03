@@ -13,5 +13,6 @@ defmodule AprWeb.SlackCommandController do
       json(conn, Commands.process_command(params))
     end
   end
+
   def command(conn, _), do: send_resp(conn, 403, "Access Denied")
 end

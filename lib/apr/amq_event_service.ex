@@ -81,6 +81,7 @@ defmodule Apr.AmqEventService do
           IO.puts("Error parsing #{payload} #{exception}")
       end
     end)
+
     {:noreply, {chan, opts}}
   end
 end

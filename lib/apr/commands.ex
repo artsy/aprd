@@ -4,7 +4,8 @@ defmodule Apr.Commands do
   alias Apr.Subscriptions.{Subscription}
 
   def process_command(params) do
-    response = params
+    response =
+      params
       |> Subscriptions.find_or_create_subscriber()
       |> parse_command(params)
 
@@ -47,12 +48,13 @@ defmodule Apr.Commands do
         end
 
       command =~ ~r/subscribe/ ->
-        subscribed_topics = command
+        subscribed_topics =
+          command
           |> String.split()
           |> Enum.drop(1)
           |> Enum.map(fn topic_name -> subscribe_to(subscriber, topic_name) end)
           |> Enum.reject(&is_nil/1)
-          |> Enum.map(&(&1.topic))
+          |> Enum.map(& &1.topic)
 
         ":+1: Subscribed to #{Enum.join(subscribed_topics, " ")}"
 
@@ -79,9 +81,14 @@ defmodule Apr.Commands do
 
   defp subscribe_to(subscriber, topic_str) do
     with [topic_name | routing_key] = String.split(topic_str, ":", parts: 2),
-          topic when not is_nil(topic) <- Subscriptions.get_topic_by_name(topic_name),
-          routing_key <- List.first(routing_key),
-          {:ok, subscription} <- Subscriptions.create_subscription(%{topic_id: topic.id, subscriber_id: subscriber.id, routing_key: routing_key || "#"}) do
+         topic when not is_nil(topic) <- Subscriptions.get_topic_by_name(topic_name),
+         routing_key <- List.first(routing_key),
+         {:ok, subscription} <-
+           Subscriptions.create_subscription(%{
+             topic_id: topic.id,
+             subscriber_id: subscriber.id,
+             routing_key: routing_key || "#"
+           }) do
       %{topic: topic_name, subscription: subscription}
     end
   end

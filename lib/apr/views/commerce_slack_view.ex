@@ -19,7 +19,9 @@ defmodule Apr.Views.CommerceSlackView do
 
       routing_key =~ "error." ->
         CommerceErrorSlackView.render(event, routing_key)
-      true -> nil
+
+      true ->
+        nil
     end
   end
 end
