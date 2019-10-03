@@ -110,6 +110,7 @@ defmodule Apr.Events do
 
   def fetch_artworks(order_events) do
     Neuron.Config.set(url: Application.get_env(:apr, :metaphysics)[:url])
+    Neuron.Config.set(headers: ["X-ACCESS-TOKEN": Application.get_env(:apr, Gravity)[:api_token]])
 
     order_id_artwork_ids =
       order_events
@@ -161,9 +162,9 @@ defmodule Apr.Events do
 
         {:ok, artworks_order_map}
 
-      error ->
-        Logger.warn("Could not fetch artworks #{error}")
-        {:error, {:could_not_fetch, error}}
+      {:error, error} ->
+        Logger.warn("Could not fetch artworks #{error.reason}")
+        {:error, {:could_not_fetch, error.reason}}
     end
   end
 
