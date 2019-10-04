@@ -1,5 +1,5 @@
 defmodule Apr.Views.PartnersSlackView do
-  def render(event, routing_key) do
+  def render(event, "partner.updated") do
     %{
       text:
         ":uk: #{event["properties"]["display_name"]} has set VAT status to #{
@@ -9,4 +9,5 @@ defmodule Apr.Views.PartnersSlackView do
       unfurl_links: true
     }
   end
+  def render(_,_), do: nil
 end

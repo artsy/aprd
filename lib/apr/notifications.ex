@@ -45,7 +45,7 @@ defmodule Apr.Notifications do
           Apr.Views.CommerceSlackView.render(event, routing_key)
 
         "partners" ->
-          Apr.Views.PartnerSlackView.render(event, routing_key)
+          Apr.Views.PartnersSlackView.render(event, routing_key)
       end
     else
       _ -> Logger.warn("Unknown Topic #{topic_name}")
