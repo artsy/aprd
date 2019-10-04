@@ -26,7 +26,7 @@ defmodule Apr.Application do
       },
       %{
         id: :inquiries,
-        start: {Apr.AmqEventService, :start_link, [%{topic: "inquiries"}]}
+        start: {Apr.AmqEventService, :start_link, [%{topic: "inquiries", store: true}]}
       },
       %{
         id: :messages,
