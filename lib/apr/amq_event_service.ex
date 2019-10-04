@@ -1,5 +1,4 @@
 defmodule Apr.AmqEventService do
-  @behaviour GenServer
   use GenServer
   use AMQP
 
@@ -7,7 +6,7 @@ defmodule Apr.AmqEventService do
     GenServer.start_link(__MODULE__, opts, [])
   end
 
-  @impl GenServer
+  @impl true
   def init(opts) do
     rabbitmq_connect(opts)
   end
@@ -42,6 +41,7 @@ defmodule Apr.AmqEventService do
   # 2. Implement a callback to handle DOWN notifications from the system
   #    This callback should try to reconnect to the server
 
+  @impl true
   def handle_info({:DOWN, _, :process, _pid, _reason}, {_chan, opts}) do
     {:ok, {chan, opts}} = rabbitmq_connect(opts)
     {:noreply, {chan, opts}}
@@ -62,7 +62,7 @@ defmodule Apr.AmqEventService do
     {:noreply, {chan, opts}}
   end
 
-  @impl GenServer
+  @impl true
   def handle_info(
         {:basic_deliver, payload,
          %{delivery_tag: tag, redelivered: redelivered, routing_key: routing_key}},

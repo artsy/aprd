@@ -1,6 +1,6 @@
 defmodule Apr.Views.FeedbacksSlackView do
   import Apr.Views.Helper
-  alias Apr.Service.SentimentAnalysis
+  alias Apr.SentimentAnalysis
 
   def emoji(message) do
     message
