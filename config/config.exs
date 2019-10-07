@@ -50,7 +50,8 @@ config :artsy_auth_ex,
   token_aud: System.get_env("ARTSY_TOKEN_AUD"),
   client_id: System.get_env("ARTSY_CLIENT_ID"),
   client_secret: System.get_env("ARTSY_CLIENT_SECRET"),
-  redirect_uri: Map.get(System.get_env(), "HOST_URL", "http://localhost:4000") <> "/auth/callback",
+  redirect_uri:
+    Map.get(System.get_env(), "HOST_URL", "http://localhost:4000") <> "/auth/callback",
   site: System.get_env("ARTSY_URL"),
   authorize_url: "/oauth2/authorize",
   token_url: "/oauth2/access_token",
@@ -58,6 +59,11 @@ config :artsy_auth_ex,
 
 config :joken,
   default_signer: System.get_env("ARTSY_INTERNAL_SECRET")
+
+config :slack, api_token: System.get_env("SLACK_API_TOKEN")
+
+config :stripity_stripe,
+  api_key: System.get_env("STRIPE_API_KEY")
 
 # Import environment specific config. This must remain at the bottom
 # of this file so it overrides the configuration defined above.

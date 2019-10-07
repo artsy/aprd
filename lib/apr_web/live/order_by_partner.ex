@@ -1,6 +1,6 @@
 defmodule AprWeb.OrderByPartner do
   use Phoenix.LiveView
-  import Apr.ViewHelper
+  import Apr.Views.Helper
   @gravity_api Application.get_env(:apr, :gravity_api)
 
   def render(assigns) do

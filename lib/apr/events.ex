@@ -7,6 +7,27 @@ defmodule Apr.Events do
   alias Apr.Repo
 
   alias Apr.Events.Event
+  require Logger
+
+  def consume_incoming_event(%{topic: topic, store: store}, payload, routing_key) do
+    Task.async(fn ->
+      decoded_payload = Poison.decode!(payload)
+
+      if store do
+        with {:ok, event} <-
+               create_event(%{payload: decoded_payload, topic: topic, routing_key: routing_key}) do
+          # notify others
+          AprWeb.Endpoint.broadcast("events", "new_event", event)
+        end
+      end
+
+      Apr.Notifications.receive_event(decoded_payload, topic, routing_key)
+    end)
+  end
+
+  def consume_incoming_event(%{topic: topic}, payload, routing_key) do
+    consume_incoming_event(%{topic: topic, store: false}, payload, routing_key)
+  end
 
   @doc """
   Returns the list of events.
@@ -89,6 +110,7 @@ defmodule Apr.Events do
 
   def fetch_artworks(order_events) do
     Neuron.Config.set(url: Application.get_env(:apr, :metaphysics)[:url])
+    Neuron.Config.set(headers: ["X-ACCESS-TOKEN": Application.get_env(:apr, Gravity)[:api_token]])
 
     order_id_artwork_ids =
       order_events
@@ -140,8 +162,9 @@ defmodule Apr.Events do
 
         {:ok, artworks_order_map}
 
-      error ->
-        {:error, {:could_not_fetch, error}}
+      {:error, error} ->
+        Logger.warn("Could not fetch artworks #{error.reason}")
+        {:error, {:could_not_fetch, error.reason}}
     end
   end
 
