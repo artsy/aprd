@@ -165,4 +165,51 @@ defmodule Apr.Fixtures do
       }
     }
   end
+
+  def partner_update_event(verb \\ "updated", changes \\ []) do
+    %{
+      "verb" => verb,
+      "subject" => nil,
+      "object" => %{
+        "id" => "581b45e4cd530e658b000124",
+        "root_type" => "PartnerGallery",
+        "display" => "Invoicing Demo Partner"
+      },
+      "properties" => %{
+        "created_at" => "2016-11-03 14:12:52 UTC",
+        "updated_at" => "2019-10-07 18:52:31 UTC",
+        "admin" => %{
+          "id" => nil,
+          "name" => nil
+        },
+        "outreach_admin" => %{
+          "id" => nil,
+          "name" => nil
+        },
+        "changes" => changes,
+        "given_name" => "Invoicing Demo Partner",
+        "display_name" => "",
+        "short_name" => "",
+        "slug" => "invoicing-demo-partner",
+        "alternate_names" => [
+          "Partner Success Invoicing Demo Partner"
+        ],
+        "featured_names" => nil,
+        "subscription_state" => "active",
+        "billing_day" => 1,
+        "contract_type" => "Subscription",
+        "partner_flags" => %{
+          "reporting_category" => "gallery",
+          "last_cms_access" => "2019-10-05T20:39:57.096Z",
+          "legal_agreements" => "2016-11-03T14:24:27.723+00:00",
+          "cms_welcome_accepted" => "2016-11-03T14:24:27.895+00:00",
+          "last_folio_access" => "2017-03-22",
+          "ecommerce" => "true",
+          "gdpr_dpa_accepted" => "2019-04-12T20:15:38.550+00:00",
+          "updated_legal_agreements" => "2019-04-16T12:10:33.851+00:00"
+        },
+        "vat_status" => "registered"
+      }
+    }
+  end
 end
