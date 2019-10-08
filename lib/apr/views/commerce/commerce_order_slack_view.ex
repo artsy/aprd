@@ -3,11 +3,12 @@ defmodule Apr.Views.CommerceOrderSlackView do
   import Apr.Views.Helper
 
   alias Apr.Views.CommerceHelper
+  alias Stripe.PaymentIntent
 
-  def render(event, _routing_key) do
+  def render(event, routing_key) do
     event
     |> get_title
-    |> build_message(event)
+    |> build_message(event, routing_key)
   end
 
   defp get_title(event) do
@@ -65,9 +66,9 @@ defmodule Apr.Views.CommerceOrderSlackView do
     end
   end
 
-  defp build_message(nil, _event), do: nil
+  defp build_message(nil, _event, routing_key), do: nil
 
-  defp build_message(title, event) do
+  defp build_message(title, event, routing_key) do
     seller =
       CommerceHelper.fetch_participant_info(
         event["properties"]["seller_id"],
@@ -82,16 +83,17 @@ defmodule Apr.Views.CommerceOrderSlackView do
 
     %{
       text: "#{title} #{artworks_links_from_line_items(event["properties"]["line_items"])}",
-      attachments: order_attachments(event["properties"], event["object"]["id"], seller, buyer),
+      attachments: order_attachments(routing_key, event["properties"], event["object"]["id"], seller, buyer),
       unfurl_links: true
     }
   end
 
-  defp order_attachments(order_properties, order_id, seller, buyer) do
+  defp order_attachments(routing_key, order_properties, order_id, seller, buyer) do
     fields =
       order_attachment_fields(order_properties, seller, buyer)
       |> append_admin(seller["admin"])
       |> append_offer_fields(order_properties["mode"], order_properties)
+      |> append_liability_shift(routing_key, order_properties)
 
     [
       %{
@@ -149,4 +151,26 @@ defmodule Apr.Views.CommerceOrderSlackView do
     line_items
     |> Enum.map(fn li -> "<#{artwork_link(li["artwork_id"])}| >" end)
   end
+
+  defp append_liability_shift(attachments, "order.submitted", order_properties) do
+    attachments ++ [
+      %{
+        title: "Liablity Shift",
+        value: fetch_payment_for_order(order_properties),
+        short: true
+      }
+    ]
+  end
+  defp append_liability_shift(attachments, _, _order_properties), do: attachments
+
+  defp fetch_payment_for_order(%{"external_charge_id" => external_charge_id}) do
+    with {:ok, pi} <- PaymentIntent.retrieve(external_charge_id, %{expand: ["payment_method"]}),
+         charge <- List.first(pi.charges) do
+      charge.payment_method_details.card.three_d_secure.succeeded
+    else
+      _ -> nil
+    end
+  end
+
+  defp fetch_payment_for_order(_), do: nil
 end
