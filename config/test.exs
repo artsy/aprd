@@ -13,7 +13,8 @@ config :apr, AprWeb.Endpoint,
 config :logger, level: :warn
 
 config :apr,
-  gravity_api: GravityMock
+  gravity_api: GravityMock,
+  payments: Apr.PaymentsMock
 
 # Configure your database
 config :apr, Apr.Repo,

@@ -1,9 +1,11 @@
 # https://github.com/artsy/exchange/blob/master/app/events/order_event.rb
 defmodule Apr.Views.CommerceOrderSlackView do
+
+  @payments Application.get_env(:apr, :payments)
+
   import Apr.Views.Helper
 
   alias Apr.Views.CommerceHelper
-  alias Stripe.PaymentIntent
 
   def render(event, routing_key) do
     event
@@ -152,25 +154,15 @@ defmodule Apr.Views.CommerceOrderSlackView do
     |> Enum.map(fn li -> "<#{artwork_link(li["artwork_id"])}| >" end)
   end
 
-  defp append_liability_shift(attachments, "order.submitted", order_properties) do
+  defp append_liability_shift(attachments, "order.submitted", %{"external_charge_id" => external_charge_id}) do
     attachments ++ [
       %{
         title: "Liablity Shift",
-        value: fetch_payment_for_order(order_properties),
+        value: @payments.liability_shift_happened(external_charge_id),
         short: true
       }
     ]
   end
   defp append_liability_shift(attachments, _, _order_properties), do: attachments
 
-  defp fetch_payment_for_order(%{"external_charge_id" => external_charge_id}) do
-    with {:ok, pi} <- PaymentIntent.retrieve(external_charge_id, %{expand: ["payment_method"]}),
-         charge <- List.first(pi.charges) do
-      charge.payment_method_details.card.three_d_secure.succeeded
-    else
-      _ -> nil
-    end
-  end
-
-  defp fetch_payment_for_order(_), do: nil
 end

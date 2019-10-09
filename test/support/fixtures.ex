@@ -1,7 +1,6 @@
 defmodule Apr.Fixtures do
   alias Apr.Subscriptions
   alias Apr.Events
-  @review_default_attrs %{response: true, review_type: "dobar"}
 
   @subscriber_attrs %{
     team_id: "team_id",
