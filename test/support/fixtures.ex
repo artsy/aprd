@@ -1,7 +1,6 @@
 defmodule Apr.Fixtures do
   alias Apr.Subscriptions
   alias Apr.Events
-  @review_default_attrs %{response: true, review_type: "dobar"}
 
   @subscriber_attrs %{
     team_id: "team_id",
@@ -101,6 +100,7 @@ defmodule Apr.Fixtures do
         "currency_code" => "USD",
         "items_total_cents" => 2_000_000,
         "total_list_price_cents" => 3000,
+        "external_charge_id" => "pi_1",
         "line_items" => [
           %{
             "id" => "li-1",

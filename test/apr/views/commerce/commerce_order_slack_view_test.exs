@@ -2,12 +2,19 @@ defmodule Apr.Views.CommerceOrderSlackViewTest do
   use ExUnit.Case, async: true
   alias Apr.Views.CommerceOrderSlackView
   alias Apr.Fixtures
+  import Mox
 
+  setup do
+    expect(Apr.PaymentsMock, :liability_shift_happened, fn _x -> true end)
+    :ok
+  end
   test "submitted buy order" do
     event = Fixtures.commerce_order_event()
     slack_view = CommerceOrderSlackView.render(event, "order.submitted")
     assert slack_view.text == "🤞 Submitted <https://www.artsy.net/artwork/artwork1| >"
     assert slack_view[:unfurl_links] == true
+    [%{fields: fields} | _tail] = slack_view[:attachments]
+    assert Enum.find(fields, fn f -> f[:title] == "Liablity Shift" end)[:value] == true
   end
 
   test "submitted offer order" do

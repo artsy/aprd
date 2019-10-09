@@ -9,7 +9,8 @@ use Mix.Config
 
 config :apr,
   ecto_repos: [Apr.Repo],
-  gravity_api: Gravity
+  gravity_api: Gravity,
+  payments: Apr.Payments
 
 config :apr, Gravity,
   api_url: System.get_env("GRAVITY_API_URL") || "https://stagingapi.artsy.net",
