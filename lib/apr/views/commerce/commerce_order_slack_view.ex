@@ -158,7 +158,7 @@ defmodule Apr.Views.CommerceOrderSlackView do
     attachments ++ [
       %{
         title: "Liablity Shift",
-        value: @payments.liability_shift_happened(external_charge_id),
+        value: format_boolean(@payments.liability_shift_happened(external_charge_id)),
         short: true
       }
     ]
