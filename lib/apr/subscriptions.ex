@@ -102,8 +102,6 @@ defmodule Apr.Subscriptions do
   end
 
   def find_or_create_subscriber(params = %{"channel_id" => channel_id}) do
-    response = Repo.get_by(Subscriber, channel_id: channel_id)
-
     with nil <- Repo.get_by(Subscriber, channel_id: channel_id),
          {:ok, new_subscriber} <-
            create_subscriber(

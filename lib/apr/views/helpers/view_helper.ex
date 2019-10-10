@@ -79,4 +79,7 @@ defmodule Apr.Views.Helper do
       "N/A"
     end
   end
+
+  def format_boolean(true), do: ":verified:"
+  def format_boolean(false), do: ":exclamation:"
 end

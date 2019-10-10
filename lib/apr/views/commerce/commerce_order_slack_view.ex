@@ -1,19 +1,26 @@
 # https://github.com/artsy/exchange/blob/master/app/events/order_event.rb
 defmodule Apr.Views.CommerceOrderSlackView do
+  @payments Application.get_env(:apr, :payments)
+
   import Apr.Views.Helper
 
   alias Apr.Views.CommerceHelper
 
-  def render(event, _routing_key) do
+  def render(event, routing_key) do
     event
-    |> get_title
-    |> build_message(event)
+    |> get_title()
+    |> build_message(event, routing_key)
   end
 
   defp get_title(event) do
     case {event["verb"], event["properties"]["mode"]} do
       {"submitted", "buy"} ->
-        "🤞 Submitted"
+        liability_shift =
+          event["properties"]["external_charge_id"]
+          |> @payments.liability_shift_happened()
+          |> format_boolean()
+
+        "🤞 Submitted  #{liability_shift}"
 
       {"submitted", "offer"} ->
         "🤞 Offer Submitted"
@@ -65,9 +72,9 @@ defmodule Apr.Views.CommerceOrderSlackView do
     end
   end
 
-  defp build_message(nil, _event), do: nil
+  defp build_message(nil, _event, routing_key), do: nil
 
-  defp build_message(title, event) do
+  defp build_message(title, event, routing_key) do
     seller =
       CommerceHelper.fetch_participant_info(
         event["properties"]["seller_id"],
@@ -82,12 +89,13 @@ defmodule Apr.Views.CommerceOrderSlackView do
 
     %{
       text: "#{title} #{artworks_links_from_line_items(event["properties"]["line_items"])}",
-      attachments: order_attachments(event["properties"], event["object"]["id"], seller, buyer),
+      attachments:
+        order_attachments(routing_key, event["properties"], event["object"]["id"], seller, buyer),
       unfurl_links: true
     }
   end
 
-  defp order_attachments(order_properties, order_id, seller, buyer) do
+  defp order_attachments(routing_key, order_properties, order_id, seller, buyer) do
     fields =
       order_attachment_fields(order_properties, seller, buyer)
       |> append_admin(seller["admin"])

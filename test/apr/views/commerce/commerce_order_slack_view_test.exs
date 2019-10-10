@@ -2,11 +2,17 @@ defmodule Apr.Views.CommerceOrderSlackViewTest do
   use ExUnit.Case, async: true
   alias Apr.Views.CommerceOrderSlackView
   alias Apr.Fixtures
+  import Mox
+
+  setup do
+    expect(Apr.PaymentsMock, :liability_shift_happened, fn _x -> true end)
+    :ok
+  end
 
   test "submitted buy order" do
     event = Fixtures.commerce_order_event()
     slack_view = CommerceOrderSlackView.render(event, "order.submitted")
-    assert slack_view.text == "🤞 Submitted <https://www.artsy.net/artwork/artwork1| >"
+    assert slack_view.text == "🤞 Submitted  :verified: <https://www.artsy.net/artwork/artwork1| >"
     assert slack_view[:unfurl_links] == true
   end
 
