@@ -14,7 +14,7 @@ defmodule Apr.Views.CommerceOrderSlackViewTest do
     assert slack_view.text == "🤞 Submitted <https://www.artsy.net/artwork/artwork1| >"
     assert slack_view[:unfurl_links] == true
     [%{fields: fields} | _tail] = slack_view[:attachments]
-    assert Enum.find(fields, fn f -> f[:title] == "Liablity Shift" end)[:value] == "Yes"
+    assert Enum.find(fields, fn f -> f[:title] == "Liablity Shift" end)[:value] == ":verified:"
   end
 
   test "submitted offer order" do

@@ -80,6 +80,6 @@ defmodule Apr.Views.Helper do
     end
   end
 
-  def format_boolean(true), do: "Yes"
-  def format_boolean(false), do: "No"
+  def format_boolean(true), do: ":verified:"
+  def format_boolean(false), do: ":x:"
 end
