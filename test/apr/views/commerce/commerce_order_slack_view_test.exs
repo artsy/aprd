@@ -12,7 +12,7 @@ defmodule Apr.Views.CommerceOrderSlackViewTest do
   test "submitted buy order" do
     event = Fixtures.commerce_order_event()
     slack_view = CommerceOrderSlackView.render(event, "order.submitted")
-    assert slack_view.text == "🤞 Submitted :verified: <https://www.artsy.net/artwork/artwork1| >"
+    assert slack_view.text == "🤞 Submitted  :verified: <https://www.artsy.net/artwork/artwork1| >"
     assert slack_view[:unfurl_links] == true
   end
 

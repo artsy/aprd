@@ -3,6 +3,7 @@ defmodule Apr.Payments do
 
   alias Stripe.PaymentIntent
 
+  def liability_shift_happened(nil), do: false
   def liability_shift_happened(external_charge_id) do
     with {:ok, pi} <- PaymentIntent.retrieve(external_charge_id, %{}),
          [charge | _tail] <- pi.charges.data,

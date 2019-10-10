@@ -27,7 +27,7 @@ defmodule Apr.Views.CommerceSlackViewTest do
     Mox.expect(Apr.PaymentsMock, :liability_shift_happened, fn _x -> true end)
     event = Fixtures.commerce_order_event()
     slack_view = CommerceSlackView.render(event, "order.submitted")
-    assert slack_view.text == "🤞 Submitted :verified: <https://www.artsy.net/artwork/artwork1| >"
+    assert slack_view.text == "🤞 Submitted  :verified: <https://www.artsy.net/artwork/artwork1| >"
     assert slack_view[:unfurl_links] == true
   end
 

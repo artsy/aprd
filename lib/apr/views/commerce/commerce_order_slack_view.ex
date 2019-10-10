@@ -20,7 +20,7 @@ defmodule Apr.Views.CommerceOrderSlackView do
           |> @payments.liability_shift_happened()
           |> format_boolean()
 
-        "🤞 Submitted #{liability_shift}"
+        "🤞 Submitted  #{liability_shift}"
 
       {"submitted", "offer"} ->
         "🤞 Offer Submitted"
