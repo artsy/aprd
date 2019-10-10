@@ -1,6 +1,5 @@
 # https://github.com/artsy/exchange/blob/master/app/events/order_event.rb
 defmodule Apr.Views.CommerceOrderSlackView do
-
   @payments Application.get_env(:apr, :payments)
 
   import Apr.Views.Helper
@@ -9,14 +8,19 @@ defmodule Apr.Views.CommerceOrderSlackView do
 
   def render(event, routing_key) do
     event
-    |> get_title
+    |> get_title()
     |> build_message(event, routing_key)
   end
 
   defp get_title(event) do
     case {event["verb"], event["properties"]["mode"]} do
       {"submitted", "buy"} ->
-        "🤞 Submitted"
+        liability_shift =
+          event["properties"]["external_charge_id"]
+          |> @payments.liability_shift_happened()
+          |> format_boolean()
+
+        "🤞 Submitted #{liability_shift}"
 
       {"submitted", "offer"} ->
         "🤞 Offer Submitted"
@@ -85,7 +89,8 @@ defmodule Apr.Views.CommerceOrderSlackView do
 
     %{
       text: "#{title} #{artworks_links_from_line_items(event["properties"]["line_items"])}",
-      attachments: order_attachments(routing_key, event["properties"], event["object"]["id"], seller, buyer),
+      attachments:
+        order_attachments(routing_key, event["properties"], event["object"]["id"], seller, buyer),
       unfurl_links: true
     }
   end
@@ -95,7 +100,6 @@ defmodule Apr.Views.CommerceOrderSlackView do
       order_attachment_fields(order_properties, seller, buyer)
       |> append_admin(seller["admin"])
       |> append_offer_fields(order_properties["mode"], order_properties)
-      |> append_liability_shift(routing_key, order_properties)
 
     [
       %{
@@ -153,16 +157,4 @@ defmodule Apr.Views.CommerceOrderSlackView do
     line_items
     |> Enum.map(fn li -> "<#{artwork_link(li["artwork_id"])}| >" end)
   end
-
-  defp append_liability_shift(attachments, "order.submitted", %{"external_charge_id" => external_charge_id}) do
-    attachments ++ [
-      %{
-        title: "Liablity Shift",
-        value: format_boolean(@payments.liability_shift_happened(external_charge_id)),
-        short: true
-      }
-    ]
-  end
-  defp append_liability_shift(attachments, _, _order_properties), do: attachments
-
 end
