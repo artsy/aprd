@@ -72,7 +72,7 @@ defmodule Apr.Views.CommerceOrderSlackView do
     end
   end
 
-  defp build_message(nil, _event, routing_key), do: nil
+  defp build_message(nil, _event, _routing_key), do: nil
 
   defp build_message(title, event, routing_key) do
     seller =
@@ -95,7 +95,7 @@ defmodule Apr.Views.CommerceOrderSlackView do
     }
   end
 
-  defp order_attachments(routing_key, order_properties, order_id, seller, buyer) do
+  defp order_attachments(_routing_key, order_properties, order_id, seller, buyer) do
     fields =
       order_attachment_fields(order_properties, seller, buyer)
       |> append_admin(seller["admin"])

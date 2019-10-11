@@ -1,5 +1,6 @@
 defmodule AprWeb.Endpoint do
   use Phoenix.Endpoint, otp_app: :apr
+  use Sentry.Phoenix.Endpoint
 
   socket "/socket", AprWeb.UserSocket,
     websocket: true,
