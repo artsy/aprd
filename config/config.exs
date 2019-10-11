@@ -27,6 +27,16 @@ config :apr, AprWeb.Endpoint,
   ],
   check_origin: false
 
+config :sentry,
+  dsn: System.get_env("SENTRY_DSN"),
+  environment_name: :prod,
+  included_environments: [:prod],
+  enable_source_code_context: true,
+  root_source_code_path: File.cwd!(),
+  tags: %{
+    env: "production"
+  }
+
 config :apr, :metaphysics, url: System.get_env("METAPHYSICS_URL")
 config :apr, :exchange, url: System.get_env("EXCHANGE_URL")
 
