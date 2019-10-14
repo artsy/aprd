@@ -163,7 +163,7 @@ defmodule Apr.Events do
         {:ok, artworks_order_map}
 
       {:error, error} ->
-        Logger.warn("Could not fetch artworks #{error.reason}")
+        Logger.warn("Could not fetch artworks")
         {:error, {:could_not_fetch, error.reason}}
     end
   end

@@ -64,6 +64,7 @@ defmodule Apr.Views.ConversationSlackView do
           ],
           unfurl_links: true
         }
+      _ -> nil
     end
   end
 end
