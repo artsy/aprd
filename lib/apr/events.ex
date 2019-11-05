@@ -115,8 +115,7 @@ defmodule Apr.Events do
     order_id_artwork_ids =
       order_events
       |> Enum.reduce(%{}, fn e, acc ->
-        artwork_ids =
-          e.payload["properties"]["line_items"] |> Enum.map(fn li -> li["artwork_id"] end)
+        artwork_ids = e.payload["properties"]["line_items"] |> Enum.map(fn li -> li["artwork_id"] end)
 
         acc
         |> Map.merge(%{e.payload["object"]["id"] => artwork_ids})

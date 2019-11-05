@@ -124,9 +124,9 @@ defmodule Apr.Views.ConsignmentsSlackView do
   end
 
   defp dimensions(event) do
-    "#{event["properties"]["width"]}x#{event["properties"]["height"]}x#{
-      event["properties"]["depth"]
-    }#{event["properties"]["dimensions_metric"]}"
+    "#{event["properties"]["width"]}x#{event["properties"]["height"]}x#{event["properties"]["depth"]}#{
+      event["properties"]["dimensions_metric"]
+    }"
   end
 
   defp thumbnail(event) do

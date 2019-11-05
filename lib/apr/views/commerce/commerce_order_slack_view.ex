@@ -89,8 +89,7 @@ defmodule Apr.Views.CommerceOrderSlackView do
 
     %{
       text: "#{title} #{artworks_links_from_line_items(event["properties"]["line_items"])}",
-      attachments:
-        order_attachments(routing_key, event["properties"], event["object"]["id"], seller, buyer),
+      attachments: order_attachments(routing_key, event["properties"], event["object"]["id"], seller, buyer),
       unfurl_links: true
     }
   end
@@ -124,8 +123,7 @@ defmodule Apr.Views.CommerceOrderSlackView do
         [
           %{
             title: "List Price",
-            value:
-              format_price(properties["total_list_price_cents"], properties["currency_code"]),
+            value: format_price(properties["total_list_price_cents"], properties["currency_code"]),
             short: true
           }
         ]
@@ -146,8 +144,7 @@ defmodule Apr.Views.CommerceOrderSlackView do
       },
       %{
         title: "Total Amount",
-        value:
-          format_price(order_properties["items_total_cents"], order_properties["currency_code"]),
+        value: format_price(order_properties["items_total_cents"], order_properties["currency_code"]),
         short: true
       }
     ]

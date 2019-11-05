@@ -51,12 +51,7 @@ defmodule Apr.Views.ConversationSlackView do
                 },
                 %{
                   title: "Radiation",
-                  value:
-                    "#{
-                      radiation_conversation_link(
-                        event["properties"]["radiation_conversation_id"]
-                      )
-                    }",
+                  value: "#{radiation_conversation_link(event["properties"]["radiation_conversation_id"])}",
                   short: false
                 }
               ]
@@ -64,7 +59,9 @@ defmodule Apr.Views.ConversationSlackView do
           ],
           unfurl_links: true
         }
-      _ -> nil
+
+      _ ->
+        nil
     end
   end
 end

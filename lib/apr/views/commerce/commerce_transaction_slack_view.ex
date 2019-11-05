@@ -19,9 +19,7 @@ defmodule Apr.Views.CommerceTransactionSlackView do
 
     %{
       text:
-        ":alert: <#{stripe_search_link(event["properties"]["order"]["id"])}|#{
-          event["properties"]["failure_code"]
-        }>",
+        ":alert: <#{stripe_search_link(event["properties"]["order"]["id"])}|#{event["properties"]["failure_code"]}>",
       attachments: [
         %{
           color: "#6E1FFF",
