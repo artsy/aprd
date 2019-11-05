@@ -2,6 +2,15 @@ defmodule Apr.Views.CommerceSlackViewTest do
   use ExUnit.Case, async: true
   alias Apr.Views.CommerceSlackView
   alias Apr.Fixtures
+  import Mox
+
+  setup do
+    expect(Apr.PaymentsMock, :payment_info, fn _, _ ->
+      {:ok, %{liability_shift: true, card_country: "XY", zip_check: true, cvc_check: true}}
+    end)
+
+    :ok
+  end
 
   test "Transaction event renders transaction message" do
     event =
@@ -24,7 +33,6 @@ defmodule Apr.Views.CommerceSlackViewTest do
   end
 
   test "Order event renders order message" do
-    Mox.expect(Apr.PaymentsMock, :liability_shift_happened, fn _x -> true end)
     event = Fixtures.commerce_order_event()
     slack_view = CommerceSlackView.render(event, "order.submitted")
     assert slack_view.text == "🤞 Submitted  :verified: <https://www.artsy.net/artwork/artwork1| >"

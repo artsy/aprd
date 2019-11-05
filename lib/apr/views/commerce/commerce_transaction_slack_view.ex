@@ -1,7 +1,8 @@
 defmodule Apr.Views.CommerceTransactionSlackView do
   import Apr.Views.Helper
   alias Apr.Views.CommerceHelper
-  alias Stripe.PaymentIntent
+
+  @payments Application.get_env(:apr, :payments)
 
   def render(event, _routing_key) do
     order = event["properties"]["order"]
@@ -11,10 +12,7 @@ defmodule Apr.Views.CommerceTransactionSlackView do
     fields =
       basic_fields(event, buyer)
       |> append_seller_admin(seller)
-      |> append_stripe_fields(
-        event["properties"]["external_id"],
-        event["properties"]["external_type"]
-      )
+      |> append_stripe_fields(event["properties"]["external_id"], event["properties"]["external_type"])
       |> append_fulfillment_info(order)
 
     %{
@@ -73,23 +71,28 @@ defmodule Apr.Views.CommerceTransactionSlackView do
 
   defp append_seller_admin(fields, _), do: fields
 
-  defp append_stripe_fields(fields, external_id, "payment_intent") do
-    with {:ok, pi} <- PaymentIntent.retrieve(external_id, %{expand: ["payment_method"]}) do
+  defp append_stripe_fields(fields, external_id, external_type) do
+    with {:ok, pi} <- @payments.payment_info(external_id, external_type) do
       fields ++
         [
           %{
+            title: "Liability Shift",
+            value: format_boolean(pi.liability_shift),
+            short: true
+          },
+          %{
             title: "Card Country",
-            value: pi.last_payment_error.payment_method.card.country,
+            value: pi.card_country,
             short: true
           },
           %{
             title: "CVC Check",
-            value: pi.last_payment_error.payment_method.card.checks.cvc_check,
+            value: pi.cvc_check,
             short: true
           },
           %{
             title: "ZIP Check",
-            value: pi.last_payment_error.payment_method.card.checks.address_postal_code_check,
+            value: pi.zip_check,
             short: true
           }
         ]
@@ -97,8 +100,6 @@ defmodule Apr.Views.CommerceTransactionSlackView do
       _ -> fields
     end
   end
-
-  defp append_stripe_fields(fields, _, _), do: fields
 
   defp append_fulfillment_info(fields, order) do
     case order["fulfillment_type"] do

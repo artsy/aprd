@@ -1,3 +1,3 @@
 defmodule Apr.PaymentsBehaviour do
-  @callback liability_shift_happened(String.t()) :: boolean()
+  @callback payment_info(String.t(), String.t()) :: Map.t()
 end

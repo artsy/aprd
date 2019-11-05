@@ -5,7 +5,10 @@ defmodule Apr.Views.CommerceOrderSlackViewTest do
   import Mox
 
   setup do
-    expect(Apr.PaymentsMock, :liability_shift_happened, fn _x -> true end)
+    expect(Apr.PaymentsMock, :payment_info, fn _, _ ->
+      {:ok, %{liability_shift: true, card_country: "XY", zip_check: true, cvc_check: true}}
+    end)
+
     :ok
   end
 

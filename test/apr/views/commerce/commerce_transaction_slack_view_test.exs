@@ -1,6 +1,15 @@
 defmodule Apr.Views.CommerceTransactionSlackViewTest do
   use ExUnit.Case, async: true
   alias Apr.Views.CommerceTransactionSlackView
+  import Mox
+
+  setup do
+    expect(Apr.PaymentsMock, :payment_info, fn _, _ ->
+      {:ok, %{liability_shift: true, card_country: "XY", zip_check: true, cvc_check: true}}
+    end)
+
+    :ok
+  end
 
   test "adds shipping details for orders to be shipped" do
     event =
