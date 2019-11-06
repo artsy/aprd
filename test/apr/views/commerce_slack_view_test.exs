@@ -6,7 +6,15 @@ defmodule Apr.Views.CommerceSlackViewTest do
 
   setup do
     expect(Apr.PaymentsMock, :payment_info, fn _, _ ->
-      {:ok, %{liability_shift: true, card_country: "XY", zip_check: true, cvc_check: true}}
+      {:ok,
+       %{
+         liability_shift: true,
+         card_country: "XY",
+         zip_check: true,
+         cvc_check: true,
+         charge_data: %{risk_level: "high"},
+         billing_state: "NY"
+       }}
     end)
 
     :ok
@@ -24,8 +32,7 @@ defmodule Apr.Views.CommerceSlackViewTest do
 
     slack_view = CommerceSlackView.render(event, "transaction.failure")
 
-    assert slack_view.text ==
-             ":alert: <https://dashboard.stripe.com/search?query=order123|insufficient_funds>"
+    assert slack_view.text == ":alert:"
   end
 
   test "Offer event renders offer message" do

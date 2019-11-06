@@ -9,129 +9,139 @@ defmodule Apr.Views.CommerceTransactionSlackView do
     seller = CommerceHelper.fetch_participant_info(order["seller_id"], order["seller_type"])
     buyer = CommerceHelper.fetch_participant_info(order["buyer_id"], order["buyer_type"])
 
-    fields =
-      basic_fields(event, buyer)
-      |> append_seller_admin(seller)
-      |> append_stripe_fields(event["properties"]["external_id"], event["properties"]["external_type"])
-      |> append_fulfillment_info(order)
+    attachments =
+      []
+      |> append_order_info(order)
+      |> append_participant_info(buyer, seller)
+      |> append_transaction_info(event)
 
     %{
-      text:
-        ":alert: <#{stripe_search_link(event["properties"]["order"]["id"])}|#{event["properties"]["failure_code"]}>",
-      attachments: [
-        %{
-          color: "#6E1FFF",
-          author_name: event["properties"]["order"]["code"],
-          author_link: exchange_admin_link(event["properties"]["order"]["id"]),
-          title: seller["name"],
-          title_link: exchange_partner_orders_link(seller["_id"]),
-          fields: fields
-        }
-      ],
+      text: ":alert:",
+      attachments: attachments,
       unfurl_links: true
     }
   end
 
-  defp basic_fields(event, buyer) do
+  defp append_participant_info(attachments, buyer, seller) do
+    attachments ++
+      [
+        %{
+          color: "#ED553B",
+          author_name: cleanup_name(buyer["name"]),
+          author_link: exchange_user_orders_link(buyer["_id"]),
+          title: seller["name"],
+          title_link: exchange_partner_orders_link(seller["_id"]),
+          fields:
+            [
+              %{
+                title: "User Since",
+                value: format_datetime_string(buyer["created_at"]),
+                short: true
+              }
+            ] ++ seller_admin(seller)
+        }
+      ]
+  end
+
+  defp append_order_info(attachments, order) do
+    attachments ++
+      [
+        %{
+          color: "#20639B",
+          author_name: order["code"],
+          author_link: exchange_admin_link(order["id"]),
+          fields:
+            [
+              %{
+                title: "#{order["mode"]} / #{order["fulfillment_type"]}",
+                value:
+                  format_price(
+                    order["items_total_cents"],
+                    order["currency_code"]
+                  ),
+                short: false
+              }
+            ] ++ fulfillment_info(order)
+        }
+      ]
+  end
+
+  defp append_transaction_info(attachments, event) do
+    attachments ++
+      [
+        %{
+          color: "#6E1FFF",
+          title: event["properties"]["failure_message"],
+          title_link: stripe_search_link(event["properties"]["order"]["id"]),
+          author_name: event["properties"]["failure_code"],
+          author_link: stripe_search_link(event["properties"]["order"]["id"]),
+          fields:
+            [
+              %{
+                title: "Transaction Type",
+                value: event["properties"]["transaction_type"],
+                short: true
+              }
+            ] ++ stripe_fields(event["properties"]["external_id"], event["properties"]["external_type"])
+        }
+      ]
+  end
+
+  defp fulfillment_info(order = %{"fulfillment_type" => "ship"}) do
+    [
+      %{title: "Shipping Country", value: order["shipping_country"], short: true},
+      %{title: "Shipping Name", value: cleanup_name(order["shipping_name"]), short: true},
+      %{title: "Shipping State", value: order["shipping_region"], short: true}
+    ]
+  end
+
+  defp fulfillment_info(_), do: []
+
+  defp seller_admin(%{"admin" => %{"name" => name}}) do
     [
       %{
-        title: "Purchase Method",
-        value: event["properties"]["order"]["mode"],
-        short: true
-      },
-      %{
-        title: "Buyer",
-        value: cleanup_name(buyer["name"]),
-        short: true
-      },
-      %{
-        title: "Buyer Joined at",
-        value: format_datetime_string(buyer["created_at"]),
-        short: true
-      },
-      %{
-        title: "Failure Message",
-        value: event["properties"]["failure_message"],
-        short: true
-      },
-      %{
-        title: "Transaction Type",
-        value: event["properties"]["transaction_type"],
-        short: true
-      },
-      %{
-        title: "Total Amount",
-        value:
-          format_price(
-            event["properties"]["order"]["items_total_cents"],
-            event["properties"]["order"]["currency_code"]
-          ),
+        title: "Partner Admin",
+        value: name,
         short: true
       }
     ]
   end
 
-  defp append_seller_admin(fields, %{"admin" => %{"name" => name}}),
-    do: fields ++ [%{title: "Admin", value: name, short: true}]
+  defp seller_admin(_), do: []
 
-  defp append_seller_admin(fields, _), do: fields
-
-  defp append_stripe_fields(fields, external_id, external_type) do
+  defp stripe_fields(external_id, external_type) do
     with {:ok, pi} <- @payments.payment_info(external_id, external_type) do
-      fields ++
-        [
-          %{
-            title: "Liability Shift",
-            value: format_boolean(pi.liability_shift),
-            short: true
-          },
-          %{
-            title: "Card Country",
-            value: pi.card_country,
-            short: true
-          },
-          %{
-            title: "CVC Check",
-            value: pi.cvc_check,
-            short: true
-          },
-          %{
-            title: "ZIP Check",
-            value: pi.zip_check,
-            short: true
-          },
-          %{
-            title: "Risk Level",
-            value: pi.charge_data.risk_level,
-            short: true
-          },
-          %{
-            title: "Billing State",
-            value: pi.billing_state,
-            short: true
-          }
-        ]
+      [
+        %{
+          title: "Risk Level",
+          value: pi.charge_data.risk_level,
+          short: false
+        },
+        %{
+          title: "Card Country",
+          value: pi.card_country,
+          short: true
+        },
+        %{
+          title: "Billing State",
+          value: pi.billing_state,
+          short: true
+        },
+        %{
+          title: "CVC Check  #{format_check(pi.cvc_check)}",
+          short: true
+        },
+        %{
+          title: "ZIP Check  #{format_check(pi.zip_check)}",
+          short: true
+        },
+        %{
+          title: "Liability Shift #{format_boolean(pi.liability_shift)}",
+          short: true
+        }
+      ]
     else
-      _ -> fields
-    end
-  end
-
-  defp append_fulfillment_info(fields, order) do
-    case order["fulfillment_type"] do
-      "ship" ->
-        fields ++
-          [
-            %{title: "Fulfillment Type", value: order["fulfillment_type"], short: true},
-            %{title: "Shipping Country", value: order["shipping_country"], short: true},
-            %{title: "Shipping Name", value: cleanup_name(order["shipping_name"]), short: true},
-            %{title: "Shipping State", value: order["shipping_region"], short: true}
-          ]
-
-      "pickup" ->
-        fields ++ [%{title: "Fulfillment Type", value: order["fulfillment_type"], short: true}]
-
-      _ ->
-        fields
+      _ -> []
     end
   end
 end
