@@ -45,6 +45,11 @@ defmodule Apr.Views.CommerceTransactionSlackView do
         short: true
       },
       %{
+        title: "Buyer Joined at",
+        value: format_datetime_string(buyer["created_at"]),
+        short: true
+      },
+      %{
         title: "Failure Message",
         value: event["properties"]["failure_message"],
         short: true
@@ -94,6 +99,16 @@ defmodule Apr.Views.CommerceTransactionSlackView do
             title: "ZIP Check",
             value: pi.zip_check,
             short: true
+          },
+          %{
+            title: "Risk Level",
+            value: pi.charge_data.risk_level,
+            short: true
+          },
+          %{
+            title: "Billing State",
+            value: pi.billing_state,
+            short: true
           }
         ]
     else
@@ -108,7 +123,8 @@ defmodule Apr.Views.CommerceTransactionSlackView do
           [
             %{title: "Fulfillment Type", value: order["fulfillment_type"], short: true},
             %{title: "Shipping Country", value: order["shipping_country"], short: true},
-            %{title: "Shipping Name", value: cleanup_name(order["shipping_name"]), short: true}
+            %{title: "Shipping Name", value: cleanup_name(order["shipping_name"]), short: true},
+            %{title: "Shipping State", value: order["shipping_region"], short: true}
           ]
 
       "pickup" ->

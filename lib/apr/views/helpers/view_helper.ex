@@ -82,4 +82,12 @@ defmodule Apr.Views.Helper do
 
   def format_boolean(true), do: ":verified:"
   def format_boolean(false), do: ":exclamation:"
+
+  def format_datetime_string(datetime_string) when is_binary(datetime_string) do
+    case DateTime.from_iso8601(datetime_string) do
+      {:ok, datetime} -> NimbleStrftime.format(datetime, "%b %d %Y")
+      _ -> "Unknown Date"
+    end
+  end
+  def format_datetime_string(_), do: "Unknown Date"
 end

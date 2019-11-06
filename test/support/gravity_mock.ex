@@ -1,9 +1,10 @@
 defmodule GravityMock do
-  def get!("/users/" <> id) do
+  def get!("/v1/user/" <> id) do
     %{
       body: %{
         "id" => id,
-        "name" => "Mocked User2"
+        "name" => "Mocked User2",
+        "created_at" => "2019-11-04T23:35:09+00:00"
       }
     }
   end
@@ -35,5 +36,13 @@ defmodule GravityMock do
         "eligible_sale_artworks_count" => "2"
       }
     }
+  end
+
+  def match_partners(_term, _token) do
+    %{}
+  end
+
+  def match_users(_term, _token) do
+    %{}
   end
 end

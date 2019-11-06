@@ -5,13 +5,16 @@ defmodule Apr.Payments do
 
   def payment_info(external_id, "payment_intent") do
     with {:ok, pi} <- PaymentIntent.retrieve(external_id, %{expand: ["payment_method"]}),
-         liability_shift <- liability_shift_from_payment(pi) do
+         liability_shift <- liability_shift_from_payment(pi),
+         charge_data <- charge_data(pi) do
       {:ok,
        %{
          liability_shift: liability_shift,
+         charge_data: charge_data,
          card_country: pi.last_payment_error.payment_method.card.country,
          cvc_check: pi.last_payment_error.payment_method.card.checks.cvc_check,
-         zip_check: pi.last_payment_error.payment_method.card.checks.address_postal_code_check
+         zip_check: pi.last_payment_error.payment_method.card.checks.address_postal_code_check,
+         billing_state: pi.last_payment_error.payment_method.billing_details.address.state
        }}
     else
       _ -> nil
@@ -27,6 +30,17 @@ defmodule Apr.Payments do
       succeeded
     else
       _ -> false
+    end
+  end
+
+  defp charge_data(payment_intent) do
+    with [charge | _tail] <- payment_intent.charges.data do
+      %{
+        risk_level: charge.outcome.risk_level,
+        fraud_details: charge.fraud_details
+      }
+    else
+      _ -> %{}
     end
   end
 end

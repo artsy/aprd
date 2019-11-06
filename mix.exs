@@ -53,7 +53,8 @@ defmodule Apr.MixProject do
       {:slack, "~> 0.15.0"},
       {:stripity_stripe, "~> 2.4.0"},
       {:mox, "~> 0.5", only: :test},
-      {:sentry, "~> 7.0"}
+      {:sentry, "~> 7.0"},
+      {:nimble_strftime, "~> 0.1.0"}
     ]
   end
 

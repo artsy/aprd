@@ -17,7 +17,9 @@ defmodule Apr.Views.CommerceSlackViewTest do
       Apr.Fixtures.commerce_transaction_event(%{
         "id" => "order123",
         "items_total_cents" => 2_000_000,
-        "currency_code" => "USD"
+        "currency_code" => "USD",
+        "buyer_id" => "user1",
+        "buyer_type" => "user"
       })
 
     slack_view = CommerceSlackView.render(event, "transaction.failure")
