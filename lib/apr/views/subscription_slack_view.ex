@@ -6,8 +6,7 @@ defmodule Apr.Views.SubscriptionSlackView do
       text: "",
       attachments: [
         %{
-          title:
-            ":moneybag: #{event["properties"]["partner"]["name"]}'s subscription #{event["verb"]}",
+          title: ":moneybag: #{event["properties"]["partner"]["name"]}'s subscription #{event["verb"]}",
           title_link: "#{admin_subscription_link(event["object"]["id"])}",
           fields: [
             %{

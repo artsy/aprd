@@ -10,10 +10,7 @@ defmodule Apr.Views.SalesSlackView do
     case routing_key do
       "sale.started" ->
         %{
-          text:
-            ":gavel: :star: ted: <#{artsy_sale_link(event["properties"]["id"])}|#{
-              event["properties"]["name"]
-            }>",
+          text: ":gavel: :star: ted: <#{artsy_sale_link(event["properties"]["id"])}|#{event["properties"]["name"]}>",
           attachments: sale_attachments(event, routing_key, sale),
           unfurl_links: true
         }
@@ -21,9 +18,7 @@ defmodule Apr.Views.SalesSlackView do
       "sale.ended" ->
         %{
           text:
-            ":gavel: :shaka: : ended: <#{artsy_sale_link(event["properties"]["id"])}|#{
-              event["properties"]["name"]
-            }>",
+            ":gavel: :shaka: : ended: <#{artsy_sale_link(event["properties"]["id"])}|#{event["properties"]["name"]}>",
           attachments: sale_attachments(event, routing_key, sale),
           unfurl_links: true
         }

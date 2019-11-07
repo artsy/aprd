@@ -40,9 +40,7 @@ defmodule Apr.Commands do
           |> Enum.reject(fn x -> x == nil end)
 
         if Enum.count(removed_topics) > 0 do
-          ":+1: Unsubscribed from #{
-            Enum.join(Enum.map(removed_topics, fn x -> "_#{x}_" end), " ")
-          }"
+          ":+1: Unsubscribed from #{Enum.join(Enum.map(removed_topics, fn x -> "_#{x}_" end), " ")}"
         else
           "Can't find a matching subscription to unsubscribe!"
         end

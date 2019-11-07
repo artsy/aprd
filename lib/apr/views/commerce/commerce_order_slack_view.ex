@@ -15,12 +15,12 @@ defmodule Apr.Views.CommerceOrderSlackView do
   defp get_title(event) do
     case {event["verb"], event["properties"]["mode"]} do
       {"submitted", "buy"} ->
-        liability_shift =
-          event["properties"]["external_charge_id"]
-          |> @payments.liability_shift_happened()
-          |> format_boolean()
-
-        "🤞 Submitted  #{liability_shift}"
+        with {:ok, payment_info} <-
+               @payments.payment_info(event["properties"]["external_charge_id"], event["properties"]["external_type"]) do
+          "🤞 Submitted  #{format_boolean(payment_info.charge_data.liability_shift)}"
+        else
+          _ -> "🤞Submitted"
+        end
 
       {"submitted", "offer"} ->
         "🤞 Offer Submitted"
@@ -89,8 +89,7 @@ defmodule Apr.Views.CommerceOrderSlackView do
 
     %{
       text: "#{title} #{artworks_links_from_line_items(event["properties"]["line_items"])}",
-      attachments:
-        order_attachments(routing_key, event["properties"], event["object"]["id"], seller, buyer),
+      attachments: order_attachments(routing_key, event["properties"], event["object"]["id"], seller, buyer),
       unfurl_links: true
     }
   end
@@ -124,8 +123,7 @@ defmodule Apr.Views.CommerceOrderSlackView do
         [
           %{
             title: "List Price",
-            value:
-              format_price(properties["total_list_price_cents"], properties["currency_code"]),
+            value: format_price(properties["total_list_price_cents"], properties["currency_code"]),
             short: true
           }
         ]
@@ -146,8 +144,7 @@ defmodule Apr.Views.CommerceOrderSlackView do
       },
       %{
         title: "Total Amount",
-        value:
-          format_price(order_properties["items_total_cents"], order_properties["currency_code"]),
+        value: format_price(order_properties["items_total_cents"], order_properties["currency_code"]),
         short: true
       }
     ]

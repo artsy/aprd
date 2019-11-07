@@ -100,8 +100,7 @@ defmodule Apr.SubscriptionsTest do
     end
 
     test "create_subscription/1 with invalid data returns error changeset" do
-      assert {:error, %Ecto.Changeset{}} =
-               Subscriptions.create_subscription(%{routing_key: "something"})
+      assert {:error, %Ecto.Changeset{}} = Subscriptions.create_subscription(%{routing_key: "something"})
     end
   end
 end

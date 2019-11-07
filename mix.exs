@@ -51,9 +51,10 @@ defmodule Apr.MixProject do
       {:postgrex, ">= 0.0.0"},
       {:sentient, git: "https://github.com/rdalin82/sentient.git"},
       {:slack, "~> 0.15.0"},
-      {:stripity_stripe, "~> 2.4.0"},
+      {:stripity_stripe, "~> 2.4"},
       {:mox, "~> 0.5", only: :test},
-      {:sentry, "~> 7.0"}
+      {:sentry, "~> 7.0"},
+      {:nimble_strftime, "~> 0.1.0"}
     ]
   end
 

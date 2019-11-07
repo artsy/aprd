@@ -1,7 +1,7 @@
 defmodule Apr.Views.CommerceHelper do
   @gravity_api Application.get_env(:apr, :gravity_api)
 
-  def fetch_participant_info(id, "user"), do: @gravity_api.get!("/users/#{id}").body
+  def fetch_participant_info(id, "user"), do: @gravity_api.get!("/v1/user/#{id}").body
   def fetch_participant_info(id, _), do: @gravity_api.get!("/v1/partner/#{id}").body
 
   def line_item_attachments(line_items) do

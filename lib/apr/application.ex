@@ -20,9 +20,7 @@ defmodule Apr.Application do
       },
       %{
         id: :conversations,
-        start:
-          {Apr.AmqEventService, :start_link,
-           [%{topic: "conversations", routing_keys: ["conversation.*"]}]}
+        start: {Apr.AmqEventService, :start_link, [%{topic: "conversations", routing_keys: ["conversation.*"]}]}
       },
       %{
         id: :inquiries,

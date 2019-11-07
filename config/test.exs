@@ -24,3 +24,8 @@ config :apr, Apr.Repo,
   hostname: System.get_env("DB_HOST") || "localhost",
   adapter: Ecto.Adapters.Postgres,
   pool: Ecto.Adapters.SQL.Sandbox
+
+config :apr, RabbitMQ,
+  username: System.get_env("RABBITMQ_USER") || "guest",
+  password: System.get_env("RABBITMQ_PASSWORD") || "guest",
+  host: System.get_env("RABBITMQ_HOST") || "localhost"

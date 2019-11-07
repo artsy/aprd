@@ -176,8 +176,7 @@ defmodule AprWeb.OrderDashboardLive do
     approved_order_events = Events.list_events(routing_key: "order.approved", day_threshold: 1)
     active_orders = Events.active_orders()
 
-    active_orders_grouped =
-      Enum.group_by(active_orders, fn e -> e.payload["properties"]["currency_code"] end)
+    active_orders_grouped = Enum.group_by(active_orders, fn e -> e.payload["properties"]["currency_code"] end)
 
     with {:ok, artworks} <- Events.fetch_artworks(approved_order_events ++ active_orders) do
       {:noreply,
@@ -190,7 +189,7 @@ defmodule AprWeb.OrderDashboardLive do
        )}
     else
       [] -> {:noreply, socket}
-      {:error, error} -> {:noreply, socket}
+      {:error, _error} -> {:noreply, socket}
     end
   end
 

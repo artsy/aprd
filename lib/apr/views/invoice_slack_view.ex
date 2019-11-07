@@ -42,10 +42,7 @@ defmodule Apr.Views.InvoiceSlackView do
             },
             %{
               title: "Artworks",
-              value:
-                artworks_display_from_artworkgroups(
-                  event["properties"]["invoice"]["artwork_groups"]
-                ),
+              value: artworks_display_from_artworkgroups(event["properties"]["invoice"]["artwork_groups"]),
               short: false
             },
             %{
@@ -55,10 +52,7 @@ defmodule Apr.Views.InvoiceSlackView do
             },
             %{
               title: "Impulse Link",
-              value:
-                impulse_conversation_link(
-                  event["properties"]["invoice"]["impulse_conversation_id"]
-                )
+              value: impulse_conversation_link(event["properties"]["invoice"]["impulse_conversation_id"])
             },
             %{
               title: "Charge Id",

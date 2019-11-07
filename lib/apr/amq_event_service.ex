@@ -64,8 +64,7 @@ defmodule Apr.AmqEventService do
 
   @impl true
   def handle_info(
-        {:basic_deliver, payload,
-         %{delivery_tag: tag, redelivered: redelivered, routing_key: routing_key}},
+        {:basic_deliver, payload, %{delivery_tag: tag, redelivered: redelivered, routing_key: routing_key}},
         {chan, opts}
       ) do
     spawn(fn ->
