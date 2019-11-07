@@ -189,7 +189,7 @@ defmodule AprWeb.OrderDashboardLive do
        )}
     else
       [] -> {:noreply, socket}
-      {:error, error} -> {:noreply, socket}
+      {:error, _error} -> {:noreply, socket}
     end
   end
 

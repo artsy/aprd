@@ -15,12 +15,12 @@ defmodule Apr.Views.CommerceOrderSlackView do
   defp get_title(event) do
     case {event["verb"], event["properties"]["mode"]} do
       {"submitted", "buy"} ->
-        liability_shift =
-          event["properties"]["external_charge_id"]
-          |> @payments.liability_shift_happened()
-          |> format_boolean()
-
-        "🤞 Submitted  #{liability_shift}"
+        with {:ok, payment_info} <-
+               @payments.payment_info(event["properties"]["external_charge_id"], event["properties"]["external_type"]) do
+          "🤞 Submitted  #{format_boolean(payment_info.charge_data.liability_shift)}"
+        else
+          _ -> "🤞Submitted"
+        end
 
       {"submitted", "offer"} ->
         "🤞 Offer Submitted"
