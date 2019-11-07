@@ -136,7 +136,7 @@ defmodule Apr.Views.CommerceTransactionSlackView do
           short: true
         },
         %{
-          title: "Liability Shift #{format_boolean(pi.liability_shift)}",
+          title: "Liability Shift #{format_boolean(pi.charge_data.liability_shift)}",
           short: true
         }
       ]

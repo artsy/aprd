@@ -17,7 +17,7 @@ defmodule Apr.Views.CommerceOrderSlackView do
       {"submitted", "buy"} ->
         with {:ok, payment_info} <-
                @payments.payment_info(event["properties"]["external_charge_id"], event["properties"]["external_type"]) do
-          "🤞 Submitted  #{format_boolean(payment_info.liability_shift)}"
+          "🤞 Submitted  #{format_boolean(payment_info.charge_data.liability_shift)}"
         else
           _ -> "🤞Submitted"
         end

@@ -8,11 +8,10 @@ defmodule Apr.Views.CommerceSlackViewTest do
     expect(Apr.PaymentsMock, :payment_info, fn _, _ ->
       {:ok,
        %{
-         liability_shift: true,
          card_country: "XY",
          zip_check: true,
          cvc_check: true,
-         charge_data: %{risk_level: "high"},
+         charge_data: %{risk_level: "high", liability_shift: true},
          billing_state: "NY"
        }}
     end)
