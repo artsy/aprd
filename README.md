@@ -1,4 +1,4 @@
-# APRd (Artsy Real-time Dashboard) [![CircleCI](https://circleci.com/gh/artsy/apr-dashboard/tree/master.svg?style=svg)](https://circleci.com/gh/artsy/apr-dashboard/tree/master)
+# APRd (Artsy Real-time Dashboard) [![CircleCI](https://circleci.com/gh/artsy/aprd.svg?style=svg)](https://circleci.com/gh/artsy/aprd)
 
 APRd (aka. APR dashboard), is a real-time dashboard built in [Elixir](https://elixir-lang.org/) on [Phoenix Framework](https://phoenixframework.org/). For it's real-time dashboard it's using [Phoenix Live View](https://github.com/phoenixframework/phoenix_live_view) to be able to provide websocket based pages that can update in real-time based on updates on the server side.
 
