@@ -73,7 +73,7 @@ defmodule Apr.Views.CommerceTransactionSlackView do
           color: "#6E1FFF",
           title: event["properties"]["failure_message"],
           title_link: stripe_search_link(event["properties"]["order"]["id"]),
-          author_name: event["properties"]["failure_code"],
+          author_name: "#{event["properties"]["failure_code"]} / #{event["properties"]["decline_code"]}}",
           author_link: stripe_search_link(event["properties"]["order"]["id"]),
           fields:
             [
@@ -115,7 +115,7 @@ defmodule Apr.Views.CommerceTransactionSlackView do
         %{
           title: "Risk Level",
           value: pi.charge_data.risk_level,
-          short: false
+          short: true
         },
         %{
           title: "Card Country",
