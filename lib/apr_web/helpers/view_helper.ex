@@ -23,7 +23,5 @@ defmodule Apr.ViewHelper do
     |> URI.encode()
   end
 
-  defp exchange_url do
-    Application.get_env(:apr, :exchange)[:url]
-  end
+  defp exchange_url, do: Application.get_env(:apr, :exchange)[:url]
 end

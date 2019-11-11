@@ -94,4 +94,11 @@ defmodule Apr.Views.Helper do
   end
 
   def format_datetime_string(_), do: "Unknown Date"
+
+  @spec artsy_admin_user_link(String.t()) :: String.t()
+  def artsy_admin_user_link(user_id) do
+    "#{artsy_admin_url()}/user/#{user_id}"
+  end
+
+  defp artsy_admin_url, do: Application.get_env(:apr, :artsy_admin)[:url]
 end
