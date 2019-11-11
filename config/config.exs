@@ -39,6 +39,7 @@ config :sentry,
 
 config :apr, :metaphysics, url: System.get_env("METAPHYSICS_URL")
 config :apr, :exchange, url: System.get_env("EXCHANGE_URL")
+config :apr, :artsy_admin, url: System.get_env("ARTSY_ADMIN_URL")
 
 # Configures Elixir's Logger
 config :logger, :console,

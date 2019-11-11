@@ -28,7 +28,7 @@ defmodule Apr.Views.CommerceTransactionSlackView do
         %{
           color: "#ED553B",
           author_name: cleanup_name(buyer["name"]),
-          author_link: exchange_user_orders_link(buyer["_id"]),
+          author_link: artsy_admin_user_link(buyer["_id"]),
           title: seller["name"],
           title_link: exchange_partner_orders_link(seller["_id"]),
           fields:
@@ -73,7 +73,7 @@ defmodule Apr.Views.CommerceTransactionSlackView do
           color: "#6E1FFF",
           title: event["properties"]["failure_message"],
           title_link: stripe_search_link(event["properties"]["order"]["id"]),
-          author_name: "#{event["properties"]["failure_code"]} / #{event["properties"]["decline_code"]}}",
+          author_name: "#{event["properties"]["failure_code"]} / #{event["properties"]["decline_code"]}",
           author_link: stripe_search_link(event["properties"]["order"]["id"]),
           fields:
             [
