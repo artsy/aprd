@@ -6,7 +6,11 @@ defmodule Apr.Views.CommerceSlackView do
     CommerceErrorSlackView
   }
 
-  def render(event, routing_key) do
+  alias Apr.Subscriptions.{
+    Subscription
+  }
+
+  def render(%Subscription{theme: theme}, event, routing_key) when is_nil(theme) do
     cond do
       routing_key == "transaction.failure" ->
         CommerceTransactionSlackView.render(event, routing_key)
@@ -24,4 +28,10 @@ defmodule Apr.Views.CommerceSlackView do
         nil
     end
   end
+
+  def render(%Subscription{theme: "fraud"}, _event, _routing_key) do
+    nil
+  end
+
+  def render(_, _, _), do: nil
 end

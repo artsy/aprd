@@ -1,7 +1,7 @@
 defmodule Apr.Views.SubscriptionSlackView do
   import Apr.Views.Helper
 
-  def render(event) do
+  def render(_subscription, event) do
     %{
       text: "",
       attachments: [

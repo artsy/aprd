@@ -1,7 +1,7 @@
 defmodule Apr.Views.InquirySlackView do
   import Apr.Views.Helper
 
-  def render(event) do
+  def render(_subscription, event) do
     %{
       text:
         ":shaka: #{cleanup_name(event["subject"]["display"])} #{event["verb"]} on #{

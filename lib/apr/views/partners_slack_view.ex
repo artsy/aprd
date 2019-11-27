@@ -1,5 +1,5 @@
 defmodule Apr.Views.PartnersSlackView do
-  def render(event = %{"verb" => "updated", "properties" => %{"changes" => changes}}, _) do
+  def render(_subscription, event = %{"verb" => "updated", "properties" => %{"changes" => changes}}, _) do
     if Enum.member?(changes, "vat_status") do
       %{
         text: ":uk: #{event["properties"]["given_name"]} has set VAT status to #{event["properties"]["vat_status"]}",

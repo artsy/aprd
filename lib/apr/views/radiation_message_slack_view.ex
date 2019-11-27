@@ -1,7 +1,7 @@
 defmodule Apr.Views.RadiationMessageSlackView do
   import Apr.Views.Helper
 
-  def render(event) do
+  def render(_subscription, event) do
     %{
       text: ":sadbot: #{event["verb"]} event for #{radiation_link(event["object"]["link"])}",
       attachments: [
