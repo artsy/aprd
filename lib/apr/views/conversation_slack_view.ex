@@ -1,6 +1,10 @@
 defmodule Apr.Views.ConversationSlackView do
   import Apr.Views.Helper
 
+  def render(event) do
+    render(nil, event)
+  end
+
   def render(_subscription, event) do
     case event["verb"] do
       "buyer_outcome_set" ->

@@ -3,6 +3,10 @@ defmodule Apr.Views.BiddingSlackView do
 
   import Apr.Views.Helper
 
+  def render(event) do
+    render(nil, event)
+  end
+
   def render(_subscription, event) do
     artwork_data = fetch_sale_artwork(event["lotId"])
 
