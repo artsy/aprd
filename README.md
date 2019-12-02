@@ -19,6 +19,7 @@ APRd (aka. APR dashboard), is a real-time dashboard built in [Elixir](https://el
   ```
   $ git clone git@github.com:your-github-username/apr-dashboard.git
   ```
+- Ensure you have [postgres](https://www.postgresql.org/download/) and [rabbitmq](https://www.rabbitmq.com/download.html) installed
 - Install dependencies with `mix deps.get`
 - Create and migrate your database with `mix ecto.setup`
 - Install Node.js dependencies with `cd assets && npm install`
