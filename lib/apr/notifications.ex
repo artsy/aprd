@@ -5,7 +5,7 @@ defmodule Apr.Notifications do
   def receive_event(event, topic, routing_key) do
     get_subscriptions(topic, routing_key)
     |> Enum.map(&{&1, slack_message(&1, event, topic, routing_key)})
-    |> Enum.map(&post_message(&1))
+    |> Enum.map(&post_message/1)
   end
 
   defp get_subscriptions(topic, routing_key) do
