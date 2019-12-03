@@ -3,10 +3,6 @@ defmodule Apr.Views.ConsignmentsSlackView do
 
   import Apr.Views.Helper
 
-  def render(event) do
-    render(nil, event)
-  end
-
   def render(_subscription, event) do
     artist_data = fetch_artist(event["properties"]["artist_id"])
 

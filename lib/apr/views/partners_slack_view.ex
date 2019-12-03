@@ -1,8 +1,4 @@
 defmodule Apr.Views.PartnersSlackView do
-  def render(event, routing_key) do
-    render(nil, event, routing_key)
-  end
-
   def render(_subscription, event = %{"verb" => "updated", "properties" => %{"changes" => changes}}, _) do
     if Enum.member?(changes, "vat_status") do
       %{

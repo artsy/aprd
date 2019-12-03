@@ -1,10 +1,6 @@
 defmodule Apr.Views.PurchaseSlackView do
   import Apr.Views.Helper
 
-  def render(event) do
-    render(nil, event)
-  end
-
   def render(_subscription, event) do
     %{
       text:
