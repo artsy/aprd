@@ -3,13 +3,9 @@ defmodule Apr.Notifications do
   require Logger
 
   def receive_event(event, topic, routing_key) do
-    get_subscriptions(topic, routing_key)
+    Subscriptions.get_topic_subscribers(topic, routing_key)
     |> Enum.map(&{&1, slack_message(&1, event, topic, routing_key)})
     |> Enum.map(&post_message/1)
-  end
-
-  defp get_subscriptions(topic, routing_key) do
-    Subscriptions.get_topic_subscribers(topic, routing_key)
   end
 
   def slack_message(subscription, event, topic_name, routing_key) do
