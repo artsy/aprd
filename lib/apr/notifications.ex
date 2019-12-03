@@ -56,7 +56,7 @@ defmodule Apr.Notifications do
     end
   end
 
-  defp post_message({subscriber, slack_message}) do
+  defp post_message({subscriber, slack_message}) when not is_nil(slack_message) do
     if slack_message != nil do
       Slack.Web.Chat.post_message(
         "##{subscriber.channel_name}",
@@ -69,4 +69,6 @@ defmodule Apr.Notifications do
       )
     end
   end
+
+  defp post_message(_), do: nil
 end
