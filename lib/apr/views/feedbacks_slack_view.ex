@@ -17,10 +17,6 @@ defmodule Apr.Views.FeedbacksSlackView do
     String.replace(message, ~r/(\S+)@\S+/m, "\\1[@domain]", global: true)
   end
 
-  def render(event) do
-    render(nil, event)
-  end
-
   def render(_subscription, event) do
     %{
       text:
