@@ -3,8 +3,8 @@ defmodule Apr.Subscriptions.Subscription do
   import Ecto.Changeset
 
   schema "subscriptions" do
-    field :routing_key, :string
-    field :theme, :string
+    field :routing_key, :string, default: "#"
+    field :theme, :string, default: nil
 
     belongs_to :topic, Apr.Subscriptions.Topic
     belongs_to :subscriber, Apr.Subscriptions.Subscriber
