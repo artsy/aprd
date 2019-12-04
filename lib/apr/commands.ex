@@ -78,7 +78,7 @@ defmodule Apr.Commands do
   end
 
   defp parse_text(subscribe_to_text) do
-    pattern = ~r/(?<topic_name>\w+)(:(?<routing_key>\w+))?(->(?<theme>\w+))?/
+    pattern = ~r/(?<topic_name>\w+)(:(?<routing_key>[\w\.]+))?(->(?<theme>\w+))?/
     Regex.named_captures(pattern, subscribe_to_text)
   end
 
