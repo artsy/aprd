@@ -10,15 +10,11 @@ defmodule Apr.Views.CommerceSlackView do
     Subscription
   }
 
-  def render(%Subscription{theme: theme}, event, routing_key) when is_nil(theme) do
-    render(nil, event, routing_key)
-  end
-
   def render(%Subscription{theme: "fraud"}, _event, _routing_key) do
     nil
   end
 
-  def render(nil, event, routing_key) do
+  def render(_, event, routing_key) do
     cond do
       routing_key == "transaction.failure" ->
         CommerceTransactionSlackView.render(event, routing_key)
@@ -36,6 +32,4 @@ defmodule Apr.Views.CommerceSlackView do
         nil
     end
   end
-
-  def render(_, _, _), do: nil
 end
