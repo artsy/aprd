@@ -1,7 +1,7 @@
 defmodule Apr.Views.ConversationSlackView do
   import Apr.Views.Helper
 
-  def render(event) do
+  def render(_subscription, event) do
     case event["verb"] do
       "buyer_outcome_set" ->
         if event["properties"]["buyer_outcome"] == "other" do
@@ -51,7 +51,12 @@ defmodule Apr.Views.ConversationSlackView do
                 },
                 %{
                   title: "Radiation",
-                  value: "#{radiation_conversation_link(event["properties"]["radiation_conversation_id"])}",
+                  value:
+                    "#{
+                      radiation_conversation_link(
+                        event["properties"]["radiation_conversation_id"]
+                      )
+                    }",
                   short: false
                 }
               ]

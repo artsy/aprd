@@ -2,7 +2,7 @@ defmodule Apr.Views.InvoiceSlackView do
   @gravity_api Application.get_env(:apr, :gravity_api)
   import Apr.Views.Helper
 
-  def render(event, routing_key) do
+  def render(_subscription, event, routing_key) do
     partner_data = fetch_partner_data(event["properties"]["partner_id"])
 
     cond do

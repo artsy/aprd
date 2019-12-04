@@ -77,15 +77,20 @@ defmodule Apr.Commands do
     """
   end
 
+  defp parse_text(subscribe_to_text) do
+    pattern = ~r/(?<topic_name>\w+)(:(?<routing_key>\w+))?(->(?<theme>\w+))?/
+    Regex.named_captures(pattern, subscribe_to_text)
+  end
+
   defp subscribe_to(subscriber, topic_str) do
-    with [topic_name | routing_key] = String.split(topic_str, ":", parts: 2),
+    with %{"topic_name" => topic_name, "routing_key" => routing_key, "theme" => theme} <- parse_text(topic_str),
          topic when not is_nil(topic) <- Subscriptions.get_topic_by_name(topic_name),
-         routing_key <- List.first(routing_key),
          {:ok, subscription} <-
            Subscriptions.create_subscription(%{
              topic_id: topic.id,
              subscriber_id: subscriber.id,
-             routing_key: routing_key || "#"
+             routing_key: routing_key,
+             theme: theme
            }) do
       %{topic: topic_name, subscription: subscription}
     end
