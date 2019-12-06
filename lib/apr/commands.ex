@@ -20,15 +20,16 @@ defmodule Apr.Commands do
         |> Enum.join("\n")
 
       command == "subscriptions" ->
-        current_subscriptions =
-          Repo.preload(subscriber, :subscriptions).subscriptions
-          |> Enum.map(fn s ->
-            s = Repo.preload(s, :topic)
-            "*#{s.topic.name}*:#{s.routing_key || "#"}"
-          end)
+        subscriber =
+          subscriber
+          |> Repo.preload(subscriptions: :topic)
+
+        subcription_list =
+          subscriber.subscriptions
+          |> Enum.map(&subscription_display/1)
           |> Enum.join("\n")
 
-        "Subscribed topics: #{current_subscriptions}"
+        "Subscribed topics: \n #{subcription_list}"
 
       command =~ ~r/unsubscribe/ ->
         [_command | topic_names] = String.split(command, ~r{\s}, parts: 2)
@@ -46,15 +47,17 @@ defmodule Apr.Commands do
         end
 
       command =~ ~r/subscribe/ ->
-        subscribed_topics =
+        subcription_list =
           command
           |> String.split()
           |> Enum.drop(1)
           |> Enum.map(fn topic_name -> subscribe_to(subscriber, topic_name) end)
           |> Enum.reject(&is_nil/1)
-          |> Enum.map(& &1.topic)
+          |> Repo.preload(:topic)
+          |> Enum.map(&subscription_display/1)
+          |> Enum.join("\n")
 
-        ":+1: Subscribed to #{Enum.join(subscribed_topics, " ")}"
+        ":+1: Subscribed to #{subcription_list}"
 
       command =~ ~r/summary/ ->
         summary(command)
@@ -92,7 +95,7 @@ defmodule Apr.Commands do
              routing_key: routing_key,
              theme: theme
            }) do
-      %{topic: topic_name, subscription: subscription}
+      subscription
     end
   end
 
@@ -109,7 +112,11 @@ defmodule Apr.Commands do
     end
   end
 
-  defp summary(_command) do
-    ":sadbot: not supported for now, we will be back soon!"
-  end
+  defp summary(_command), do: ":sadbot: not supported for now, we will be back soon!"
+
+  defp subscription_display(%Subscription{topic: topic, routing_key: routing_key, theme: theme}) when not is_nil(theme),
+    do: "*#{topic.name}*:#{routing_key || "#"}->#{theme}"
+
+  defp subscription_display(%Subscription{topic: topic, routing_key: routing_key}),
+    do: "*#{topic.name}*:#{routing_key || "#"}"
 end
