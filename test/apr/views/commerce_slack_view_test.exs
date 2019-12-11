@@ -29,27 +29,27 @@ defmodule Apr.Views.CommerceSlackViewTest do
         "buyer_type" => "user"
       })
 
-    slack_view = CommerceSlackView.render(event, "transaction.failure")
+    slack_view = CommerceSlackView.render(nil, event, "transaction.failure")
 
     assert slack_view.text == ":alert:"
   end
 
   test "Offer event renders offer message" do
     event = Apr.Fixtures.commerce_offer_event("submitted", %{"amount_cents" => 300})
-    slack_view = CommerceSlackView.render(event, "offer.submitted")
+    slack_view = CommerceSlackView.render(nil, event, "offer.submitted")
     assert slack_view.text == ":parrotsunnies: Counteroffer submitted"
   end
 
   test "Order event renders order message" do
     event = Fixtures.commerce_order_event()
-    slack_view = CommerceSlackView.render(event, "order.submitted")
+    slack_view = CommerceSlackView.render(nil, event, "order.submitted")
     assert slack_view.text == "🤞 Submitted  :verified: <https://www.artsy.net/artwork/artwork1| >"
     assert slack_view[:unfurl_links] == true
   end
 
   test "Error event renders error message" do
     event = Apr.Fixtures.commerce_error_event()
-    slack_view = CommerceSlackView.render(event, "error.validation.insufficient_funds")
+    slack_view = CommerceSlackView.render(nil, event, "error.validation.insufficient_funds")
     assert slack_view.text == ":alert: Failed submitting an order"
   end
 end

@@ -4,7 +4,7 @@ defmodule Apr.Views.SalesSlackView do
 
   import Apr.Views.Helper
 
-  def render(event, routing_key) do
+  def render(_subscription, event, routing_key) do
     sale = fetch_sale(event["properties"]["id"])
 
     case routing_key do

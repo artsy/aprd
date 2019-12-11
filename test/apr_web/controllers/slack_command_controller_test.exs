@@ -57,7 +57,7 @@ defmodule AprWeb.SlackCommandControllerTest do
       conn = receive_slack_message("token", "subscribe #{topic.name} inquiries", "wrong_channel")
 
       assert json_response(conn, 200) == %{
-               "text" => ":+1: Subscribed to #{topic.name}",
+               "text" => ":+1: Subscribed to *#{topic.name}*:#",
                "response_type" => "in_channel"
              }
 
