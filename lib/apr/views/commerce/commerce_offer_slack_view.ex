@@ -3,7 +3,7 @@ defmodule Apr.Views.CommerceOfferSlackView do
 
   alias Apr.Views.CommerceHelper
 
-  def render(event, routing_key) do
+  def render(_, event, routing_key) do
     case routing_key do
       "offer.submitted" -> offer_submitted(event)
       "offer.pending_response" -> offer_pending_response(event)
