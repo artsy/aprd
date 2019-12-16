@@ -15,7 +15,7 @@ defmodule Apr.Views.CommerceOrderSlackView do
         %{"verb" => verb, "properties" => %{"items_total_cents" => items_total_cents}},
         _routing_key
       )
-      when items_total_cents < 300_000 or verb != "submitted",
+      when items_total_cents < 3_000_00 or verb != "submitted",
       do: nil
 
   def render(_, event, routing_key) do
