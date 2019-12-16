@@ -13,7 +13,7 @@ defmodule Apr.Views.CommerceTransactionSlackView do
         %{"properties" => %{"order" => %{"items_total_cents" => items_total_cents}}},
         _routing_key
       )
-      when items_total_cents < 3000_00,
+      when items_total_cents < 300_000,
       do: nil
 
   def render(_, event, _routing_key) do
