@@ -76,10 +76,10 @@ defmodule Apr.Fixtures do
     }
   end
 
-  def commerce_offer_order(verb \\ "submitted", state_reason \\ nil),
-    do: commerce_order_event(verb, state_reason, "offer")
+  def commerce_offer_order(verb \\ "submitted", properties \\ %{}),
+    do: commerce_order_event(verb, properties |> Map.merge(%{"mode" => "offer"}))
 
-  def commerce_order_event(verb \\ "submitted", state_reason \\ nil, mode \\ "buy") do
+  def commerce_order_event(verb \\ "submitted", properties \\ %{}) do
     %{
       "object" => %{
         "id" => "order123",
@@ -90,24 +90,26 @@ defmodule Apr.Fixtures do
         "display" => "User LastName"
       },
       "verb" => verb,
-      "properties" => %{
-        "mode" => mode,
-        "state_reason" => state_reason,
-        "seller_id" => "partner1",
-        "seller_type" => "gallery",
-        "buyer_id" => "user1",
-        "buyer_type" => "user",
-        "currency_code" => "USD",
-        "items_total_cents" => 2_000_000,
-        "total_list_price_cents" => 3000,
-        "external_charge_id" => "pi_1",
-        "line_items" => [
-          %{
-            "id" => "li-1",
-            "artwork_id" => "artwork1"
-          }
-        ]
-      }
+      "properties" =>
+        %{
+          "mode" => "buy",
+          "state_reason" => nil,
+          "seller_id" => "partner1",
+          "seller_type" => "gallery",
+          "buyer_id" => "user1",
+          "buyer_type" => "user",
+          "currency_code" => "USD",
+          "items_total_cents" => 20000_00,
+          "total_list_price_cents" => 3000,
+          "external_charge_id" => "pi_1",
+          "line_items" => [
+            %{
+              "id" => "li-1",
+              "artwork_id" => "artwork1"
+            }
+          ]
+        }
+        |> Map.merge(properties)
     }
   end
 

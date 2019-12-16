@@ -1,10 +1,11 @@
 defmodule Apr.Views.CommerceErrorSlackViewTest do
   use ExUnit.Case, async: true
   alias Apr.Views.CommerceErrorSlackView
+  alias Apr.Subscriptions.Subscription
 
   test "commerce error slack view" do
     event = Apr.Fixtures.commerce_error_event()
-    slack_view = CommerceErrorSlackView.render(event, "test_routing_key")
+    slack_view = CommerceErrorSlackView.render(%Subscription{}, event, "test_routing_key")
     assert slack_view.text == ":alert: Failed submitting an order"
 
     assert Enum.map(List.first(slack_view.attachments).fields, fn field -> field.title end) == [
