@@ -17,8 +17,7 @@ defmodule Apr.Views.SalesSlackView do
 
       "sale.ended" ->
         %{
-          text:
-            ":gavel: :shaka: : ended: <#{artsy_sale_link(event["properties"]["id"])}|#{event["properties"]["name"]}>",
+          text: ":gavel: :shaka: : ended: <#{artsy_sale_link(event["properties"]["id"])}|#{event["properties"]["name"]}>",
           attachments: sale_attachments(event, routing_key, sale),
           unfurl_links: true
         }

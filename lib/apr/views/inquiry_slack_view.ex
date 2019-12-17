@@ -3,10 +3,7 @@ defmodule Apr.Views.InquirySlackView do
 
   def render(_subscription, event) do
     %{
-      text:
-        ":shaka: #{cleanup_name(event["subject"]["display"])} #{event["verb"]} on #{
-          artwork_link(event["properties"]["inquireable"]["id"])
-        }",
+      text: ":shaka: #{cleanup_name(event["subject"]["display"])} #{event["verb"]} on #{artwork_link(event["properties"]["inquireable"]["id"])}",
       attachments: [
         %{
           fields: [

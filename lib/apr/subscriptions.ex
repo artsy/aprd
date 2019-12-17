@@ -89,16 +89,15 @@ defmodule Apr.Subscriptions do
   """
   def get_subscriber!(id), do: Repo.get!(Subscriber, id)
 
-  def get_topic_subscribers(topic_name, routing_key) do
-    Repo.all(
-      from s in Subscriber,
-        join: sc in Subscription,
-        on: s.id == sc.subscriber_id,
-        join: t in Topic,
-        on: t.id == sc.topic_id,
-        where: t.name == ^topic_name,
-        where: sc.routing_key == ^routing_key or is_nil(sc.routing_key) or sc.routing_key == "#"
+  def get_subscriptions(topic_name, routing_key) do
+    from(s in Subscription,
+      join: t in Topic,
+      on: t.id == s.topic_id,
+      where: t.name == ^topic_name,
+      where: s.routing_key == ^routing_key or is_nil(s.routing_key) or s.routing_key == "#"
     )
+    |> Repo.all()
+    |> Repo.preload(:subscriber)
   end
 
   def find_or_create_subscriber(params = %{"channel_id" => channel_id}) do

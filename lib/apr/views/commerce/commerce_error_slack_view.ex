@@ -3,7 +3,7 @@
 defmodule Apr.Views.CommerceErrorSlackView do
   import Apr.Views.Helper
 
-  def render(event, _routing_key) do
+  def render(_, event, _routing_key) do
     %{
       text: ":alert: Failed submitting an order",
       attachments: [

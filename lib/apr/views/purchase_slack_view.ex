@@ -3,10 +3,7 @@ defmodule Apr.Views.PurchaseSlackView do
 
   def render(_subscription, event) do
     %{
-      text:
-        ":shake: #{cleanup_name(event["subject"]["display"])} #{event["verb"]} #{
-          artwork_link(event["properties"]["artwork"]["id"])
-        }",
+      text: ":shake: #{cleanup_name(event["subject"]["display"])} #{event["verb"]} #{artwork_link(event["properties"]["artwork"]["id"])}",
       attachments: [
         %{
           fields: [
