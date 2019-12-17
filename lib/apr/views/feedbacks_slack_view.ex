@@ -20,9 +20,9 @@ defmodule Apr.Views.FeedbacksSlackView do
   def render(_subscription, event) do
     %{
       text:
-        "#{prefix(event)} #{cleanup_name(event["properties"]["user_name"])} #{event["verb"]} from #{
-          event["properties"]["url"]
-        }\n\n#{obfuscate_emails(event["properties"]["message"])}",
+        "#{prefix(event)} #{cleanup_name(event["properties"]["user_name"])} #{event["verb"]} from #{event["properties"]["url"]}\n\n#{
+          obfuscate_emails(event["properties"]["message"])
+        }",
       attachments: [],
       unfurl_links: false
     }

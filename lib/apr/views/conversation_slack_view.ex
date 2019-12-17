@@ -6,10 +6,7 @@ defmodule Apr.Views.ConversationSlackView do
       "buyer_outcome_set" ->
         if event["properties"]["buyer_outcome"] == "other" do
           %{
-            text:
-              ":phone: #{event["subject"]["display"]} responded on #{
-                artwork_link(List.first(event["properties"]["items"])["item_id"])
-              }",
+            text: ":phone: #{event["subject"]["display"]} responded on #{artwork_link(List.first(event["properties"]["items"])["item_id"])}",
             attachments: [
               %{
                 fields: [

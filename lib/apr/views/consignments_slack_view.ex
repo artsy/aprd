@@ -118,15 +118,11 @@ defmodule Apr.Views.ConsignmentsSlackView do
   end
 
   defp location(event) do
-    "#{event["properties"]["location_city"]}, #{event["properties"]["location_state"]}, #{
-      event["properties"]["location_country"]
-    }"
+    "#{event["properties"]["location_city"]}, #{event["properties"]["location_state"]}, #{event["properties"]["location_country"]}"
   end
 
   defp dimensions(event) do
-    "#{event["properties"]["width"]}x#{event["properties"]["height"]}x#{event["properties"]["depth"]}#{
-      event["properties"]["dimensions_metric"]
-    }"
+    "#{event["properties"]["width"]}x#{event["properties"]["height"]}x#{event["properties"]["depth"]}#{event["properties"]["dimensions_metric"]}"
   end
 
   defp thumbnail(event) do

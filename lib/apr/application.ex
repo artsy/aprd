@@ -43,9 +43,7 @@ defmodule Apr.Application do
       },
       %{
         id: :auctions,
-        start:
-          {Apr.AmqEventService, :start_link,
-           [%{topic: "auctions", routing_keys: ["SecondPriceBidPlaced"], store: true}]}
+        start: {Apr.AmqEventService, :start_link, [%{topic: "auctions", routing_keys: ["SecondPriceBidPlaced"], store: true}]}
       },
       %{
         id: :purchases,
