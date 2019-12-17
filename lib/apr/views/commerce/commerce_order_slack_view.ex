@@ -6,9 +6,7 @@ defmodule Apr.Views.CommerceOrderSlackView do
 
   alias Apr.Views.CommerceHelper
 
-  alias Apr.Subscriptions.{
-    Subscription
-  }
+  alias Apr.Subscriptions.Subscription
 
   def render(
         %Subscription{theme: "fraud"},
@@ -18,7 +16,7 @@ defmodule Apr.Views.CommerceOrderSlackView do
       when items_total_cents < 3_000_00 or verb != "submitted",
       do: nil
 
-  def render(_, event, routing_key) do
+  def render(_subscription, event, routing_key) do
     event
     |> get_title()
     |> build_message(event, routing_key)
