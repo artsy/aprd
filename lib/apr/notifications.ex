@@ -1,14 +1,16 @@
 defmodule Apr.Notifications do
   alias Apr.Subscriptions
+  alias Apr.Subscriptions.Subscription
   require Logger
 
   def receive_event(event, topic, routing_key) do
-    Subscriptions.get_topic_subscribers(topic, routing_key)
+    Subscriptions.get_subscriptions(topic, routing_key)
     |> Enum.map(&{&1, slack_message(&1, event, topic, routing_key)})
     |> Enum.map(&post_message/1)
   end
 
-  def slack_message(subscription, event, topic_name, routing_key) do
+  @spec slack_message(Subscription, Map, String, String) :: nil | Map
+  defp slack_message(subscription, event, topic_name, routing_key) do
     with topic when not is_nil(topic) <- Subscriptions.get_topic_by_name(topic_name) do
       case topic.name do
         "subscriptions" ->
@@ -48,23 +50,23 @@ defmodule Apr.Notifications do
           Apr.Views.PartnersSlackView.render(subscription, event, routing_key)
       end
     else
-      _ -> Logger.warn("Unknown Topic #{topic_name}")
+      _ ->
+        Logger.warn("Unknown Topic #{topic_name}")
+        nil
     end
   end
 
-  defp post_message({subscriber, slack_message}) when not is_nil(slack_message) do
-    if slack_message != nil do
-      Slack.Web.Chat.post_message(
-        "##{subscriber.channel_name}",
-        slack_message[:text],
-        %{
-          attachments: Poison.encode!(slack_message[:attachments]),
-          unfurl_links: slack_message[:unfurl_links],
-          as_user: true
-        }
-      )
-    end
-  end
+  defp post_message({_, nil}), do: nil
 
-  defp post_message(_), do: nil
+  defp post_message({subscription, slack_message}) do
+    Slack.Web.Chat.post_message(
+      "##{subscription.subscriber.channel_name}",
+      slack_message[:text],
+      %{
+        attachments: Poison.encode!(slack_message[:attachments]),
+        unfurl_links: slack_message[:unfurl_links],
+        as_user: true
+      }
+    )
+  end
 end
