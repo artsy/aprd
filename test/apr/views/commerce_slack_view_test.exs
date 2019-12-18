@@ -1,6 +1,7 @@
 defmodule Apr.Views.CommerceSlackViewTest do
   use ExUnit.Case, async: true
   alias Apr.Views.CommerceSlackView
+  alias Apr.Subscriptions.Subscription
   alias Apr.Fixtures
   import Mox
 
@@ -38,6 +39,12 @@ defmodule Apr.Views.CommerceSlackViewTest do
     event = Apr.Fixtures.commerce_offer_event("submitted", %{"amount_cents" => 300})
     slack_view = CommerceSlackView.render(nil, event, "offer.submitted")
     assert slack_view.text == ":parrotsunnies: Counteroffer submitted"
+  end
+
+  test "Ignores offer events for fraud theme" do
+    event = Apr.Fixtures.commerce_offer_event("submitted", %{"amount_cents" => 300})
+    slack_view = CommerceSlackView.render(%Subscription{theme: "fraud"}, event, "offer.submitted")
+    assert is_nil(slack_view)
   end
 
   test "Order event renders order message" do

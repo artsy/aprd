@@ -2,6 +2,9 @@ defmodule Apr.Views.CommerceOfferSlackView do
   import Apr.Views.Helper
 
   alias Apr.Views.CommerceHelper
+  alias Apr.Subscriptions.Subscription
+
+  def render(%Subscription{theme: "fraud"}, _, _), do: nil
 
   def render(_, event, routing_key) do
     case routing_key do
