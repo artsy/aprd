@@ -10,10 +10,10 @@ defmodule Apr.Views.CommerceOrderSlackView do
 
   def render(
         %Subscription{theme: "fraud"},
-        %{"verb" => verb, "properties" => %{"items_total_cents" => items_total_cents}},
+        %{"verb" => verb, "properties" => %{"items_total_cents" => items_total_cents, "mode" => mode}},
         _routing_key
       )
-      when items_total_cents < 3_000_00 or verb != "submitted",
+      when items_total_cents < 3_000_00 or verb != "submitted" or mode == "offer",
       do: nil
 
   def render(_subscription, event, routing_key) do
