@@ -93,27 +93,11 @@ defmodule Apr.Views.CommerceTransactionSlackViewTest do
     assert "Shipping Name" not in titles
   end
 
-  test "returns nil for subscription with fraud template and total cents below threshold" do
-    event =
-      Apr.Fixtures.commerce_transaction_event(%{
-        "id" => "order123",
-        "items_total_cents" => 2000_00,
-        "currency_code" => "USD",
-        "seller_id" => "partner1",
-        "seller_type" => "gallery",
-        "buyer_id" => "user1",
-        "buyer_type" => "user"
-      })
-
-    slack_view = CommerceTransactionSlackView.render(@fraud_theme_subscription, event, "transaction.failed")
-    assert is_nil(slack_view)
-  end
-
   test "returns message for subscription with fraud template and total cents below threshold" do
     event =
       Apr.Fixtures.commerce_transaction_event(%{
         "id" => "order123",
-        "items_total_cents" => 3001_00,
+        "items_total_cents" => 2001_00,
         "currency_code" => "USD",
         "seller_id" => "partner1",
         "seller_type" => "gallery",

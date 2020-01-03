@@ -2,19 +2,7 @@ defmodule Apr.Views.CommerceTransactionSlackView do
   import Apr.Views.Helper
   alias Apr.Views.CommerceHelper
 
-  alias Apr.Subscriptions.{
-    Subscription
-  }
-
   @payments Application.get_env(:apr, :payments)
-
-  def render(
-        %Subscription{theme: "fraud"},
-        %{"properties" => %{"order" => %{"items_total_cents" => items_total_cents}}},
-        _routing_key
-      )
-      when items_total_cents < 3_000_00,
-      do: nil
 
   def render(_, event, _routing_key) do
     order = event["properties"]["order"]
