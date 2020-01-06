@@ -1,3 +1,5 @@
+<img src="/assets/static/images/APR.png" width="100px" />
+
 # APRd (Artsy Real-time Dashboard) [![CircleCI](https://circleci.com/gh/artsy/aprd.svg?style=svg)](https://circleci.com/gh/artsy/aprd)
 
 APRd (aka. APR dashboard), is a real-time dashboard built in [Elixir](https://elixir-lang.org/) on [Phoenix Framework](https://phoenixframework.org/). For it's real-time dashboard it's using [Phoenix Live View](https://github.com/phoenixframework/phoenix_live_view) to be able to provide websocket based pages that can update in real-time based on updates on the server side.
@@ -5,9 +7,9 @@ APRd (aka. APR dashboard), is a real-time dashboard built in [Elixir](https://el
 ## Meta
 
 - State: production
-- Production: https://aprd.artsy.net/dashboard
-- Staging: https://aprd-staging.artsy.net/dashboard
-- GitHub: https://github.com/artsy/apr-dashboard/
+- Production: https://aprd.artsy.net
+- Staging: https://aprd-staging.artsy.net
+- GitHub: https://github.com/artsy/aprd/
 - CI: [CircleCI](https://circleci.com/gh/artsy/apr-dashboard); merged PRs to artsy/apr-dashboard#master are automatically deployed to staging. PRs from `staging` to `release` are automatically deployed to production. [Start a deploy...](https://github.com/artsy/apr-dashboard/compare/release...staging?expand=1)
 - Point People: [@ashkan18][ashkan18], [@zephraph][zephraph]
 
