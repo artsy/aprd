@@ -2,17 +2,17 @@
 # yarn lockfile v1
 
 
-"@artsy/palette@4.17.8":
-  version "4.17.8"
-  resolved "https://registry.yarnpkg.com/@artsy/palette/-/palette-4.17.8.tgz#a023883869f9734cc0a2f2a4c39ad00cbbe53f1c"
-  integrity sha512-ZMq1ZmGMwY4Zkr6qPl+JJ6wJ3E1Rc2OUt9/J5kc7EQyy5DVa9reOe2ON/OZQvxeph8DHWK5pK2OfqMa0QQB4BA==
+"@artsy/palette@5.1.16":
+  version "5.1.16"
+  resolved "https://registry.yarnpkg.com/@artsy/palette/-/palette-5.1.16.tgz#d224ecc90f00a298244e1c667f04cc97db899057"
+  integrity sha512-21qZveD9aKboCOCGY7gPl/UIQVUG94Qmfv/WQ2CUUClCfoE7n5ogxkLNgYLOvSl2NnmH5x4Vo6lpLN+LxySF9A==
   dependencies:
     babel-plugin-styled-components "^1.10.0"
     d3-interpolate "^1.3.2"
     d3-shape "^1.3.5"
     luxon "^1.15"
     rc-slider "^8.6.2"
-    react-lazy-load-image-component "^1.3.2"
+    react-lazy-load-image-component "^1.4.1-beta.0"
     react-live "^1.12.0"
     react-powerplug "^1.0.0"
     react-spring "^8.0.27"
@@ -5157,14 +5157,20 @@ performance-now@^2.1.0:
   resolved "https://registry.yarnpkg.com/performance-now/-/performance-now-2.1.0.tgz#6309f4e0e5fa913ec1c69307ae364b4b377c9e7b"
   integrity sha1-Ywn04OX6kT7BxpMHrjZLSzd8nns=
 
-"phoenix@file:../deps/phoenix":
+phoenix@1.4.10:
   version "1.4.10"
+  resolved "https://registry.yarnpkg.com/phoenix/-/phoenix-1.4.10.tgz#02ebd5bf57bdbeb3ff43d8de6d44a8af7968991b"
+  integrity sha512-apWRDNUj3c//fwh7F7ixh90qejE2j9FFw+e0qSDzYKzszByGrrv9uSmsqol/7x2E+r0GbkXKaeH93eXTQbhJ1A==
 
-"phoenix_html@file:../deps/phoenix_html":
+phoenix_html@2.13.2:
   version "2.13.2"
+  resolved "https://registry.yarnpkg.com/phoenix_html/-/phoenix_html-2.13.2.tgz#28a2376b713e9d8dda0aee8710f7c73732ff0157"
+  integrity sha512-tXrTduDqIisIn0nhZJURLqjaN5aq0nYAwh6wKGQKug6FHEsRmjxWMCVSrPyXo+2ldf7EQLUWdX1ZzlNtyXTsSQ==
 
-"phoenix_live_view@file:../deps/phoenix_live_view":
+phoenix_live_view@0.3.1:
   version "0.3.1"
+  resolved "https://registry.yarnpkg.com/phoenix_live_view/-/phoenix_live_view-0.3.1.tgz#c97187f10587a6b52c34b1d4049ddcc40b5af2b3"
+  integrity sha512-xhFz1eCjYKuhPWsytfS+CtIe+2xmBhhcg59MSPx7LKLX8XwD91wRV8JkorgxT8GW6Mvb26E0xaGLWnAbRrkMPg==
 
 pify@^2.3.0:
   version "2.3.0"
@@ -5771,10 +5777,10 @@ react-is@^16.8.1:
   resolved "https://registry.yarnpkg.com/react-is/-/react-is-16.12.0.tgz#2cc0fe0fba742d97fd527c42a13bec4eeb06241c"
   integrity sha512-rPCkf/mWBtKc97aLL9/txD8DZdemK0vkA3JMLShjlJB3Pj3s+lpf1KaBzMfQrAmhMQB0n1cU/SUGgKKBCe837Q==
 
-react-lazy-load-image-component@^1.3.2:
-  version "1.3.2"
-  resolved "https://registry.yarnpkg.com/react-lazy-load-image-component/-/react-lazy-load-image-component-1.3.2.tgz#2182d6ed864feb15c30067e04e52cbcdcfc86860"
-  integrity sha512-LLbsFQwIV4TdlObBYjlJyRSmYMadd8pMOsYmihFAI6nXBgOEYVuRJlq7T0PjT5OWzntV38VvSw+P+NJU7etH3Q==
+react-lazy-load-image-component@^1.4.1-beta.0:
+  version "1.4.1-beta.0"
+  resolved "https://registry.yarnpkg.com/react-lazy-load-image-component/-/react-lazy-load-image-component-1.4.1-beta.0.tgz#4b47fcda23b40412bc03f66442e419a23e5cae9d"
+  integrity sha512-SFYu44wAMRpN9afyoeerlSprjl3K/aokueZgTW/qbqmxkEbRLUSWubr5dM1cXEAcLxFruqGdjswzB8YI3KaPBQ==
   dependencies:
     lodash.debounce "^4.0.8"
     lodash.throttle "^4.1.1"
