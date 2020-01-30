@@ -52,6 +52,14 @@ defmodule Apr.Views.Helper do
     "#{@exchange_url}/admin/orders/#{order_id}"
   end
 
+  def exchange_flag_as_fraud_link(order_id) do
+    "#{@exchange_url}/admin/orders/#{order_id}/fraud_reviews/new?fraud_review[flagged_as_fraud]=true"
+  end
+
+  def exchange_not_fraud_link(order_id) do
+    "#{@exchange_url}/admin/orders/#{order_id}/fraud_reviews/new"
+  end
+
   def exchange_partner_orders_link(partner_id) do
     "#{@exchange_url}/admin/orders?q%5Bseller_id_eq=#{partner_id}"
   end

@@ -1,10 +1,11 @@
 defmodule Apr.Views.CommerceTransactionSlackView do
   import Apr.Views.Helper
   alias Apr.Views.CommerceHelper
+  alias Apr.Subscriptions.Subscription
 
   @payments Application.get_env(:apr, :payments)
 
-  def render(_, event, _routing_key) do
+  def render(subscription, event, _routing_key) do
     order = event["properties"]["order"]
     seller = CommerceHelper.fetch_participant_info(order["seller_id"], order["seller_type"])
     buyer = CommerceHelper.fetch_participant_info(order["buyer_id"], order["buyer_type"])
@@ -14,6 +15,7 @@ defmodule Apr.Views.CommerceTransactionSlackView do
       |> append_order_info(order)
       |> append_participant_info(buyer, seller)
       |> append_transaction_info(event)
+      |> append_fraud_review_buttons(subscription, order)
 
     %{
       text: ":alert:",
@@ -85,6 +87,33 @@ defmodule Apr.Views.CommerceTransactionSlackView do
             ] ++ stripe_fields(event["properties"]["external_id"], event["properties"]["external_type"])
         }
       ]
+  end
+
+  defp append_fraud_review_buttons(attachments, %Subscription{theme: "fraud"}, order) do
+    attachments ++
+      [
+        %{
+          text: "",
+          actions: [
+            %{
+              type: "button",
+              text: "Approve",
+              style: "primary",
+              url: exchange_not_fraud_link(order["id"])
+            },
+            %{
+              type: "button",
+              text: "Flag as Fraud",
+              style: "danger",
+              url: exchange_flag_as_fraud_link(order["id"])
+            }
+          ]
+        }
+      ]
+  end
+
+  defp append_fraud_review_buttons(attachments, _, _) do
+    attachments
   end
 
   defp fulfillment_info(order = %{"fulfillment_type" => "ship"}) do
