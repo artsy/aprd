@@ -44,7 +44,7 @@ Whenever we receive a new event, after storing the event locally, we use Phoenix
 
 ## Artsy Slack Setup
 
-APRd is used to powerful critical alerting workflows in Artsy's Slack organization. After a recent incident where APRd lost its connection to Artsy's Slack, we surfaced the following steps to re-connect the digital assets needed to get it all working:
+APRd is used to power critical alerting workflows in Artsy's Slack organization. After a recent incident where APRd lost its connection to Artsy's Slack, we surfaced the following steps to re-connect the digital assets needed to get it all working:
 
 1. Re-enable the `/apr` slash command: https://artsy.slack.com/services/B227A48KX
 1. Re-enable the `@apr / APR Announcer` Slack bot: https://artsy.slack.com/services/70260076245
