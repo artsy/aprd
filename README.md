@@ -41,3 +41,15 @@ Whenever we receive a new event, after storing the event locally, we use Phoenix
 
 [ashkan18]: https://github.com/ashkan18
 [zephraph]: https://github.com/zephraph
+
+## Artsy Slack Setup
+
+APRd is used to power critical alerting workflows in Artsy's Slack organization. After a recent incident where APRd lost its connection to Artsy's Slack, we surfaced the following steps to re-connect the digital assets needed to get it all working:
+
+1. Re-enable the `/apr` slash command: https://artsy.slack.com/services/B227A48KX
+1. Re-enable the `@apr / APR Announcer` Slack bot: https://artsy.slack.com/services/70260076245
+1. Re-invite the Bot in (2) to the appropriate Slack channels
+    - You can check your work by reading the Channels attribute on the Bot show page: https://artsy.slack.com/services/70260076245
+1. Re-generate the bot API token (via https://artsy.slack.com/services/70260076245)
+1. Run `hokusai [staging|production] env set SLACK_API_TOKEN=token-from-step-4`
+1. Run `hokusai [staging|production] refresh`
