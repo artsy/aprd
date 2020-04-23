@@ -40,6 +40,23 @@ defmodule AprWeb.OrderDashboardLive do
           <%= currency(@current_month_gbp.totals.amount_cents, "GBP") %>
         </palette-jumbo>
       </section>
+      <section class="main-stats">
+        <palette-jumbo label="">
+          🇪🇺
+        </palette-jumbo>
+        <palette-jumbo label="Pending Approval GMV">
+          <%= currency(@active_orders_eur.totals.amount_cents, "EUR") %>
+        </palette-jumbo>
+        <palette-jumbo label="Today's GMV">
+          <%= currency(@approved_today_eur.totals.amount_cents, "EUR") %>
+        </palette-jumbo>
+        <palette-jumbo label="Yesterday's GMV">
+          <%= currency(@approved_yesterday_eur.totals.amount_cents, "EUR") %>
+        </palette-jumbo>
+        <palette-jumbo label="Current Month's GMV">
+          <%= currency(@current_month_eur.totals.amount_cents, "EUR") %>
+        </palette-jumbo>
+      </section>
       <section class="stats-details">
         <section class="event">
           <h2 class="sans-6"> Approved (<%= @approved_orders_one_day.count %>) </h2>
@@ -92,12 +109,16 @@ defmodule AprWeb.OrderDashboardLive do
        active_orders: aggregated_data(nil),
        active_orders_usd: aggregated_data(nil),
        active_orders_gbp: aggregated_data(nil),
+       active_orders_eur: aggregated_data(nil),
        approved_yesterday_usd: aggregated_data(nil),
        approved_today_usd: aggregated_data(nil),
        current_month_usd: aggregated_data(nil),
        approved_yesterday_gbp: aggregated_data(nil),
        approved_today_gbp: aggregated_data(nil),
        current_month_gbp: aggregated_data(nil),
+       approved_yesterday_eur: aggregated_data(nil),
+       approved_today_eur: aggregated_data(nil),
+       current_month_eur: aggregated_data(nil),
        artworks: %{}
      )}
   end
@@ -172,6 +193,39 @@ defmodule AprWeb.OrderDashboardLive do
      )}
   end
 
+  def handle_info(:eur_numbers, socket) do
+    nyc_time = NaiveDateTime.add(NaiveDateTime.utc_now(), -4 * 60 * 60, :second)
+
+    approved_yesterday_eur =
+      Events.list_events(
+        routing_key: "order.approved",
+        payload: %{properties: %{currency_code: "EUR"}},
+        start_date: Date.add(nyc_time, -1),
+        end_date: NaiveDateTime.to_date(nyc_time)
+      )
+
+    approved_today_eur =
+      Events.list_events(
+        routing_key: "order.approved",
+        payload: %{properties: %{currency_code: "EUR"}},
+        start_date: NaiveDateTime.to_date(nyc_time)
+      )
+
+    current_month_eur =
+      Events.list_events(
+        routing_key: "order.approved",
+        payload: %{properties: %{currency_code: "EUR"}},
+        start_date: %{NaiveDateTime.to_date(nyc_time) | day: 1}
+      )
+
+    {:noreply,
+     assign(socket,
+       approved_today_eur: aggregated_data(approved_today_eur),
+       approved_yesterday_eur: aggregated_data(approved_yesterday_eur),
+       current_month_eur: aggregated_data(current_month_eur)
+     )}
+  end
+
   def handle_info(:active_pending_orders, socket) do
     approved_order_events = Events.list_events(routing_key: "order.approved", day_threshold: 1)
     active_orders = Events.active_orders()
@@ -185,6 +239,7 @@ defmodule AprWeb.OrderDashboardLive do
          active_orders: aggregated_data(active_orders),
          active_orders_usd: aggregated_data(active_orders_grouped["USD"]),
          active_orders_gbp: aggregated_data(active_orders_grouped["GBP"]),
+         active_orders_eur: aggregated_data(active_orders_grouped["EUR"]),
          artworks: artworks
        )}
     else
@@ -196,6 +251,7 @@ defmodule AprWeb.OrderDashboardLive do
   defp repopulate(socket) do
     send(self(), :usd_numbers)
     send(self(), :gbp_numbers)
+    send(self(), :eur_numbers)
     send(self(), :active_pending_orders)
     {:noreply, socket}
   end
