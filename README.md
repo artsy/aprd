@@ -21,7 +21,24 @@ APRd (aka. APR dashboard), is a real-time dashboard built in [Elixir](https://el
   ```
   $ git clone git@github.com:your-github-username/apr-dashboard.git
   ```
+- Install [Elixr](https://elixir-lang.org/install.html)
+
+  Using Homebrew
+  ```
+  $ brew update
+  $ brew install elixr
+  ```
+  - Ensure that everything installed correctly by running `mix`, you should not see the following error
+    ```
+    $ command not found: mix
+    ```
+
 - Ensure you have [postgres](https://www.postgresql.org/download/) and [rabbitmq](https://www.rabbitmq.com/download.html) installed
+  - Once installed make sure both are running on your local machine (using Homebrew)
+    ```
+    $ brew services start postgresql
+    $ brew services start rabbitmq
+    ```  
 - Install dependencies with `mix deps.get`
 - Create and migrate your database with `mix ecto.setup`
 - Install Node.js dependencies with `cd assets && npm install`
@@ -32,6 +49,18 @@ APRd (aka. APR dashboard), is a real-time dashboard built in [Elixir](https://el
 - Start Phoenix endpoint with `mix phx.server`
 
 Now you can visit [`localhost:4000/dashboard`](http://localhost:4000/dashboard) from your browser.
+
+## Running the test suite
+
+Run the entire test suite using the following command
+```
+$ mix test
+```
+
+To run a specific test file, add the path to the test file
+```
+$ mix test test/apr/views/commerce/commerce_transaction_slack_view_test.exs
+```
 
 ## Architecture
 
