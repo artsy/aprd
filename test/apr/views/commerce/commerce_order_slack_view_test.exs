@@ -101,9 +101,16 @@ defmodule Apr.Views.CommerceOrderSlackViewTest do
     assert is_nil(slack_view)
   end
 
-  test "does not return message for subscription with fraud theme when offer under 10K is submitted" do
+  test "does not return message for subscription with fraud theme when offer under 10K EUR is submitted" do
     event = Fixtures.commerce_order_event("submitted", %{"items_total_cents" => 4000_00, "currency_code" => "EUR", "mode" => "offer"})
     slack_view = CommerceOrderSlackView.render(@fraud_theme_subscription, event, "order.submitted")
+
+    assert is_nil(slack_view)
+  end
+
+  test "does not return message for subscription with fraud theme when offer under 10K GBP is approved" do
+    event = Fixtures.commerce_order_event("approved", %{"items_total_cents" => 4000_00, "currency_code" => "GBP", "mode" => "offer"})
+    slack_view = CommerceOrderSlackView.render(@fraud_theme_subscription, event, "order.approved")
 
     assert is_nil(slack_view)
   end
