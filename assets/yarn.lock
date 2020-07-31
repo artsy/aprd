@@ -2,16 +2,17 @@
 # yarn lockfile v1
 
 
-"@artsy/palette@11.14.0":
-  version "11.14.0"
-  resolved "https://registry.yarnpkg.com/@artsy/palette/-/palette-11.14.0.tgz#a709ff9966f6cddabeae64d3e84041aeabb8c892"
-  integrity sha512-eyA5nB0awnHZIDVYbvHV/PwXbzRrv2nJx4jN+VBiIriZvIRKRlrkxjEonyzxORjLJD7mIp5rTW3NgGkQqrm4bQ==
+"@artsy/palette@11.15.0":
+  version "11.15.0"
+  resolved "https://registry.yarnpkg.com/@artsy/palette/-/palette-11.15.0.tgz#efc3bb2291f135200360ea61ba8ff37f38263396"
+  integrity sha512-YvRthWTBhRjuuWNqQiR8drZXBM7a1qgsyWEBb4bi8ktlARfiatR+oVTvEmdTuuKJOLoqt9Jud2wEycxsOsFcyQ==
   dependencies:
     "@styled-system/theme-get" "^5.1.2"
     babel-plugin-styled-components "^1.10.0"
     d3-interpolate "^1.3.2"
     d3-shape "^1.3.5"
     luxon "^1.15"
+    proportional-scale "^4.0.0"
     rc-slider "^8.6.2"
     react-lazy-load-image-component "1.5.0"
     react-live "^1.12.0"
@@ -5684,6 +5685,11 @@ prop-types@15.x, prop-types@^15.5.10, prop-types@^15.5.4, prop-types@^15.5.8:
     loose-envify "^1.4.0"
     object-assign "^4.1.1"
     react-is "^16.8.1"
+
+proportional-scale@^4.0.0:
+  version "4.0.0"
+  resolved "https://registry.yarnpkg.com/proportional-scale/-/proportional-scale-4.0.0.tgz#888ecdb1e5e710645601bc4edc73d619bca28ff7"
+  integrity sha512-QW0HeiudSHjBQvGnJ35W/gQYaOP09gFSf+xsYSfMYE1DQ+g26aKRN0Hlvce06WeARCUQSlLE7a+jFVMN5feB4Q==
 
 prr@~1.0.1:
   version "1.0.1"
