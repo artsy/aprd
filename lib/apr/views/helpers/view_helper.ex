@@ -19,7 +19,7 @@ defmodule Apr.Views.Helper do
   end
 
   def ohm_sale_link(path) do
-    "https://sales.artsy.net/sales/#{path}"
+    "https://auctions.artsy.net/sales/#{path}"
   end
 
   def artsy_sale_link(path) do
