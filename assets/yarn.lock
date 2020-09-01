@@ -2,15 +2,16 @@
 # yarn lockfile v1
 
 
-"@artsy/palette@11.15.0":
-  version "11.15.0"
-  resolved "https://registry.yarnpkg.com/@artsy/palette/-/palette-11.15.0.tgz#efc3bb2291f135200360ea61ba8ff37f38263396"
-  integrity sha512-YvRthWTBhRjuuWNqQiR8drZXBM7a1qgsyWEBb4bi8ktlARfiatR+oVTvEmdTuuKJOLoqt9Jud2wEycxsOsFcyQ==
+"@artsy/palette@12.5.0":
+  version "12.5.0"
+  resolved "https://registry.yarnpkg.com/@artsy/palette/-/palette-12.5.0.tgz#0d89990ca2eb11735079c9d3e643c2feb8f7763f"
+  integrity sha512-Civ9TcqX74tyfgiEPysqvKA6CPCHL8FKRshH0qlxXl+b7/CjvlB7hVzXIWH0Rn79nEPBQ0afZb3Ut5IWKEzKVA==
   dependencies:
     "@styled-system/theme-get" "^5.1.2"
     babel-plugin-styled-components "^1.10.0"
     d3-interpolate "^1.3.2"
     d3-shape "^1.3.5"
+    debounce "^1.2.0"
     luxon "^1.15"
     proportional-scale "^4.0.0"
     rc-slider "^8.6.2"
@@ -2651,6 +2652,11 @@ dateformat@^3.0.3:
   version "3.0.3"
   resolved "https://registry.yarnpkg.com/dateformat/-/dateformat-3.0.3.tgz#a6e37499a4d9a9cf85ef5872044d62901c9889ae"
   integrity sha512-jyCETtSl3VMZMWeRo7iY1FL19ges1t55hMo5yaam4Jrsm5EPL89UQkoQRyiI+Yf4k8r2ZpdngkV8hr1lIdjb3Q==
+
+debounce@^1.2.0:
+  version "1.2.0"
+  resolved "https://registry.yarnpkg.com/debounce/-/debounce-1.2.0.tgz#44a540abc0ea9943018dc0eaa95cce87f65cd131"
+  integrity sha512-mYtLl1xfZLi1m4RtQYlZgJUNQjl4ZxVnHzIR8nLLgi4q1YT8o/WM+MK/f8yfcc9s5Ir5zRaPZyZU6xs1Syoocg==
 
 debug@^2.2.0, debug@^2.3.3, debug@^2.6.8, debug@^2.6.9:
   version "2.6.9"
