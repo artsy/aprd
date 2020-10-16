@@ -5,5 +5,26 @@ services:
     extends:
       file: build.yml
       service: aprd
+    env_file: ../.env
+    environment:
+    - DB_HOST=aprd-db
+    - RABBITMQ_HOST=aprd-rabbitmq
+    - RABBITMQ_USER=guest
+    - RABBITMQ_PASSWORD=guest
+    - RABBITMQ_PORT=5672
+    - SECRET_SALT=https://gph.is/2jAtlPQ
     ports:
       - 80:80
+    depends_on:
+      - aprd-db
+      - aprd-rabbitmq
+    links:
+      - aprd-db
+      - aprd-rabbitmq
+  aprd-db:
+    image: postgres:9.6-alpine
+    environment:
+    - POSTGRES_DB=postgres
+    - POSTGRES_HOST_AUTH_METHOD=trust
+  aprd-rabbitmq:
+    image: rabbitmq:3.6-management-alpine
