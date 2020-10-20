@@ -8,7 +8,6 @@ services:
       service: aprd
     environment:
     - MIX_ENV=test
-    - DATABASE_HOST=aprd-db
     - DB_HOST=aprd-db
     - RABBITMQ_HOST=aprd-rabbitmq
     - RABBITMQ_USER=guest
