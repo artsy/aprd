@@ -21,7 +21,7 @@ APRd (aka. APR dashboard), is a real-time dashboard built in [Elixir](https://el
   ```
   $ git clone git@github.com:your-github-username/apr-dashboard.git
   ```
-- Install [Elixr](https://elixir-lang.org/install.html)
+- Install [Elixir](https://elixir-lang.org/install.html)
 
   Using Homebrew
   ```
