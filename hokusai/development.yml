@@ -2,9 +2,7 @@
 version: "2"
 services:
   aprd:
-    extends:
-      file: build.yml
-      service: aprd
+{% include 'templates/docker-compose-service.yml.j2' %}
     env_file: ../.env
     environment:
     - DB_HOST=aprd-db
