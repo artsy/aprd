@@ -3,9 +3,7 @@ version: '2'
 services:
   aprd:
     command: ./hokusai/ci.sh
-    extends:
-      file: build.yml
-      service: aprd
+{% include 'templates/docker-compose-service.yml.j2' %}
     environment:
     - MIX_ENV=test
     - DB_HOST=aprd-db
