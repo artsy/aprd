@@ -1,9 +1,13 @@
 ---
-apiVersion: extensions/v1beta1
+apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: aprd-web
   namespace: default
+  labels:
+    app: aprd
+    component: web
+    layer: application
 spec:
   replicas: 1
   strategy:
@@ -11,6 +15,11 @@ spec:
       maxSurge: 1
       maxUnavailable: 0
     type: RollingUpdate
+  selector:
+    matchLabels:
+      app: aprd
+      component: web
+      layer: application
   template:
     metadata:
       labels:
@@ -67,16 +76,18 @@ spec:
   type: ClusterIP
 
 ---
-apiVersion: extensions/v1beta1
+apiVersion: networking.k8s.io/v1beta1
 kind: Ingress
 metadata:
   name: aprd
 spec:
+  ingressClassName: nginx
   rules:
     - host: aprd.artsy.net
       http:
         paths:
           - path: /
+            pathType: Prefix
             backend:
               serviceName: aprd-web-internal
               servicePort: http
