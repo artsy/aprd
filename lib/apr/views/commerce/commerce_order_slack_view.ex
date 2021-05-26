@@ -14,11 +14,12 @@ defmodule Apr.Views.CommerceOrderSlackView do
 
   def render(subscription, event, routing_key) do
     case {subscription.theme, event["verb"], event["properties"]} do
-      {"fraud", "submitted", %{"mode" => "buy", "items_total_cents" => cents}} when cents >= 3_000_00 ->
-        generate_slack_message(event, routing_key)
-      {"fraud", "approved", %{"mode" => "offer", "currency_code" => currency_code, "items_total_cents" => cents}}
-        when cents >= 9_500_00 and (currency_code == "EUR" or currency_code == "GBP") ->
-        generate_slack_message(event, routing_key)
+      {"fraud", "submitted", %{"mode" => "buy", "decline_code" => decline_code, "items_total_cents" => cents}} 
+        when cents >= 9_500_00 and decline_code != "insufficient_funds" ->        
+          generate_slack_message(event, routing_key)
+      {"fraud", "approved", %{"mode" => "offer", "decline_code" => decline_code, "items_total_cents" => cents}} 
+        when cents >= 9_500_00 and decline_code != "insufficient_funds" ->
+          generate_slack_message(event, routing_key)
         # When subscription theme is not fraud it is nil, in this case we want to render all the messages
       {nil, _, _} ->
         generate_slack_message(event, routing_key)

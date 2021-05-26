@@ -55,7 +55,7 @@ defmodule Apr.Views.CommerceTransactionSlackView do
           fields:
             [
               %{
-                title: "#{order["mode"]} / #{order["fulfillment_type"]}",
+                title: "#{order["is_inquiry_order"] && "make-offer-inquiry" || order["mode"]} / #{order["fulfillment_type"]}",
                 value:
                   format_price(
                     order["items_total_cents"],

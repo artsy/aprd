@@ -127,7 +127,7 @@ defmodule Apr.Fixtures do
       "verb" => "created",
       "properties" => %{
         "order" => order,
-        "failure_code" => "insufficient_funds",
+        "failure_code" => "do_not_honor",
         "failure_message" => ":(",
         "transaction_type" => "capture"
       }
