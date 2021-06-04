@@ -93,6 +93,7 @@ defmodule Apr.Fixtures do
       "properties" =>
         %{
           "mode" => "buy",
+          "impulse_conversation_id" => nil,
           "state_reason" => nil,
           "seller_id" => "partner1",
           "seller_type" => "gallery",

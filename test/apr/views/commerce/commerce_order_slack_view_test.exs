@@ -30,6 +30,15 @@ defmodule Apr.Views.CommerceOrderSlackViewTest do
     assert slack_view[:unfurl_links] == true
   end
 
+  test "submitted inquiry offer order" do
+    event = Fixtures.commerce_offer_order("submitted", %{"impulse_conversation_id" => "12345"})
+    slack_view = CommerceOrderSlackView.render(@subscription, event, "order.submitted")
+    assert slack_view.text == "🤞 Offer Submitted <https://www.artsy.net/artwork/artwork1| >"
+    attachments = slack_view.attachments |> Enum.flat_map(fn a -> a.fields end) |> Enum.map(fn field -> field.value end)
+    assert "Inquiry Offer :cashmoney:" in attachments
+    assert slack_view[:unfurl_links] == true
+  end
+
   test "approved order" do
     event = Fixtures.commerce_order_event("approved")
     slack_view = CommerceOrderSlackView.render(@subscription, event, "order.approved")
