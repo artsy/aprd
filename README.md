@@ -11,7 +11,7 @@ APRd (aka. APR dashboard), is a real-time dashboard built in [Elixir](https://el
 - Staging: https://aprd-staging.artsy.net
 - GitHub: https://github.com/artsy/aprd/
 - CI: [CircleCI](https://circleci.com/gh/artsy/apr-dashboard); merged PRs to artsy/apr-dashboard#master are automatically deployed to staging. PRs from `staging` to `release` are automatically deployed to production. [Start a deploy...](https://github.com/artsy/apr-dashboard/compare/release...staging?expand=1)
-- Point People: [@jpotts244](https://github.com/jpotts244), [@zephraph][zephraph]
+- Point People: [@jpotts244](https://github.com/jpotts244)
 
 ## Setup
 
@@ -67,8 +67,6 @@ $ mix test test/apr/views/commerce/commerce_transaction_slack_view_test.exs
 APRd listens on RabbitMQ for different topics. Once it receives a new event, it will store a copy of that event locally in it's database so we can later process the data and provide detailed and aggregated data.
 
 Whenever we receive a new event, after storing the event locally, we use Phoenix's local PUB/SUB to broadcast we received an event. And then our websocket live views are listening on this internal PUB/SUB and they update the data on listening Webosckets reflecting the latest event updated.
-
-[zephraph]: https://github.com/zephraph
 
 ## Artsy Slack Setup
 
