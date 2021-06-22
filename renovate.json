@@ -1,6 +1,5 @@
 {
   "extends": ["@artsy:app"],
-  "reviewers": ["zephraph"],
-  "assignees": ["ashkan18"],
+  "assignees": ["joeyAghion"],
   "ignoreDeps": ["phoenix", "phoenix_html", "phoenix_live_view"]
 }
