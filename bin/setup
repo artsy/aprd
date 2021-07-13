@@ -9,7 +9,8 @@ set -e
 echo "brew update and bundle install..."
 brew update
 brew bundle --file=- <<EOF
-brew 'elixir'
+brew asdf
+brew node
 brew 'postgresql@12', restart_service: true
 brew 'rabbitmq', restart_service: true
 brew 'yarn'
@@ -21,23 +22,60 @@ if ! grep -Fq "stomp.listeners.tcp.1 = 12345" /usr/local/etc/rabbitmq/rabbitmq; 
   brew services restart rabbitmq
 fi
 
-echo "Install dependencies..."
+echo "Setup asdf, if required..."
+if (! grep 'asdf.sh' ~/.bash_profile)
+then
+  echo -e "\n. $(brew --prefix asdf)/asdf.sh" >> ~/.bash_profile
+  source ~/.bash_profile
+fi
+
+echo "Prepare asdf for erlang and elixir..."
+asdf plugin add erlang
+asdf plugin add elixir 
+asdf plugin update erlang
+asdf plugin update elixir 
+
+echo "asdf install erlang..."
+# On Mojave (and possibly other Mac versions), you might encounter:
+# configure: error: cannot find required auxiliary files: install-sh config.guess config.sub
+# Installing autoconf 2.69 solves it.
+version=$(sw_vers -productVersion | cut -f1,2 -d'.')
+# if Mojave
+if [[ $version == '10.14.6' ]]
+then
+  brew install autoconf@2.69 && \
+  brew link --overwrite autoconf@2.69 && \
+  autoconf -V
+fi
+asdf install erlang 23.1.1
+asdf local erlang 23.1.1
+
+echo "asdf install elixir..."
+asdf install elixir 1.10.3-otp-23
+asdf local elixir 1.10.3-otp-23
+
+echo "Prepare mix..."
+mix local.hex --force
+mix local.rebar --force
+
+echo "Mix install dependencies..."
 mix deps.get
 
-echo "Create database and perform migration..."
-mix ecto.setup
-
 echo "Install Node.js dependencies..."
-cd assets && npm install
+# just use system node/yarn versions, since repo does not specify.
+cd assets && yarn install
 cd ..
 
 echo "Download .env.shared (for common local dev config)..."
 aws s3 cp s3://artsy-citadel/dev/.env.aprd .env.shared
 
 if [ ! -e ".env" ]; then
-  echo "Initialize .env from .env.example (for any custom configuration)..."
-  cp .env.example .env
+  echo "Initialize .env from .env.shared, and from .env.example (for any custom configuration)..."
+  cat .env.shared .env.example > .env
 fi
+
+echo "Create database, perform migration, and seed data (you might have to CTRL-C to exit)..."
+mix ecto.setup
 
 echo "
 Done!
@@ -52,18 +90,23 @@ brew services
 brew info <service>
 brew --prefix <service>
 
-Your local dev environment is setup based on sane defaults in:
+Your local dev environment is setup based on:
 
-- common config in .env.shared
+- config files in ./config
+- common config in .env.shared (s3://artsy-citadel/dev/.env.aprd)
 
 If those configs do not work for you, you can over-ride in .env.
-If your over-ride should be the default, please update the shared-config in s3.
+If your over-ride should be the default, please update those configs.
+
+Please launch staging VPN because the configs point to artsy apps in staging environment.
 
 You should be able to run tests by:
 
   mix test
+  mix test test/apr/views/commerce/commerce_transaction_slack_view_test.exs
 
-To start Phoenix endpoint (at http://localhost:4000/dashboard), run:
+To start Phoenix endpoint (at http://localhost:4000), run:
 
+  export $(grep -v '^#' .env | xargs)
   mix phx.server
 "
