@@ -1,0 +1,69 @@
+#!/bin/bash
+
+# This assumes you have general prerequisites installed as by:
+# https://github.com/artsy/potential/blob/master/scripts/setup
+
+# Exit if any subcommand fails
+set -e
+
+echo "brew update and bundle install..."
+brew update
+brew bundle --file=- <<EOF
+brew 'elixir'
+brew 'postgresql@12', restart_service: true
+brew 'rabbitmq', restart_service: true
+brew 'yarn'
+EOF
+
+echo "fix rabbitmq stomp plugin not able to bind to port 61613..."
+if ! grep -Fq "stomp.listeners.tcp.1 = 12345" /usr/local/etc/rabbitmq/rabbitmq; then
+  echo "stomp.listeners.tcp.1 = 12345" >> /usr/local/etc/rabbitmq/rabbitmq
+  brew services restart rabbitmq
+fi
+
+echo "Install dependencies..."
+mix deps.get
+
+echo "Create database and perform migration..."
+mix ecto.setup
+
+echo "Install Node.js dependencies..."
+cd assets && npm install
+cd ..
+
+echo "Download .env.shared (for common local dev config)..."
+aws s3 cp s3://artsy-citadel/dev/.env.aprd .env.shared
+
+if [ ! -e ".env" ]; then
+  echo "Initialize .env from .env.example (for any custom configuration)..."
+  cp .env.example .env
+fi
+
+echo "
+Done!
+
+These backing-services should be running locally:
+
+postgres, rabbitmq
+
+If you want to customize them, find out where they are installed by:
+
+brew services
+brew info <service>
+brew --prefix <service>
+
+Your local dev environment is setup based on sane defaults in:
+
+- common config in .env.shared
+
+If those configs do not work for you, you can over-ride in .env.
+If your over-ride should be the default, please update the shared-config in s3.
+
+You should be able to run tests by:
+
+  mix test
+
+To start Phoenix endpoint (at http://localhost:4000/dashboard), run:
+
+  mix phx.server
+"
