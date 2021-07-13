@@ -71,7 +71,9 @@ aws s3 cp s3://artsy-citadel/dev/.env.aprd .env.shared
 
 if [ ! -e ".env" ]; then
   echo "Initialize .env from .env.shared, and from .env.example (for any custom configuration)..."
-  cat .env.shared .env.example > .env
+  cat .env.shared >> .env
+  echo >> .env
+  cat .env.example >> .env
 fi
 
 echo "Create database, perform migration, and seed data (you might have to CTRL-C to exit)..."
