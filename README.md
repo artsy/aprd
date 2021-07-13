@@ -13,14 +13,21 @@ APRd (aka. APR dashboard), is a real-time dashboard built in [Elixir](https://el
 - CI: [CircleCI](https://circleci.com/gh/artsy/apr-dashboard); merged PRs to artsy/apr-dashboard#master are automatically deployed to staging. PRs from `staging` to `release` are automatically deployed to production. [Start a deploy...](https://github.com/artsy/apr-dashboard/compare/release...staging?expand=1)
 - Point People: [@jpotts244](https://github.com/jpotts244)
 
-## Setup
+## Clone the project
+```
+$ git clone git@github.com:your-github-username/apr-dashboard.git
+```
 
-- Fork the project to your GitHub account
+## Setup using setup script
 
-- Clone your fork:
+- Read and run setup script.
   ```
-  $ git clone git@github.com:your-github-username/apr-dashboard.git
+  $ cat bin/setup
+  $ bin/setup
   ```
+
+## Setup manually (not using setup script)
+
 - Install [Elixir](https://elixir-lang.org/install.html)
 
   Using Homebrew
