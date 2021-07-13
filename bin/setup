@@ -31,9 +31,9 @@ fi
 
 echo "Prepare asdf for erlang and elixir..."
 asdf plugin add erlang
-asdf plugin add elixir 
+asdf plugin add elixir
 asdf plugin update erlang
-asdf plugin update elixir 
+asdf plugin update elixir
 
 echo "asdf install erlang..."
 # On Mojave (and possibly other Mac versions), you might encounter:
