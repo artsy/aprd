@@ -41,8 +41,11 @@ node_modules
 # variables.
 /config/*.secret.exs
 
-.env
+.env*
 
 /log/*
 
 .elixir_ls
+
+# Do not ignore .env.example
+!.env.example
