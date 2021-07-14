@@ -49,11 +49,12 @@ $ git clone git@github.com:artsy/aprd.git
 - Install dependencies with `mix deps.get`
 - Create and migrate your database with `mix ecto.setup`
 - Install Node.js dependencies with `cd assets && npm install`
-- Copy `.env.example` to `.env`
-- We use [Phoenix Live View](https://github.com/phoenixframework/phoenix_live_view) for our real-time data presentation. Make sure to set `SECRET_SALT` in your `.env`. Generate a secret salt with:
+- `s3://artsy-citadel/dev/.env.aprd` contains common configuration values for local dev. Copy it to `.env.shared`
+- `.env` should contain configuration values specific to your local development. Create the file if it does not exist. See `.env.example` for suggestion on values you might want to customize.
+- We use [Phoenix Live View](https://github.com/phoenixframework/phoenix_live_view) for our real-time data presentation. Make sure `SECRET_SALT` exists in `.env.shared` or `.env`. You can generate a secret salt with:
   - `mix phx.gen.secret 32`
-- Make set your RabbitMQ setting in `.env`
-- Start Phoenix endpoint with `mix phx.server`
+- The app defaults to using local RabbitMQ. If you want to use the one in our Staging environment, set the appropriate values in `.env`
+- Start Phoenix endpoint with a wrapper script: `bin/start.sh`
 
 Now you can visit [`localhost:4000`](http://localhost:4000) from your browser.
 
