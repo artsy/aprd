@@ -9,8 +9,8 @@ set -e
 echo "brew update and bundle install..."
 brew update
 brew bundle --file=- <<EOF
-brew asdf
-brew node
+brew 'asdf'
+brew 'node'
 brew 'postgresql@12', restart_service: true
 brew 'rabbitmq', restart_service: true
 brew 'yarn'
@@ -30,8 +30,11 @@ then
 fi
 
 echo "Prepare asdf for erlang and elixir..."
+# asdf errors if plugin already added
+set +e
 asdf plugin add erlang
 asdf plugin add elixir
+set -e
 asdf plugin update erlang
 asdf plugin update elixir
 
@@ -70,13 +73,17 @@ echo "Download .env.shared (for common local dev config)..."
 aws s3 cp s3://artsy-citadel/dev/.env.aprd .env.shared
 
 if [ ! -e ".env" ]; then
-  echo "Initialize .env from .env.shared, and from .env.example (for any custom configuration)..."
-  cat .env.shared >> .env
-  echo >> .env
-  cat .env.example >> .env
+  echo "Initialize .env from from .env.example (for any custom configuration)..."
+  cat .env.example > .env
 fi
 
-echo "Create database, perform migration, and seed data (you might have to CTRL-C to exit)..."
+# print this in red
+tput setaf 1
+echo "Create database, perform migration, and seed data..."
+echo "You will have to CTRL-C and abort Mix !!!!!!!!!!!!!!!!!!!!!!!!"
+sleep 3
+# revert to black
+tput setaf 0
 mix ecto.setup
 
 echo "
@@ -109,6 +116,5 @@ You should be able to run tests by:
 
 To start Phoenix endpoint (at http://localhost:4000), run:
 
-  export $(grep -v '^#' .env | xargs)
-  mix phx.server
+  bin/start.sh
 "
