@@ -187,6 +187,7 @@ defmodule Apr.Events do
         where: fragment("e0.id in (
               select distinct on (payload->'object'->> 'id') id
               from events as last_event
+              where last_event.inserted_at > now() - interval '3 months'
               order by last_event.payload->'object'->> 'id', last_event.inserted_at desc)")
 
     query
