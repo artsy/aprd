@@ -46,24 +46,4 @@ defmodule Apr.Views.BiddingSlackView do
       unfurl_links: true
     }
   end
-
-  @spec field_value_to_i(nil | bitstring() | integer()) :: nil | integer()
-  def field_value_to_i(nil), do: nil
-  def field_value_to_i(value) when is_integer(value), do: value
-
-  def field_value_to_i(value) when is_bitstring(value),
-    do: field_value_to_i(String.to_integer(value))
-
-  defp fetch_sale_artwork(lot_id) do
-    sale_artwork_response = @gravity_api.get!("/sale_artworks/#{lot_id}").body
-
-    %{
-      permalink: sale_artwork_response["_links"]["permalink"]["href"],
-      lot_number: sale_artwork_response["lot_number"],
-      currency: sale_artwork_response["currency"],
-      estimate_cents: field_value_to_i(sale_artwork_response["estimate_cents"]),
-      high_estimate_cents: field_value_to_i(sale_artwork_response["high_estimate_cents"]),
-      low_estimate_cents: field_value_to_i(sale_artwork_response["low_estimate_cents"])
-    }
-  end
 end
