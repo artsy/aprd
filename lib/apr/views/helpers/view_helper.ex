@@ -1,6 +1,20 @@
 defmodule Apr.Views.Helper do
   @exchange_url "https://exchange.artsy.net"
   @stripe_search_url "https://dashboard.stripe.com/search"
+  @gravity_api Application.get_env(:apr, :gravity_api)
+
+  def fetch_sale_artwork(lot_id) do
+    sale_artwork_response = @gravity_api.get!("/sale_artworks/#{lot_id}").body
+
+    %{
+      permalink: sale_artwork_response["_links"]["permalink"]["href"],
+      lot_number: sale_artwork_response["lot_number"],
+      currency: sale_artwork_response["currency"],
+      estimate_cents: field_value_to_i(sale_artwork_response["estimate_cents"]),
+      high_estimate_cents: field_value_to_i(sale_artwork_response["high_estimate_cents"]),
+      low_estimate_cents: field_value_to_i(sale_artwork_response["low_estimate_cents"])
+    }
+  end
 
   def artwork_link(artwork_id) do
     "https://www.artsy.net/artwork/#{artwork_id}"
@@ -93,6 +107,13 @@ defmodule Apr.Views.Helper do
 
   def format_check("pass"), do: ":white_check_mark:"
   def format_check(_), do: ":x:"
+
+  @spec field_value_to_i(nil | bitstring() | integer()) :: nil | integer()
+  def field_value_to_i(nil), do: nil
+  def field_value_to_i(value) when is_integer(value), do: value
+
+  def field_value_to_i(value) when is_bitstring(value),
+    do: field_value_to_i(String.to_integer(value))
 
   def format_datetime_string(datetime_string) when is_binary(datetime_string) do
     case DateTime.from_iso8601(datetime_string) do

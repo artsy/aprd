@@ -21,6 +21,25 @@ defmodule Apr.Views.SalesSlackView do
           attachments: sale_attachments(event, routing_key, sale),
           unfurl_links: true
         }
+
+      "lotevents-maxbidplaced.max_bid_placed" ->
+        artwork_data = fetch_sale_artwork(event["sale_artwork_id"])
+
+        %{
+          text: ":gavel: #{event["type"]} on #{artwork_data[:permalink]}",
+          attachments: [
+            %{
+              fields: [
+                %{
+                  title: "Lot number",
+                  value: artwork_data[:lot_number],
+                  short: true
+                }
+              ]
+            }
+          ],
+          unfurl_links: true
+        }
     end
   end
 
