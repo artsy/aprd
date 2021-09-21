@@ -1,0 +1,12 @@
+version: 2
+updates:
+  - package-ecosystem: "hex"
+    directory: "/"
+    schedule:
+      interval: "daily"
+    # Limit to 0 to enable only security updates:
+    open-pull-requests-limit: 0
+    assignees:
+      - jpotts244
+    reviewers:
+      - artsy/purchase-devs
