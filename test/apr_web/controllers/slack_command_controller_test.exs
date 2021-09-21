@@ -91,7 +91,7 @@ defmodule AprWeb.SlackCommandControllerTest do
       conn =
         receive_slack_message(
           "token",
-          "unsubscribe #{topic.name} inquiries",
+          "unsubscribe #{topic.name},inquiries",
           subscriber.channel_id
         )
 
