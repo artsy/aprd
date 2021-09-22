@@ -1,6 +1,6 @@
 version: 2
 updates:
-  - package-ecosystem: "hex"
+  - package-ecosystem: "mix"
     directory: "/"
     schedule:
       interval: "daily"
@@ -10,7 +10,7 @@ updates:
       - jpotts244
     reviewers:
       - artsy/purchase-devs
-  - package-ecosystem: npm
+  - package-ecosystem: "npm"
     directory: "/assets"
     schedule:
       interval: daily
