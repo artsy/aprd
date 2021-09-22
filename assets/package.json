@@ -6,7 +6,7 @@
     "watch": "webpack --mode development --watch"
   },
   "dependencies": {
-    "@artsy/palette": "17.7.2",
+    "@artsy/palette": "17.7.3",
     "phoenix": "1.4.10",
     "phoenix_html": "2.13.2",
     "phoenix_live_view": "0.3.1",
