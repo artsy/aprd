@@ -36,9 +36,9 @@ defmodule Apr.Commands do
         # add subscriptions
         removed_topics =
           List.first(topic_names)
-          |> String.split(~r{\s})
+          |> String.split(",")
           |> Enum.map(fn topic_name -> unsubscribe(subscriber, topic_name) end)
-          |> Enum.reject(fn x -> x == nil end)
+          |> Enum.reject(&is_nil/1)
 
         if Enum.count(removed_topics) > 0 do
           ":+1: Unsubscribed from #{Enum.join(Enum.map(removed_topics, fn x -> "_#{x}_" end), " ")}"
@@ -59,9 +59,6 @@ defmodule Apr.Commands do
 
         ":+1: Subscribed to #{subcription_list}"
 
-      command =~ ~r/summary/ ->
-        summary(command)
-
       true ->
         help_message()
     end
@@ -69,14 +66,12 @@ defmodule Apr.Commands do
 
   defp help_message do
     """
-    Unknown command!
-    Supported commands:
-    - `topics`
-    - `subscriptions`
-    - `subscribe <comma separated list of topics>`:
-        you can also subscribe to specific routing key/verb, by using <topic>:<routing_key> format. For example: subsribe users:user.created
-    - `unsubscribe <list of topics>`
-    - `summary <name of topic> <optional: date in 2014-11-21 format>`
+    Available commands:\n
+    - *`topics`*: Will return list of current existing topics available to subscribe.\n
+    - *`subscriptions`*: Will return current subscriptions of this channel.\n
+    - *`subscribe <comma separated list of topics>`*: Subscribes this channel to each topic.\nyou can also subscribe to specific routing key/verb, by using _`<topic>:<routing_key>`_ format.\n
+    For example: `subsribe users:user.created`\n
+    - *`unsubscribe <comma separated list of topics>`*: Unsubscribes from specific topic. Use `subscruptions` command first to get list of current subscriptions first and unsubscribe from the ones you want.\n"
     """
   end
 
@@ -111,8 +106,6 @@ defmodule Apr.Commands do
       end
     end
   end
-
-  defp summary(_command), do: ":sadbot: not supported for now, we will be back soon!"
 
   defp subscription_display(%Subscription{topic: topic, routing_key: routing_key, theme: theme}) when not is_nil(theme),
     do: "*#{topic.name}*:#{routing_key || "#"}->#{theme}"
