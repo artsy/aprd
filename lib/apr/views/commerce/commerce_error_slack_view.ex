@@ -9,7 +9,7 @@ defmodule Apr.Views.CommerceErrorSlackView do
   def render(_, event, routing_key) do
     case routing_key do
       "commerce.tax_mismatch" -> tax_mismatch_message(event)
-      _ -> defaul_message(event)
+      _ -> default_message(event)
     end
   end
 
