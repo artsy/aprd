@@ -17,6 +17,9 @@ defmodule Apr.Views.CommerceSlackView do
       routing_key =~ "order." ->
         CommerceOrderSlackView.render(subscription, event, routing_key)
 
+      routing_key =~ "error.tax_mismatch" -> 
+        CommerceErrorTaxMismatchSlackView.render(subscription, event, routing_key)
+        
       routing_key =~ "error." ->
         CommerceErrorSlackView.render(subscription, event, routing_key)
 

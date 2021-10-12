@@ -6,7 +6,14 @@ defmodule Apr.Views.CommerceErrorSlackView do
 
   def render(%Subscription{theme: "fraud"}, _, _), do: nil
 
-  def render(_, event, _routing_key) do
+  def render(_, event, routing_key) do
+    case routing_key do
+      "commerce.tax_mismatch" -> tax_mismatch_message(event)
+      _ -> defaul_message(event)
+    end
+  end
+
+  defp default_message(event) do
     %{
       text: ":alert: Failed submitting an order",
       attachments: [
@@ -57,5 +64,37 @@ defmodule Apr.Views.CommerceErrorSlackView do
         short: true
       }
     end)
+  end
+
+  defp tax_mismatch_message(event) do
+    order_id = event["properties"]["data"]["order_id"]
+    tax_transaction = event["properties"]["data"]["tax_transaction"]
+
+    %{
+      text: ":take_my_money: A tax mismatch error has occurred.",
+      attachments: [
+        %{
+          title: "Order ID",
+          value: "<#{artwork_link(order_id)}|#{order_id}>",
+          short: true
+        },
+        %{
+          title: "Tax Transaction ID",
+          value: tax_transaction["id"],
+          short: true
+        },
+        %{
+          title: "Tax Transaction Code",
+          value: tax_transaction["code"],
+          short: true
+        },
+        %{
+          title: "Tax Date",
+          value: format_datetime_string(tax_transaction["taxDate"]),
+          short: true
+        },
+      ],
+      unfurl_links: true
+    }
   end
 end
