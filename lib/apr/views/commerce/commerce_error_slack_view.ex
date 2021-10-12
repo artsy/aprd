@@ -6,7 +6,7 @@ defmodule Apr.Views.CommerceErrorSlackView do
 
   def render(%Subscription{theme: "fraud"}, _, _), do: nil
 
-  def render(_, event, routing_key) do
+  def render(_, event, _routing_key) do
     case event["properties"]["code"] do
       "tax_mismatch" -> tax_mismatch_message(event)
       _ -> default_message(event)
