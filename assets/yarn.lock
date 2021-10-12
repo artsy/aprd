@@ -7,10 +7,10 @@
   "resolved" "https://registry.npmjs.org/@artsy/palette-tokens/-/palette-tokens-2.6.0.tgz"
   "version" "2.6.0"
 
-"@artsy/palette@17.7.6":
-  "integrity" "sha512-EPrsiTkEIN2zGOoK95sT1tWveuSvMFwk8lCldbm72KTr4PiOrjakpgWiUmIuzPPiqH1cjm1QyH/uh8Ak+mpxrQ=="
-  "resolved" "https://registry.npmjs.org/@artsy/palette/-/palette-17.7.6.tgz"
-  "version" "17.7.6"
+"@artsy/palette@17.8.0":
+  version "17.8.0"
+  resolved "https://registry.yarnpkg.com/@artsy/palette/-/palette-17.8.0.tgz#5117e5101524c7e26209feb3158c5c3fb52aa8ae"
+  integrity sha512-mAIcDCzkhokEcS2kmgiKEmrza70i6JM+hqcSXF5G/u101Dht1QUqKmgU0XSM4HFdEI6J7BJ3qRxHM2I06karKQ==
   dependencies:
     "@artsy/palette-tokens" "^2.6.0"
     "@seznam/compose-react-refs" "^1.0.6"
