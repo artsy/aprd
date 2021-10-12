@@ -87,11 +87,7 @@ defmodule Apr.Fixtures do
         "code" => "tax_mismatch",
         "data" => %{
           "order_id" => "order1",
-          "tax_transaction" => %{
-            "id" => "tt_id",
-            "code" => "tt_code",
-            "taxDate" => "2021-10-12T03:11:31Z"
-          }
+          "tax_transaction_id" => "avalara_id" 
         }
       }
     }

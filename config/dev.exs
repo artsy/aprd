@@ -68,12 +68,12 @@ config :phoenix, :stacktrace_depth, 20
 config :phoenix, :plug_init_mode, :runtime
 
 # Configure your database
-config :apr, Apr.Repo,
-  database: "apr_dev",
-  hostname: "localhost",
-  pool_size: 10
-
 # config :apr, Apr.Repo,
-#   adapter: Ecto.Adapters.Postgres,
-#   url: System.get_env("DATABASE_URL"),
+#   database: "apr_dev",
+#   hostname: "localhost",
 #   pool_size: 10
+
+config :apr, Apr.Repo,
+  adapter: Ecto.Adapters.Postgres,
+  url: System.get_env("DATABASE_URL"),
+  pool_size: 10
