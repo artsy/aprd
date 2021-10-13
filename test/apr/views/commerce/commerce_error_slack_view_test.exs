@@ -24,7 +24,7 @@ defmodule Apr.Views.CommerceErrorSlackViewTest do
 
     assert Enum.map(List.first(slack_view.attachments).fields, fn field -> field.title end) == [
              "Order ID",
-             "Tax Transaction ID"
+             "Avalara Transaction ID"
            ]
 
     assert slack_view[:unfurl_links] == true
