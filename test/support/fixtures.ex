@@ -76,6 +76,23 @@ defmodule Apr.Fixtures do
     }
   end
 
+  def tax_mismatch_error_event() do
+    %{
+      "object" => %{
+        "id" => "ApplicationError",
+        "display" => "ApplicationError"
+      },
+      "properties" => %{
+        "type" => "processing",
+        "code" => "tax_mismatch",
+        "data" => %{
+          "order_id" => "order1",
+          "tax_transaction_id" => "avalara_id" 
+        }
+      }
+    }
+  end
+
   def commerce_offer_order(verb \\ "submitted", properties \\ %{}),
     do: commerce_order_event(verb, properties |> Map.merge(%{"mode" => "offer"}))
 

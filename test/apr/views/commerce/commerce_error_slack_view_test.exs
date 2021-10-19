@@ -16,4 +16,17 @@ defmodule Apr.Views.CommerceErrorSlackViewTest do
 
     assert slack_view[:unfurl_links] == true
   end
+
+  test "tax mismatch error slack view" do
+    event = Apr.Fixtures.tax_mismatch_error_event()
+    slack_view = CommerceErrorSlackView.render(%Subscription{}, event, "commerce.tax_mismatch")
+    assert slack_view.text == ":this-is-fine-fire: A *tax mismatch error* has occurred."
+
+    assert Enum.map(List.first(slack_view.attachments).fields, fn field -> field.title end) == [
+             "Order ID",
+             "Avalara Transaction ID"
+           ]
+
+    assert slack_view[:unfurl_links] == true
+  end
 end
