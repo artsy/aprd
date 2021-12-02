@@ -47,6 +47,23 @@ $ git clone git@github.com:artsy/aprd.git
     $ brew services start rabbitmq
     ```  
 - Install dependencies with `mix deps.get`
+- Go to the config/test.exs file and comment out the lines for the username and password to run the tests: 
+  ```
+  config :apr, Apr.Repo,
+  database: "aprd_test",
+  # username: System.get_env("DB_USER") || "postgres",
+  # password: System.get_env("DB_PASSWORD") || "postgres",
+  hostname: System.get_env("DB_HOST") || "localhost",
+  adapter: Ecto.Adapters.Postgres,
+  pool: Ecto.Adapters.SQL.Sandbox
+  ```
+- In your command line run 
+  ```
+  brew install autoconf@2.69 && \
+  brew link --overwrite autoconf@2.69 && \
+  autoconf -V
+  ```
+  to fix an issue in erlang 23
 - Create and migrate your database with `mix ecto.setup`
 - Install Node.js dependencies with `cd assets && npm install`
 - `s3://artsy-citadel/dev/.env.aprd` contains common configuration values for local dev. Copy it to `.env.shared`
