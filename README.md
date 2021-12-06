@@ -11,7 +11,7 @@ APRd (aka. APR dashboard), is a real-time dashboard built in [Elixir](https://el
 - Staging: https://aprd-staging.artsy.net
 - GitHub: https://github.com/artsy/aprd/
 - CI: [CircleCI](https://circleci.com/gh/artsy/apr-dashboard); merged PRs to artsy/apr-dashboard#master are automatically deployed to staging. PRs from `staging` to `release` are automatically deployed to production. [Start a deploy...](https://github.com/artsy/apr-dashboard/compare/release...staging?expand=1)
-- Point People: [@jpotts244](https://github.com/jpotts244)
+- Point People: [@jpotts244](https://github.com/jpotts244) [@kajatiger](https://github.com/kajatiger)
 
 ## Clone the project
 ```
@@ -66,7 +66,10 @@ $ git clone git@github.com:artsy/aprd.git
   to fix an issue in erlang 23
 - Create and migrate your database with `mix ecto.setup`
 - Install Node.js dependencies with `cd assets && npm install`
-- `s3://artsy-citadel/dev/.env.aprd` contains common configuration values for local dev. Copy it to `.env.shared`
+- `s3://artsy-citadel/dev/.env.aprd` contains common configuration values for local dev. Create a `.env.shared` file locally and copy using this command:
+```
+aws s3 cp s3://artsy-citadel/dev/.env.aprd .env.shared
+```
 - `.env` should contain configuration values specific to your local development. Create the file if it does not exist. See `.env.example` for suggestion on values you might want to customize.
 - We use [Phoenix Live View](https://github.com/phoenixframework/phoenix_live_view) for our real-time data presentation. Make sure `SECRET_SALT` exists in `.env.shared` or `.env`. You can generate a secret salt with:
   - `mix phx.gen.secret 32`
