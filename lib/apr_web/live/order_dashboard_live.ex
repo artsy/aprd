@@ -66,7 +66,7 @@ defmodule AprWeb.OrderDashboardLive do
               <% artwork = List.first(@artworks[event.payload["object"]["id"]]) %>
               <img class="mb-1" src="<%= artwork["imageUrl"] %>" />
               <div class="mb-0_5 sans-2-medium"> <%= currency(event.payload["properties"]["items_total_cents"], event.payload["properties"]["currency_code"]) %> </div>
-              <div class="serif-2-semibold color-black60"> <%= artwork["artist_names"] %> </div>
+              <div class="serif-2-semibold color-black60"> <%= artwork["artistNames"] %> </div>
               <div class="serif-2-italic color-black60"> <%= artwork["title"] %> </div>
               <div class="serif-2 color-black60"> <%= artwork["partner"]["name"] %> </div>
               <div class="serif-2 color-black30"> <a href="<%= exchange_link(event.payload["object"]["id"]) %>"> <%= event.payload["properties"]["code"] %></a></div>
@@ -83,7 +83,7 @@ defmodule AprWeb.OrderDashboardLive do
                 <% artwork = List.first(@artworks[event.payload["object"]["id"]]) %>
                 <img class="mb-1" src="<%= artwork["imageUrl"] %>" />
                 <div class="mb-0_5 sans-2-medium"> <%= currency(event.payload["properties"]["items_total_cents"], event.payload["properties"]["currency_code"]) %> </div>
-                <div class="serif-2-semibold color-black60"> <%= artwork["artist_names"] %> </div>
+                <div class="serif-2-semibold color-black60"> <%= artwork["artistNames"] %> </div>
                 <div class="serif-2-italic color-black60"> <%= artwork["title"] %> </div>
                 <div class="serif-2 color-black60"> <%= artwork["partner"]["name"] %> </div>
                 <div class="serif-2 color-black30"> <a href="<%= exchange_link(event.payload["object"]["id"]) %>"> <%= event.payload["properties"]["code"] %></a></div>
