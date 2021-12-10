@@ -1,4 +1,4 @@
-# https://github.com/artsy/exchange/blob/master/app/events/order_event.rb
+# https://github.com/artsy/exchange/blob/main/app/events/order_event.rb
 defmodule Apr.Views.CommerceOrderSlackView do
   @payments Application.get_env(:apr, :payments)
 

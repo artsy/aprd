@@ -1,4 +1,4 @@
-# https://github.com/artsy/exchange/blob/master/app/events/application_error_event.rb
+# https://github.com/artsy/exchange/blob/main/app/events/application_error_event.rb
 
 defmodule Apr.Views.CommerceErrorSlackView do
   import Apr.Views.Helper
