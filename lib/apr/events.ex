@@ -150,7 +150,7 @@ defmodule Apr.Events do
       {:ok, response} ->
         artworks_map =
           response.body["data"]["artworks"]["edges"]
-          |> Enum.reduce(%{}, fn a, acc -> Map.merge(acc, %{a["node"]["internalID"] => a}) end)
+          |> Enum.reduce(%{}, fn a, acc -> Map.merge(acc, %{a["node"]["internalID"] => a["node"]}) end)
 
         artworks_order_map =
           order_id_artwork_ids
