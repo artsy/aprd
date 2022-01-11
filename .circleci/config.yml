@@ -2,6 +2,7 @@ version: 2.1
 
 orbs:
   hokusai: artsy/hokusai@0.10.0
+  horizon: artsy/release@0.0.1
 
 not_staging_or_release: &not_staging_or_release
   filters:
@@ -25,6 +26,11 @@ only_release: &only_release
 workflows:
   build-deploy:
     jobs:
+      - horizon/block:
+          <<: *only_release
+          context: horizon
+          project_id: 45
+
       # pre-staging
       - hokusai/test:
           name: test
@@ -46,3 +52,5 @@ workflows:
       # release
       - hokusai/deploy-production:
           <<: *only_release
+          requires:
+            - horizon/block
