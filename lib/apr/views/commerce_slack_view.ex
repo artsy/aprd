@@ -3,7 +3,8 @@ defmodule Apr.Views.CommerceSlackView do
     CommerceTransactionSlackView,
     CommerceOfferSlackView,
     CommerceOrderSlackView,
-    CommerceErrorSlackView
+    CommerceErrorSlackView,
+    CommerceDisqualifiedSlackView
   }
 
   def render(subscription, event, routing_key) do
@@ -19,6 +20,9 @@ defmodule Apr.Views.CommerceSlackView do
 
       routing_key =~ "error." ->
         CommerceErrorSlackView.render(subscription, event, routing_key)
+      
+      routing_key =~ "disqualified." ->
+        CommerceDisqualifiedSlackView.render(subscription, event, routing_key)
 
       true ->
         nil
