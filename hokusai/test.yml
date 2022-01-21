@@ -7,6 +7,8 @@ services:
     environment:
     - MIX_ENV=test
     - DB_HOST=aprd-db
+    - PGUSER=postgres
+    - PGPASSWORD=postgres
     - RABBITMQ_HOST=aprd-rabbitmq
     - RABBITMQ_USER=guest
     - RABBITMQ_PASSWORD=guest
