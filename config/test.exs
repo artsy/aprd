@@ -19,8 +19,6 @@ config :apr,
 # Configure your database
 config :apr, Apr.Repo,
   database: "aprd_test",
-  username: System.get_env("DB_USER") || "postgres",
-  password: System.get_env("DB_PASSWORD") || "postgres",
   hostname: System.get_env("DB_HOST") || "localhost",
   adapter: Ecto.Adapters.Postgres,
   pool: Ecto.Adapters.SQL.Sandbox
