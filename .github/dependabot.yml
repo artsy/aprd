@@ -9,7 +9,7 @@ updates:
     assignees:
       - "jpotts244"
     reviewers:
-      - "artsy/purchase-devs"
+      - "artsy/transact-devs"
   - package-ecosystem: "npm"
     directory: "/assets"
     schedule:
@@ -19,4 +19,4 @@ updates:
     assignees:
       - "jpotts244"
     reviewers:
-      - "artsy/purchase-devs"
+      - "artsy/transact-devs"
