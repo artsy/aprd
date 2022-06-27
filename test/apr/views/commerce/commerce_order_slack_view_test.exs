@@ -158,4 +158,40 @@ defmodule Apr.Views.CommerceOrderSlackViewTest do
 
     assert is_nil(slack_view)
   end
+
+  describe "high risk theme" do
+    setup [:high_risk_theme_subscription]
+
+    test "returns a message for an approved buy order over 10K", context do
+      event = Fixtures.commerce_order_event("approved", %{"items_total_cents" => 10000_00, "currency_code" => "USD", "mode" => "buy"})
+      slack_view = CommerceOrderSlackView.render(context[:subscription], event, "order.approved")
+
+      refute is_nil(slack_view)
+    end
+
+    test "returns a message for an approved offer order over 10K", context do
+      event = Fixtures.commerce_order_event("approved", %{"items_total_cents" => 10000_00, "currency_code" => "USD", "mode" => "offer"})
+      slack_view = CommerceOrderSlackView.render(context[:subscription], event, "order.approved")
+
+      refute is_nil(slack_view)
+    end
+
+    test "does not return a message for an approved buy order under 10K ", context do
+      event = Fixtures.commerce_order_event("approved", %{"items_total_cents" => 9999_00, "currency_code" => "USD", "mode" => "buy"})
+      slack_view = CommerceOrderSlackView.render(context[:subscription], event, "order.approved")
+
+      assert is_nil(slack_view)
+    end
+
+    test "does not return a message for an approved offer order under 10K ", context do
+      event = Fixtures.commerce_order_event("approved", %{"items_total_cents" => 9999_00, "currency_code" => "USD", "mode" => "offer"})
+      slack_view = CommerceOrderSlackView.render(context[:subscription], event, "order.approved")
+
+      assert is_nil(slack_view)
+    end
+  end
+
+  defp high_risk_theme_subscription(_context) do
+    [subscription: %Subscription{theme: "high_risk"}]
+  end
 end
