@@ -7,10 +7,10 @@
   resolved "https://registry.yarnpkg.com/@artsy/palette-tokens/-/palette-tokens-4.0.0.tgz#ee0d157ad73ca0e2e252f896a21fba798b20d4d9"
   integrity sha512-Os2fimLkHgxWLZZ8xRPWm4t3mBTMMBsKO+Iqgn2d44VjhcN7w9XxAp8VK8sRSLJmcrajnTczZZtFy273lYeqaA==
 
-"@artsy/palette@22.1.0":
-  version "22.1.0"
-  resolved "https://registry.yarnpkg.com/@artsy/palette/-/palette-22.1.0.tgz#206b2fcac925004b2426e6fa62e853ccb524eb64"
-  integrity sha512-SvzIH2mAZAjWfL21nl0KTwMThgdXR5lprjnSS0ckOYpk7PIrwBcwb0NKXErQmg3Q0xPAHYH6rhBjhkTytdLP/Q==
+"@artsy/palette@24.0.1":
+  version "24.0.1"
+  resolved "https://registry.yarnpkg.com/@artsy/palette/-/palette-24.0.1.tgz#c722bad36346009df63621f85a96d6a005867ce1"
+  integrity sha512-/R286oLTHatkTsaVxGiq/ZfrZcnESZEzforo0iwPkTCBTCWqBKIVvkm0ADHgtFQyNAyWketRAS7oRhGnfnaaWQ==
   dependencies:
     "@artsy/palette-tokens" "^4.0.0"
     "@seznam/compose-react-refs" "^1.0.6"
@@ -20,7 +20,6 @@
     proportional-scale "^4.0.0"
     react-lazy-load-image-component "1.5.0"
     react-remove-scroll "2.5.0"
-    styled-bootstrap-grid "3.1.0"
     styled-system "^5.1.5"
     trunc-html "^1.1.2"
     use-cursor "^1.2.3"
@@ -6362,11 +6361,6 @@ strip-json-comments@~2.0.1:
   version "2.0.1"
   resolved "https://registry.yarnpkg.com/strip-json-comments/-/strip-json-comments-2.0.1.tgz#3c531942e908c2697c0ec344858c286c7ca0a60a"
   integrity sha1-PFMZQukIwml8DsNEhYwobHygpgo=
-
-styled-bootstrap-grid@3.1.0:
-  version "3.1.0"
-  resolved "https://registry.yarnpkg.com/styled-bootstrap-grid/-/styled-bootstrap-grid-3.1.0.tgz#955991a7f5a7210c5933dddfcc83707d733737a3"
-  integrity sha512-ouKxAS/WNv7B1NgjX6AVmPytjHNYP56u6qyHXzKFSIkXoSCV9xuCAzD5g4mHikl4q7E4vkTqjqIAd33BWXH5yw==
 
 styled-system@^5.1.5:
   version "5.1.5"
