@@ -2,7 +2,7 @@ FROM bitwalker/alpine-elixir-phoenix:1.10.3
 
 ARG SECRET_KEY_BASE
 
-RUN apk add yarn
+RUN apk add yarn --force-broken-world
 
 RUN mkdir /app
 ADD . /app
