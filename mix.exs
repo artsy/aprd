@@ -20,7 +20,7 @@ defmodule Apr.MixProject do
   def application do
     [
       mod: {Apr.Application, []},
-      extra_applications: [:logger, :runtime_tools]
+      extra_applications: [:lager, :logger, :runtime_tools]
     ]
   end
 
