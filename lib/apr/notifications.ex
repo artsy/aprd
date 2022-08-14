@@ -48,6 +48,9 @@ defmodule Apr.Notifications do
 
         "partners" ->
           Apr.Views.PartnersSlackView.render(subscription, event, routing_key)
+
+        "ach" ->
+          Apr.Views.ACHSlackView.render(subscription, event, routing_key)
       end
     else
       _ ->
