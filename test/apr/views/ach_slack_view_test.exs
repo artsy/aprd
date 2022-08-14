@@ -11,7 +11,7 @@ defmodule Apr.Views.ACHSlackViewTest do
       "dispute_created",
       %{
         "payment_method" => "us_bank_account",
-        "tax_transaction_id" => "txn_1"
+        "external_payment_id" => "txn_1"
       }
     )
     slack_view = ACHSlackView.render(@subscription, event, "order.submitted")
@@ -29,6 +29,11 @@ defmodule Apr.Views.ACHSlackViewTest do
               short: true,
               title: "Seller ID",
               value: "<https://admin-partners.artsy.net/partner/partner1|partner1>"
+            },
+            %{
+              short: true,
+              title: "Stripe payment ID",
+              value: "<https://dashboard.stripe.com/payments/txn_1|txn_1>"
             }
           ]
         }

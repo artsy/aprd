@@ -15,6 +15,8 @@ defmodule Apr.Views.ACHSlackView do
     order_id = event["object"]["id"]
     seller_id = event["properties"]["seller_id"]
     seller_path = "partner/#{seller_id}"
+    payment_intent_id = event["properties"]["external_payment_id"]
+    payment_intent_link = "https://dashboard.stripe.com/payments/#{payment_intent_id}"
 
     %{
       text: ":alert: Dispute, do not refund this order on Stripe",
@@ -29,6 +31,11 @@ defmodule Apr.Views.ACHSlackView do
             %{
               title: "Seller ID",
               value: "<#{admin_partners_link(seller_path)}|#{seller_id}>",
+              short: true
+            },
+            %{
+              title: "Stripe payment ID",
+              value: "<#{payment_intent_link}|#{payment_intent_id}>",
               short: true
             }
           ]
