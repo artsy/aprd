@@ -11,7 +11,7 @@ defmodule Apr.Views.ACHSlackViewTest do
       "dispute_created",
       %{
         "payment_method" => "us_bank_account",
-        "external_payment_id" => "txn_1"
+        "payment_intent_id" => "txn_1"
       }
     )
     slack_view = ACHSlackView.render(@subscription, event, "order.submitted")

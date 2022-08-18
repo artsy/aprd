@@ -15,7 +15,7 @@ defmodule Apr.Views.ACHSlackView do
     order_id = event["object"]["id"]
     seller_id = event["properties"]["seller_id"]
     seller_path = "partner/#{seller_id}"
-    payment_intent_id = event["properties"]["external_payment_id"]
+    payment_intent_id = event["properties"]["payment_intent_id"]
     payment_intent_link = "https://dashboard.stripe.com/payments/#{payment_intent_id}"
 
     %{
