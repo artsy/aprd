@@ -4,7 +4,7 @@ defmodule Apr.Views.ACHSlackViewTest do
   alias Apr.Fixtures
   alias Apr.Subscriptions.Subscription
 
-  @subscription %Subscription{theme: "ach"}
+  @subscription %Subscription{theme: "dispute"}
 
   test "disputed payment" do
     event = Fixtures.commerce_transaction_event(

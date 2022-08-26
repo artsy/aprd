@@ -3,7 +3,7 @@ defmodule Apr.Views.ACHSlackView do
 
   def render(subscription, event, _) do
     case {subscription.theme, event["properties"]["external_type"], event["verb"], event["properties"]["transaction_type"], event["properties"]["order"]["payment_method"]} do
-      {"ach", "payment_intent", "created", "dispute", "us_bank_account"} ->
+      {"dispute", "payment_intent", "created", "dispute", "us_bank_account"} ->
         generate_slack_message(event)
       _ -> nil
     end
