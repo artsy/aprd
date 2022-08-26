@@ -87,7 +87,7 @@ defmodule Apr.Fixtures do
         "code" => "tax_mismatch",
         "data" => %{
           "order_id" => "order1",
-          "tax_transaction_id" => "avalara_id" 
+          "tax_transaction_id" => "avalara_id"
         }
       }
     }
@@ -131,7 +131,7 @@ defmodule Apr.Fixtures do
     }
   end
 
-  def commerce_transaction_event(order \\ nil) do
+  def commerce_transaction_event(order \\ nil, properties \\ %{}) do
     %{
       "object" => %{
         "id" => "transaction123",
@@ -148,6 +148,7 @@ defmodule Apr.Fixtures do
         "failure_message" => ":(",
         "transaction_type" => "capture"
       }
+      |> Map.merge(properties)
     }
   end
 

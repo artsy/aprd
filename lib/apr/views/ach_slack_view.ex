@@ -1,21 +1,19 @@
 defmodule Apr.Views.ACHSlackView do
   import Apr.Views.Helper
 
-  def render(subscription, event = %{"verb" => "dispute_created",}, _) do
-    case {subscription.theme, event["verb"], event["properties"]} do
-      {"ach", "dispute_created", %{"payment_method" => "us_bank_account"}} ->
-        generate_slack_message(event, "dispute_created")
+  def render(subscription, event, _) do
+    case {subscription.theme, event["properties"]["external_type"], event["verb"], event["properties"]["transaction_type"], event["properties"]["order"]["payment_method"]} do
+      {"ach", "payment_intent", "created", "dispute", "us_bank_account"} ->
+        generate_slack_message(event)
       _ -> nil
     end
   end
 
-  def render(_, _, _), do: nil
-
-  defp generate_slack_message(event, _routing_key) do
-    order_id = event["object"]["id"]
-    seller_id = event["properties"]["seller_id"]
+  defp generate_slack_message(event) do
+    order_id = event["properties"]["order"]["id"]
+    seller_id = event["properties"]["order"]["seller_id"]
     seller_path = "partner/#{seller_id}"
-    payment_intent_id = event["properties"]["payment_intent_id"]
+    payment_intent_id = event["properties"]["external_id"]
     payment_intent_link = "https://dashboard.stripe.com/payments/#{payment_intent_id}"
 
     %{

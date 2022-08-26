@@ -7,11 +7,17 @@ defmodule Apr.Views.ACHSlackViewTest do
   @subscription %Subscription{theme: "ach"}
 
   test "disputed payment" do
-    event = Fixtures.commerce_order_event(
-      "dispute_created",
+    event = Fixtures.commerce_transaction_event(
       %{
+        "id" => "order123",
+        "seller_id" => "partner1",
         "payment_method" => "us_bank_account",
-        "payment_intent_id" => "txn_1"
+      },
+      %{
+        "verb" => "created",
+        "transaction_type" => "dispute",
+        "external_id" => "pi_123",
+        "external_type" => "payment_intent",
       }
     )
     slack_view = ACHSlackView.render(@subscription, event, "order.submitted")
@@ -33,7 +39,7 @@ defmodule Apr.Views.ACHSlackViewTest do
             %{
               short: true,
               title: "Stripe payment ID",
-              value: "<https://dashboard.stripe.com/payments/txn_1|txn_1>"
+              value: "<https://dashboard.stripe.com/payments/pi_123|pi_123>"
             }
           ]
         }
