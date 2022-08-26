@@ -10,12 +10,6 @@ defmodule Apr.Views.ACHSlackView do
   end
 
   defp generate_slack_message(event) do
-    order_id = event["properties"]["order"]["id"]
-    seller_id = event["properties"]["order"]["seller_id"]
-    seller_path = "partner/#{seller_id}"
-    payment_intent_id = event["properties"]["external_id"]
-    payment_intent_link = "https://dashboard.stripe.com/payments/#{payment_intent_id}"
-
     %{
       text: ":alert: Dispute, do not refund this order on Stripe",
       attachments: [
@@ -23,17 +17,17 @@ defmodule Apr.Views.ACHSlackView do
           fields: [
             %{
               title: "Order ID",
-              value: "<#{exchange_admin_link(order_id)}|#{order_id}>",
+              value: formatted_exchange_admin_link(event["properties"]["order"]["id"]),
               short: true
             },
             %{
               title: "Seller ID",
-              value: "<#{admin_partners_link(seller_path)}|#{seller_id}>",
+              value: formatted_admin_partners_link(event["properties"]["order"]["seller_id"]),
               short: true
             },
             %{
               title: "Stripe payment ID",
-              value: "<#{payment_intent_link}|#{payment_intent_id}>",
+              value: formatted_payment_intent_link(event["properties"]["external_id"]),
               short: true
             }
           ]
@@ -41,5 +35,18 @@ defmodule Apr.Views.ACHSlackView do
       ],
       unfurl_links: true
     }
+  end
+
+  defp formatted_exchange_admin_link(order_id) do
+    "<#{exchange_admin_link(order_id)}|#{order_id}>"
+  end
+
+  defp formatted_admin_partners_link(seller_id) do
+    seller_path = "partner/#{seller_id}"
+    "<#{admin_partners_link(seller_path)}|#{seller_id}>"
+  end
+
+  defp formatted_payment_intent_link(payment_intent_id) do
+    "<https://dashboard.stripe.com/payments/#{payment_intent_id}|#{payment_intent_id}>"
   end
 end
