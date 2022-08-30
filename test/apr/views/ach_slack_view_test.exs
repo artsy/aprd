@@ -4,7 +4,7 @@ defmodule Apr.Views.ACHSlackViewTest do
   alias Apr.Fixtures
   alias Apr.Subscriptions.Subscription
 
-  @subscription %Subscription{theme: "dispute"}
+  @subscription %Subscription{theme: "ach"}
 
   test "disputed payment" do
     event = Fixtures.commerce_transaction_event(
@@ -20,7 +20,7 @@ defmodule Apr.Views.ACHSlackViewTest do
         "external_type" => "payment_intent",
       }
     )
-    slack_view = ACHSlackView.render(@subscription, event, "order.submitted")
+    slack_view = ACHSlackView.render(@subscription, event, "dispute")
 
     assert slack_view == %{
       attachments: [
