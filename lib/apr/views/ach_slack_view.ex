@@ -1,15 +1,7 @@
 defmodule Apr.Views.ACHSlackView do
   import Apr.Views.Helper
 
-  def render(subscription, event, routing_key) do
-    case {subscription.theme, event["properties"]["external_type"], event["verb"], event["properties"]["transaction_type"], event["properties"]["order"]["payment_method"], routing_key} do
-      {"ach", "payment_intent", "created", "dispute", "us_bank_account", "dispute"} ->
-        generate_slack_message(event)
-      _ -> nil
-    end
-  end
-
-  defp generate_slack_message(event) do
+  def render(event) do
     %{
       text: ":alert: Dispute, do not refund this order on Stripe",
       attachments: [
