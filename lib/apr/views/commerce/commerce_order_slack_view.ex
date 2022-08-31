@@ -6,8 +6,6 @@ defmodule Apr.Views.CommerceOrderSlackView do
 
   alias Apr.Views.CommerceHelper
 
-  alias Apr.Subscriptions.Subscription
-
   def render(nil, event, routing_key) do
     generate_slack_message(event, routing_key)
   end

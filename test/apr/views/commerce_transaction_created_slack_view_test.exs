@@ -1,7 +1,10 @@
-defmodule Apr.Views.ACHSlackViewTest do
+defmodule Apr.Views.CommerceTransactionCreatedSlackViewTest do
   use ExUnit.Case, async: true
-  alias Apr.Views.ACHSlackView
+  alias Apr.Views.CommerceTransactionCreatedSlackView
   alias Apr.Fixtures
+  alias Apr.Subscriptions.Subscription
+
+  @subscription %Subscription{theme: "dispute"}
 
   describe "render/1" do
     test "disputed payment" do
@@ -18,7 +21,7 @@ defmodule Apr.Views.ACHSlackViewTest do
           "external_type" => "payment_intent",
         }
       )
-      slack_view = ACHSlackView.render(event)
+      slack_view = CommerceTransactionCreatedSlackView.render(@subscription, event, "dispute")
 
       assert slack_view == %{
         attachments: [
