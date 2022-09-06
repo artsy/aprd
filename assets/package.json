@@ -10,7 +10,7 @@
     "phoenix": "1.4.10",
     "phoenix_html": "2.13.2",
     "phoenix_live_view": "0.3.1",
-    "svelte": "3.0.0"
+    "svelte": "3.50.0"
   },
   "devDependencies": {
     "@babel/core": "7.4.3",
