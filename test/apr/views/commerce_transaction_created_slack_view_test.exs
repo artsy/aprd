@@ -6,7 +6,7 @@ defmodule Apr.Views.CommerceTransactionCreatedSlackViewTest do
 
   @subscription %Subscription{theme: "dispute"}
 
-  describe "render/1" do
+  describe "render/2" do
     test "disputed payment" do
       event = Fixtures.commerce_transaction_event(
         %{
