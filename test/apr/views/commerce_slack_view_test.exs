@@ -59,4 +59,23 @@ defmodule Apr.Views.CommerceSlackViewTest do
     slack_view = CommerceSlackView.render(nil, event, "error.validation.insufficient_funds")
     assert slack_view.text == ":alert: Failed submitting an order"
   end
+
+  test "Ignores transaction failure events for dispute theme and # routing_key" do
+    event = Fixtures.commerce_transaction_event(
+      %{
+        "id" => "order123",
+        "seller_id" => "partner1",
+        "payment_method" => "us_bank_account",
+      },
+      %{
+        "verb" => "created",
+        "transaction_type" => "dispute",
+        "external_id" => "pi_123",
+        "external_type" => "payment_intent",
+      }
+    )
+
+    slack_view = CommerceSlackView.render(%Subscription{routing_key: "#", theme: "dispute"}, event, "transaction.failure")
+    assert is_nil(slack_view)
+  end
 end
