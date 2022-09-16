@@ -4,6 +4,7 @@ defmodule Apr.Views.CommerceOfferSlackView do
   alias Apr.Views.CommerceHelper
   alias Apr.Subscriptions.Subscription
 
+ def render(%Subscription{theme: "dispute"}, _, _), do: nil
   def render(%Subscription{theme: "fraud"}, _, _), do: nil
 
   def render(_, event, routing_key) do
