@@ -5,6 +5,8 @@ defmodule Apr.Views.CommerceTransactionSlackView do
 
   @payments Application.get_env(:apr, :payments)
 
+  def render(%Subscription{theme: "dispute"}, _, _), do: nil
+
   def render(subscription, event, _routing_key) do
     order = event["properties"]["order"]
     seller = CommerceHelper.fetch_participant_info(order["seller_id"], order["seller_type"])

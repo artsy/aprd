@@ -69,8 +69,8 @@ defmodule Apr.Commands do
     Available commands:\n
     - *`topics`*: Will return list of current existing topics available to subscribe.\n
     - *`subscriptions`*: Will return current subscriptions of this channel.\n
-    - *`subscribe <comma separated list of topics>`*: Subscribes this channel to each topic.\nyou can also subscribe to specific routing key/verb, by using _`<topic>:<routing_key>`_ format.\n
-    For example: `subsribe users:user.created`\n
+    - *`subscribe <comma separated list of topics>`*: Subscribes this channel to each topic.\nyou can also subscribe to specific routing key/verb/theme, by using _`<topic>:<routing_key>-><theme>`_ format.\n
+    For example: \n `subsribe users:user.created`\n`subscribe commerce:order.approved->high_risk \n`subscribe commerce:order->high_risk\n
     - *`unsubscribe <comma separated list of topics>`*: Unsubscribes from specific topic. Use `subscruptions` command first to get list of current subscriptions first and unsubscribe from the ones you want.\n"
     """
   end

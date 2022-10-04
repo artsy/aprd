@@ -5,12 +5,13 @@ defmodule Apr.Views.CommerceOrderSlackView do
   import Apr.Views.Helper
 
   alias Apr.Views.CommerceHelper
-
   alias Apr.Subscriptions.Subscription
 
   def render(nil, event, routing_key) do
     generate_slack_message(event, routing_key)
   end
+
+ def render(%Subscription{theme: "dispute"}, _, _), do: nil
 
   def render(subscription, event, routing_key) do
     case {subscription.theme, event["verb"], event["properties"]} do

@@ -4,6 +4,7 @@ defmodule Apr.Views.CommerceErrorSlackView do
   import Apr.Views.Helper
   alias Apr.Subscriptions.Subscription
 
+  def render(%Subscription{theme: "dispute"}, _, _), do: nil
   def render(%Subscription{theme: "fraud"}, _, _), do: nil
 
   def render(_, event, _routing_key) do
