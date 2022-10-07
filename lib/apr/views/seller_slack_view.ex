@@ -1,4 +1,4 @@
-defmodule Apr.Views.InvoiceSlackView do
+defmodule Apr.Views.SellerSlackView do
   @gravity_api Application.get_env(:apr, :gravity_api)
   import Apr.Views.Helper
 
