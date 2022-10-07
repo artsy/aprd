@@ -233,4 +233,25 @@ defmodule Apr.Fixtures do
       }
     }
   end
+
+  def invoice_event do
+    %{
+      "object" => %{
+        "id" => "transaction123",
+        "display" => "Transaction(123)"
+      },
+      "subject" => %{
+        "id" => "user1",
+        "display" => "User LastName"
+      },
+      "verb" => "created",
+      "properties" => %{
+        "partner_id" => "1",
+        "artwork_groups" => [],
+        "invoice" => %{
+          "artwork_groups" => []
+        }
+      }
+    }
+  end
 end

@@ -18,6 +18,15 @@ defmodule GravityMock do
     }
   end
 
+  def get!("/partners/" <> id) do
+    %{
+      body: %{
+        "id" => id,
+        "name" => "Mocked Partner2"
+      }
+    }
+  end
+
   def get!("/v1/artwork/" <> artwork_id) do
     %{
       body: %{
