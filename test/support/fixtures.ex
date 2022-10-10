@@ -234,7 +234,7 @@ defmodule Apr.Fixtures do
     }
   end
 
-  def invoice_event(verb \\ "created", properties \\ %{}) do
+  def seller_event(verb \\ "created", properties \\ %{}) do
     %{
       "object" => %{
         "id" => "transaction123",
