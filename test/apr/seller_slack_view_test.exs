@@ -11,6 +11,40 @@ defmodule Apr.Views.SellerSlackViewTest do
       assert slack_view.text == ":money_with_wings: Invoice Transaction(123)"
     end
 
+    test "merchant_account event with test routing_key" do
+      event = Apr.Fixtures.invoice_event(
+        "external_account_restricted_soon",
+        %{
+          "stripe_requirements" => %{
+            "deadline" => 1_546_300_800,
+            "requirements" => ["external_account"]
+          }
+        }
+      )
+      slack_view = SellerSlackView.render(nil, event, "merchantaccount")
+
+      assert slack_view == %{
+        attachments: [
+          %{
+            fields: [
+              %{
+                short: true,
+                title: "Requirements",
+                value: "external_account"
+              },
+              %{
+                short: true,
+                title: "Stripe account ID",
+                value: "<https://dashboard.stripe.com/connect/accounts/stripe_account_id/activity|stripe_account_id>"
+              }
+            ]
+          }
+        ],
+        text: ":warning: Stripe account of Mocked Partner2 will be restricted by 2019-01-01 12:00 AM UTC",
+        unfurl_links: true
+      }
+    end
+
     test "invoice event with merchantaccount routing_key" do
       event = Apr.Fixtures.invoice_event()
       slack_view = SellerSlackView.render(nil, event, "merchantaccount")

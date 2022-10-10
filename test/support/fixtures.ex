@@ -234,7 +234,7 @@ defmodule Apr.Fixtures do
     }
   end
 
-  def invoice_event do
+  def invoice_event(verb \\ "created", properties \\ %{}) do
     %{
       "object" => %{
         "id" => "transaction123",
@@ -244,14 +244,16 @@ defmodule Apr.Fixtures do
         "id" => "user1",
         "display" => "User LastName"
       },
-      "verb" => "created",
+      "verb" => verb,
       "properties" => %{
         "partner_id" => "1",
         "artwork_groups" => [],
         "invoice" => %{
           "artwork_groups" => []
-        }
+        },
+        "external_id" => "stripe_account_id",
       }
+      |> Map.merge(properties)
     }
   end
 end
