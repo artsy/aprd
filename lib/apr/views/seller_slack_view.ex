@@ -6,11 +6,11 @@ defmodule Apr.Views.SellerSlackView do
     partner_data = fetch_partner_data(event["properties"]["partner_id"])
 
     cond do
+      routing_key == "merchantaccount.external_account_restricted_soon" ->
+        external_account_restricted_soon_message(event, partner_data)
+
       routing_key =~ "merchantaccount" ->
-        case event["verb"] do
-          "external_account_restricted_soon" -> external_account_restricted_soon_message(event, partner_data)
-          _ -> merchant_account_message(event, partner_data)
-        end
+        merchant_account_message(event, partner_data)
 
       routing_key =~ "invoicetransaction" ->
         invoice_transaction_message(event, partner_data)

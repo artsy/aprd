@@ -11,7 +11,7 @@ defmodule Apr.Views.SellerSlackViewTest do
       assert slack_view.text == ":money_with_wings: Invoice Transaction(123)"
     end
 
-    test "merchant_account event with test routing_key" do
+    test "merchant_account event with external_account_restricted_soon routing_key" do
       event = Apr.Fixtures.seller_event(
         "external_account_restricted_soon",
         %{
@@ -21,7 +21,7 @@ defmodule Apr.Views.SellerSlackViewTest do
           }
         }
       )
-      slack_view = SellerSlackView.render(nil, event, "merchantaccount")
+      slack_view = SellerSlackView.render(nil, event, "merchantaccount.external_account_restricted_soon")
 
       assert slack_view == %{
         attachments: [
