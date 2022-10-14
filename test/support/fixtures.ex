@@ -233,4 +233,27 @@ defmodule Apr.Fixtures do
       }
     }
   end
+
+  def seller_event(verb \\ "created", properties \\ %{}) do
+    %{
+      "object" => %{
+        "id" => "transaction123",
+        "display" => "Transaction(123)"
+      },
+      "subject" => %{
+        "id" => "user1",
+        "display" => "User LastName"
+      },
+      "verb" => verb,
+      "properties" => %{
+        "partner_id" => "1",
+        "artwork_groups" => [],
+        "invoice" => %{
+          "artwork_groups" => []
+        },
+        "external_id" => "stripe_account_id",
+      }
+      |> Map.merge(properties)
+    }
+  end
 end

@@ -65,6 +65,10 @@ defmodule Apr.Application do
       %{
         id: :partners,
         start: {Apr.AmqEventService, :start_link, [%{topic: "partners"}]}
+      },
+      %{
+        id: :sellers,
+        start: {Apr.AmqEventService, :start_link, [%{topic: "sellers", store: true}]}
       }
     ]
 

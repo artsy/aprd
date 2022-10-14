@@ -1,4 +1,4 @@
-defmodule Apr.Views.InvoiceSlackView do
+defmodule Apr.Views.SellerSlackView do
   @gravity_api Application.get_env(:apr, :gravity_api)
   import Apr.Views.Helper
 
@@ -6,6 +6,9 @@ defmodule Apr.Views.InvoiceSlackView do
     partner_data = fetch_partner_data(event["properties"]["partner_id"])
 
     cond do
+      routing_key == "merchantaccount.external_account_restricted_soon" ->
+        external_account_restricted_soon_message(event, partner_data)
+
       routing_key =~ "merchantaccount" ->
         merchant_account_message(event, partner_data)
 
@@ -19,6 +22,34 @@ defmodule Apr.Views.InvoiceSlackView do
 
   defp fetch_partner_data(partner_id) do
     @gravity_api.get!("/partners/#{partner_id}").body
+  end
+
+  defp external_account_restricted_soon_message(event, partner_data) do
+    {:ok, due_date} = DateTime.from_unix(event["properties"]["stripe_requirements"]["deadline"])
+    %{
+      text: ":warning: Stripe account of #{partner_data["name"]} will be restricted by #{NimbleStrftime.format(due_date, "%Y-%m-%d %I:%M %p %Z")}",
+      attachments: [
+        %{
+          fields: [
+            %{
+              title: "Requirements",
+              value: Enum.join(event["properties"]["stripe_requirements"]["requirements"], ", "),
+              short: true
+            },
+            %{
+              title: "Stripe account ID",
+              value: formatted_stripe_account_link(event["properties"]["external_id"]),
+              short: true
+            }
+          ]
+        }
+      ],
+      unfurl_links: true
+    }
+  end
+
+  defp formatted_stripe_account_link(stripe_account_id) do
+    "<https://dashboard.stripe.com/connect/accounts/#{stripe_account_id}/activity|#{stripe_account_id}>"
   end
 
   defp merchant_account_message(event, partner_data) do
