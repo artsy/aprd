@@ -42,7 +42,7 @@ defmodule Apr.Views.CommerceTransactionCreatedSlackView do
   end
 
   defp formatted_admin_partners_link(seller_id) do
-    seller_path = "partner/#{seller_id}"
+    seller_path = "partners/#{seller_id}"
     "<#{admin_partners_link(seller_path)}|#{seller_id}>"
   end
 
