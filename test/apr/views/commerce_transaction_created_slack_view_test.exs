@@ -35,7 +35,7 @@ defmodule Apr.Views.CommerceTransactionCreatedSlackViewTest do
               %{
                 short: true,
                 title: "Seller ID",
-                value: "<https://admin-partners.artsy.net/partner/partner1|partner1>"
+                value: "<https://admin-partners.artsy.net/partners/partner1|partner1>"
               },
               %{
                 short: true,
