@@ -2,17 +2,17 @@
 # yarn lockfile v1
 
 
-"@artsy/palette-tokens@^4.0.0":
-  version "4.0.0"
-  resolved "https://registry.yarnpkg.com/@artsy/palette-tokens/-/palette-tokens-4.0.0.tgz#ee0d157ad73ca0e2e252f896a21fba798b20d4d9"
-  integrity sha512-Os2fimLkHgxWLZZ8xRPWm4t3mBTMMBsKO+Iqgn2d44VjhcN7w9XxAp8VK8sRSLJmcrajnTczZZtFy273lYeqaA==
+"@artsy/palette-tokens@^4.0.1":
+  version "4.0.1"
+  resolved "https://registry.yarnpkg.com/@artsy/palette-tokens/-/palette-tokens-4.0.1.tgz#ef171c0449f3c0a1c0765253a06beec160b0eed1"
+  integrity sha512-JQ4t6eCAL3LpYnwyIMJCKc3UiVWY17IvKadNXRXfplo+GFZUqZs61nFGlchNWZvtNESpHkGKOksA5dZq3G1wiw==
 
-"@artsy/palette@24.5.1":
-  version "24.5.1"
-  resolved "https://registry.yarnpkg.com/@artsy/palette/-/palette-24.5.1.tgz#cf85c4dcb86e304225e8734ffb552bce7c9f89bb"
-  integrity sha512-V4zbA3jPA2UG8RoY4GQFISw6Cr+a+78LkW4MygK+DLvIiuhfW/kHZRA4D79r1t8kK8lCGgaS7wzV+lQeqCNk4w==
+"@artsy/palette@25.1.0":
+  version "25.1.0"
+  resolved "https://registry.yarnpkg.com/@artsy/palette/-/palette-25.1.0.tgz#ad5d7f9696579a232566967baf3d65117e2f7ba0"
+  integrity sha512-YQw+zolIIaFjFSZrWbZ3Ux66mfZoUqsGkvqYdVl2PIE5WO0w8KbCvPqn6Bbl8SsBLP1tCo/GsK0qvlDRa3IGeQ==
   dependencies:
-    "@artsy/palette-tokens" "^4.0.0"
+    "@artsy/palette-tokens" "^4.0.1"
     "@seznam/compose-react-refs" "^1.0.6"
     "@styled-system/theme-get" "^5.1.2"
     lodash "^4.17.21"
