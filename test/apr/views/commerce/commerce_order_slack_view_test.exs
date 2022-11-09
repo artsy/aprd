@@ -191,7 +191,43 @@ defmodule Apr.Views.CommerceOrderSlackViewTest do
     end
   end
 
+  describe "high risk async_payment theme" do
+    setup [:high_risk_async_payment_theme_subscription]
+
+    test "returns a message for an processing_approval buy order over 10K", context do
+      event = Fixtures.commerce_order_event("processing_approval", %{"items_total_cents" => 10000_00, "currency_code" => "USD", "mode" => "buy"})
+      slack_view = CommerceOrderSlackView.render(context[:subscription], event, "order.processing_approval")
+
+      refute is_nil(slack_view)
+    end
+
+    test "returns a message for an processing_approval offer order over 10K", context do
+      event = Fixtures.commerce_order_event("processing_approval", %{"items_total_cents" => 10000_00, "currency_code" => "USD", "mode" => "offer"})
+      slack_view = CommerceOrderSlackView.render(context[:subscription], event, "order.processing_approval")
+
+      refute is_nil(slack_view)
+    end
+
+    test "does not return a message for an processing_approval buy order under 10K ", context do
+      event = Fixtures.commerce_order_event("processing_approval", %{"items_total_cents" => 9999_00, "currency_code" => "USD", "mode" => "buy"})
+      slack_view = CommerceOrderSlackView.render(context[:subscription], event, "order.processing_approval")
+
+      assert is_nil(slack_view)
+    end
+
+    test "does not return a message for an processing_approval offer order under 10K ", context do
+      event = Fixtures.commerce_order_event("processing_approval", %{"items_total_cents" => 9999_00, "currency_code" => "USD", "mode" => "offer"})
+      slack_view = CommerceOrderSlackView.render(context[:subscription], event, "order.processing_approval")
+
+      assert is_nil(slack_view)
+    end
+  end
+
   defp high_risk_theme_subscription(_context) do
     [subscription: %Subscription{theme: "high_risk"}]
+  end
+
+  defp high_risk_async_payment_theme_subscription(_context) do
+    [subscription: %Subscription{theme: "high_risk_async_payment"}]
   end
 end
