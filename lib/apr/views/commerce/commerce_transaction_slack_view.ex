@@ -86,7 +86,7 @@ defmodule Apr.Views.CommerceTransactionSlackView do
                 value: event["properties"]["transaction_type"],
                 short: true
               }
-            ] ++ stripe_fields(event["properties"]["external_id"], event["properties"]["external_type"])
+            ] ++ stripe_fields(event["properties"]["external_id"], event["properties"]["external_type"], event["properties"]["order"]["payment_method"])
         }
       ]
   end
@@ -140,38 +140,54 @@ defmodule Apr.Views.CommerceTransactionSlackView do
 
   defp seller_admin(_), do: []
 
-  defp stripe_fields(external_id, external_type) do
-    with {:ok, pi} <- @payments.payment_info(external_id, external_type) do
-      [
-        %{
-          title: "Risk Level",
-          value: pi.charge_data.risk_level,
-          short: true
-        },
-        %{
-          title: "Card Country",
-          value: pi.card_country,
-          short: true
-        },
-        %{
-          title: "Billing State",
-          value: pi.billing_state,
-          short: true
-        },
-        %{
-          title: "CVC Check  #{format_check(pi.cvc_check)}",
-          short: true
-        },
-        %{
-          title: "ZIP Check  #{format_check(pi.zip_check)}",
-          short: true
-        },
-        %{
-          title: "Liability Shift #{format_boolean(pi.charge_data.liability_shift)}",
-          short: true
-        }
-      ]
-    else
+  defp stripe_fields(external_id, external_type, payment_method) do
+    case payment_method do
+      "credit card" ->
+        with {:ok, pi} <- @payments.payment_info(external_id, external_type) do
+          [
+            %{
+              title: "Risk Level",
+              value: pi.charge_data.risk_level,
+              short: true
+            },
+            %{
+              title: "Card Country",
+              value: pi.card_country,
+              short: true
+            },
+            %{
+              title: "Billing State",
+              value: pi.billing_state,
+              short: true
+            },
+            %{
+              title: "CVC Check  #{format_check(pi.cvc_check)}",
+              short: true
+            },
+            %{
+              title: "ZIP Check  #{format_check(pi.zip_check)}",
+              short: true
+            },
+            %{
+              title: "Liability Shift #{format_boolean(pi.charge_data.liability_shift)}",
+              short: true
+            }
+          ]
+        else
+          _ -> []
+        end
+      "us_bank_account" ->
+        with {:ok, pi} <- @payments.payment_info_ach(external_id, external_type) do
+          [
+            %{
+              title: "Risk Level",
+              value: pi.charge_data.risk_level,
+              short: true
+            },
+          ]
+        else
+          _ -> []
+        end
       _ -> []
     end
   end

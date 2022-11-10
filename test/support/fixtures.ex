@@ -173,6 +173,7 @@ defmodule Apr.Fixtures do
           "currency_code" => "USD",
           "items_total_cents" => 2_000_000,
           "total_list_price_cents" => 3000,
+          "payment_method" => "credit card",
           "line_items" => [
             %{
               "id" => "li-1",
