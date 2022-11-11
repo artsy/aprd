@@ -1,7 +1,6 @@
 defmodule Apr.Views.SellerSlackViewTest do
   use ExUnit.Case, async: true
   alias Apr.Views.SellerSlackView
-  import Mox
 
   describe "render/3" do
     test "seller event with test routing_key" do

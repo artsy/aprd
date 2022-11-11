@@ -24,6 +24,9 @@ defmodule Apr.Views.CommerceOrderSlackView do
       {"high_risk", "approved", %{"items_total_cents" => cents}}
         when cents >= 10_000_00 ->
           generate_slack_message(event, routing_key)
+      {"high_risk_async_payment", "processing_approval", %{"items_total_cents" => cents}}
+        when cents >= 10_000_00 ->
+          generate_slack_message(event, routing_key)
       # When subscription theme is not fraud it is nil, in this case we want to render all the messages
       {nil, _, _} ->
         generate_slack_message(event, routing_key)
@@ -91,6 +94,9 @@ defmodule Apr.Views.CommerceOrderSlackView do
 
       {"pending_fulfillment", _} ->
         ":hourglass: Waiting Shipping"
+
+      {"processing_approval", _} ->
+        ":hourglass: Waiting Payment Processing Approval"
 
       _ ->
         nil

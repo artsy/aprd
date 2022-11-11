@@ -21,7 +21,8 @@ config :apr, Apr.Repo,
   database: "aprd_test",
   hostname: System.get_env("DB_HOST") || "localhost",
   adapter: Ecto.Adapters.Postgres,
-  pool: Ecto.Adapters.SQL.Sandbox
+  pool: Ecto.Adapters.SQL.Sandbox,
+  ownership_timeout: 999_999_999
 
 config :apr, RabbitMQ,
   username: System.get_env("RABBITMQ_USER") || "guest",
