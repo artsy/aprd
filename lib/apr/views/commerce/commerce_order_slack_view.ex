@@ -21,11 +21,8 @@ defmodule Apr.Views.CommerceOrderSlackView do
       {"fraud", "approved", %{"mode" => "offer", "decline_code" => decline_code, "items_total_cents" => cents}}
         when cents >= 9_500_00 and decline_code != "insufficient_funds" ->
           generate_slack_message(event, routing_key)
-      {"high_risk", "approved", %{"items_total_cents" => cents}}
-        when cents >= 10_000_00 ->
-          generate_slack_message(event, routing_key)
-      {"high_risk", "processing_approval", %{"items_total_cents" => cents}}
-        when cents >= 10_000_00 ->
+      {"high_risk", verb, %{"items_total_cents" => cents}}
+        when verb in ["approved", "processing_approval"] and cents >= 10_000_00 ->
           generate_slack_message(event, routing_key)
       # When subscription theme is not fraud it is nil, in this case we want to render all the messages
       {nil, _, _} ->
