@@ -192,7 +192,7 @@ defmodule Apr.Views.CommerceOrderSlackViewTest do
   end
 
   describe "high risk async_payment theme" do
-    setup [:high_risk_async_payment_theme_subscription]
+    setup [:high_risk_theme_subscription]
 
     test "returns a message for an processing_approval buy order over 10K", context do
       event = Fixtures.commerce_order_event("processing_approval", %{"items_total_cents" => 10000_00, "currency_code" => "USD", "mode" => "buy"})
@@ -225,9 +225,5 @@ defmodule Apr.Views.CommerceOrderSlackViewTest do
 
   defp high_risk_theme_subscription(_context) do
     [subscription: %Subscription{theme: "high_risk"}]
-  end
-
-  defp high_risk_async_payment_theme_subscription(_context) do
-    [subscription: %Subscription{theme: "high_risk_async_payment"}]
   end
 end
