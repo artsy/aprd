@@ -22,12 +22,36 @@ defmodule Apr.Payments do
 
   def payment_info(_, _), do: {:uknown_payment}
 
+  def payment_info_ach(external_id, "payment_intent") do
+    with {:ok, pi} <- PaymentIntent.retrieve(external_id, %{expand: ["payment_method"]}),
+         charge_data <- charge_data_ach(pi) do
+       {:ok, 
+        %{
+          charge_data: charge_data,
+        }}
+    else
+      _ -> nil
+    end
+  end
+
+  def payment_info_ach(_, _), do: {:uknown_payment}
+
   defp charge_data(payment_intent) do
     with [charge | _tail] <- payment_intent.charges.data do
       %{
         risk_level: charge.outcome.risk_level,
         fraud_details: charge.fraud_details,
         liability_shift: liability_shift_from_charge(charge)
+      }
+    else
+      _ -> %{}
+    end
+  end
+
+  defp charge_data_ach(payment_intent) do
+    with [charge | _tail] <- payment_intent.charges.data do
+      %{
+        risk_level: charge.outcome.risk_level
       }
     else
       _ -> %{}
