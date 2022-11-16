@@ -17,16 +17,27 @@ brew 'yarn'
 EOF
 
 echo "fix rabbitmq stomp plugin not able to bind to port 61613..."
-if ! grep -Fq "stomp.listeners.tcp.1 = 12345" /usr/local/etc/rabbitmq/rabbitmq; then
-  echo "stomp.listeners.tcp.1 = 12345" >> /usr/local/etc/rabbitmq/rabbitmq
+if ! grep -Fq "stomp.listeners.tcp.1 = 12345" $(brew --prefix)/etc/rabbitmq/rabbitmq; then
+  echo "stomp.listeners.tcp.1 = 12345" >> $(brew --prefix)/etc/rabbitmq/rabbitmq
   brew services restart rabbitmq
 fi
 
+if [[ "$SHELL" = *"bash"* ]]; then
+  touch ~/.bash_profile
+  PROFILE="$HOME/.bash_profile"
+elif [[ "$SHELL" = *"zsh"* ]]; then
+  PROFILE="$HOME/.zshrc"
+fi
+
 echo "Setup asdf, if required..."
-if (! grep 'asdf.sh' ~/.bash_profile)
+if (! grep 'asdf.sh' $PROFILE)
 then
-  echo -e "\n. $(brew --prefix asdf)/asdf.sh" >> ~/.bash_profile
-  source ~/.bash_profile
+  echo -e "\n. $(brew --prefix asdf)/asdf.sh" >> $PROFILE
+  if [[ "$SHELL" = *"bash"* ]]; then
+    source $PROFILE
+  elif [[ "$SHELL" = *"zsh"* ]]; then
+    zsh $PROFILE
+  fi
 fi
 
 echo "Prepare asdf for erlang and elixir..."

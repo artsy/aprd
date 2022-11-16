@@ -188,6 +188,59 @@ defmodule Apr.Fixtures do
     }
   end
 
+  def auction_results_artist_change_event(old_artist_id \\ "old", artist_id \\ "new")
+
+  def auction_results_artist_change_event(old_artist_id, nil) do
+    %{
+      "verb" => "artist_change",
+      "subject" => nil,
+      "object" => %{
+        "id" => "751294",
+        "root_type" => "Lot",
+        "display" => "The Fall by Richard Bosman, #126 at Christie's: Contemporary Edition (2022-03-09)"
+      },
+      "properties" => %{
+        "old_artist_id" => old_artist_id,
+        "artist_id" => nil,
+        "match" => nil,
+        "maker_text" => "Richard Bosman"
+      }
+    }
+  end
+
+  def auction_results_artist_change_event(old_artist_id, artist_id) do
+    %{
+      "verb" => "artist_change",
+      "subject" => nil,
+      "object" => %{
+        "id" => "751294",
+        "root_type" => "Lot",
+        "display" => "The Fall by Richard Bosman, #126 at Christie's: Contemporary Edition (2022-03-09)"
+      },
+      "properties" => %{
+        "old_artist_id" => old_artist_id,
+        "artist_id" => artist_id,
+        "match" => %{
+          "_index" => "artists_staging",
+          "_type" => "_doc",
+          "_id" => "5c19768dddcc7a07c5c34572",
+          "_score" => 224.4639,
+          "_source" => %{
+            "alternate_names" => nil,
+            "nationality" => [
+              "American"
+            ],
+            "follow_count" => 18,
+            "name" => "RICHARD BOSMAN",
+            "name_exact" => "richard bosman",
+            "birth_year" => "1944-01-01"
+          }
+        },
+        "maker_text" => "Richard Bosman"
+      }
+    }
+  end
+
   def partner_update_event(verb \\ "updated", changes \\ []) do
     %{
       "verb" => verb,

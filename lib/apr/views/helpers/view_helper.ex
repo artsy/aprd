@@ -24,6 +24,14 @@ defmodule Apr.Views.Helper do
     "https://www.artsy.net/artist/#{artist_id}"
   end
 
+  def formatted_artist_link(artist_id) do
+    "<#{artist_link(artist_id)}|#{artist_id}>"
+  end
+
+  def formatted_artist_link(artist_id, name) do
+    "<#{artist_link(artist_id)}|#{name}>"
+  end
+
   def radiation_link(path) do
     "https://radiation.artsy.net/#{path}"
   end
