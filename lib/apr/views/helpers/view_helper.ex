@@ -24,6 +24,8 @@ defmodule Apr.Views.Helper do
     "https://www.artsy.net/artist/#{artist_id}"
   end
 
+  def formatted_artist_link(nil), do: "(none)"
+
   def formatted_artist_link(artist_id) do
     "<#{artist_link(artist_id)}|#{artist_id}>"
   end
