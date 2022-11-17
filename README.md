@@ -88,6 +88,31 @@ Whenever we receive a new event, after storing the event locally, we use Phoenix
 
 ## Artsy Slack Setup
 
+### Setting up a new topic or channel
+
+Before a new topic can be subscribed to from Slack, the topic must exist in APR's database. E.g.:
+
+```bash
+$ hokusai staging run --tty 'iex -S mix'
+Apr.Subscriptions.create_topic(%{name: "auction_results"})
+```
+
+To add the APR integration to a _new_ channel:
+
+1. In the channel's settings, choose _Integrations_,
+1. then _Add apps_, then
+1. search for and select _APR Announcer_
+
+In the channel, confirm the available topics and subscribe:
+
+```
+/apr help
+/apr topics
+/apr subscribe auction_results
+```
+
+### Recovering from a Slack connection disruption
+
 APRd is used to power critical alerting workflows in Artsy's Slack organization. After a recent incident where APRd lost its connection to Artsy's Slack, we surfaced the following steps to re-connect the digital assets needed to get it all working:
 
 1. Re-enable the `/apr` slash command: https://artsy.slack.com/services/B227A48KX
