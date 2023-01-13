@@ -14,6 +14,7 @@ APRd (aka. APR dashboard), is a real-time dashboard built in [Elixir](https://el
 - Point People: [@jpotts244](https://github.com/jpotts244) [@kajatiger](https://github.com/kajatiger)
 
 ## Clone the project
+
 ```
 $ git clone git@github.com:artsy/aprd.git
 ```
@@ -31,10 +32,12 @@ $ git clone git@github.com:artsy/aprd.git
 - Install [Elixir](https://elixir-lang.org/install.html)
 
   Using Homebrew
+
   ```
   $ brew update
   $ brew install elixir
   ```
+
   - Ensure that everything installed correctly by running `mix`, you should not see the following error
     ```
     $ command not found: mix
@@ -57,9 +60,11 @@ $ git clone git@github.com:artsy/aprd.git
 - Create and migrate your database with `mix ecto.setup`
 - Install Node.js dependencies with `cd assets && npm install`
 - `s3://artsy-citadel/dev/.env.aprd` contains common configuration values for local dev. Create a `.env.shared` file locally and copy using this command:
+
 ```
 aws s3 cp s3://artsy-citadel/dev/.env.aprd .env.shared
 ```
+
 - `.env` should contain configuration values specific to your local development. Create the file if it does not exist. See `.env.example` for suggestion on values you might want to customize.
 - We use [Phoenix Live View](https://github.com/phoenixframework/phoenix_live_view) for our real-time data presentation. Make sure `SECRET_SALT` exists in `.env.shared` or `.env`. You can generate a secret salt with:
   - `mix phx.gen.secret 32`
@@ -71,11 +76,13 @@ Now you can visit [`localhost:4000`](http://localhost:4000) from your browser.
 ## Running the test suite
 
 Run the entire test suite using the following command
+
 ```
 $ mix test
 ```
 
 To run a specific test file, add the path to the test file
+
 ```
 $ mix test test/apr/views/commerce/commerce_transaction_slack_view_test.exs
 ```
@@ -116,9 +123,10 @@ In the channel, confirm the available topics and subscribe:
 APRd is used to power critical alerting workflows in Artsy's Slack organization. After a recent incident where APRd lost its connection to Artsy's Slack, we surfaced the following steps to re-connect the digital assets needed to get it all working:
 
 1. Re-enable the `/apr` slash command: https://artsy.slack.com/services/B227A48KX
-1. Re-enable the `@apr / APR Announcer` Slack bot: https://artsy.slack.com/services/70260076245
+1. Re-enable the `@apr / APR Announcer` Slack bot: https://artsy.slack.com/services/B04JQLTBUAU
 1. Re-invite the Bot in (2) to the appropriate Slack channels
-    - You can check your work by reading the Channels attribute on the Bot show page: https://artsy.slack.com/services/70260076245
-1. Re-generate the bot API token (via https://artsy.slack.com/services/70260076245)
+   - You can check your work by reading the Channels attribute on the Bot show page: https://artsy.slack.com/services/B04JQLTBUAU
+1. Re-generate the bot API token (via https://artsy.slack.com/services/B04JQLTBUAU)
 1. Run `hokusai [staging|production] env set SLACK_API_TOKEN=token-from-step-4`
 1. Run `hokusai [staging|production] refresh`
+1. If it was down for more than a few minutes, we likely need to fetch the events that were missed. See the playbook in [Notion](https://www.notion.so/artsy/Resolving-APRd-downtime-2e1bb0e59d9e46cc8d1fe58ff04df088) for details on how to do so.
