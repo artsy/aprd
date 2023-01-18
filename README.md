@@ -124,7 +124,7 @@ APRd is used to power critical alerting workflows in Artsy's Slack organization.
 
 1. Re-enable the `/apr` slash command: https://artsy.slack.com/services/B227A48KX
 1. Re-enable the `@apr / APR Announcer` Slack bot: https://artsy.slack.com/services/B04JQLTBUAU
-1. Re-invite the Bot in (2) to the appropriate Slack channels
+1. Re-invite the Bot in (2) to the [appropriate Slack channels](https://www.notion.so/artsy/Resolving-APRd-downtime-2e1bb0e59d9e46cc8d1fe58ff04df088#7d87b3f3be804ab9802310c0603da45e)
    - You can check your work by reading the Channels attribute on the Bot show page: https://artsy.slack.com/services/B04JQLTBUAU
 1. Re-generate the bot API token (via https://artsy.slack.com/services/B04JQLTBUAU)
 1. Run `hokusai [staging|production] env set SLACK_API_TOKEN=token-from-step-4`
