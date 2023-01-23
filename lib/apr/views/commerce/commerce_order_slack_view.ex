@@ -15,13 +15,13 @@ defmodule Apr.Views.CommerceOrderSlackView do
 
   def render(subscription, event, routing_key) do
     case {subscription.theme, event["verb"], event["properties"]} do
-      {"fraud", "submitted", %{"mode" => "buy", "decline_code" => decline_code, "items_total_cents" => cents}}
+      {"fraud", "submitted", %{"mode" => "buy", "decline_code" => decline_code, "buyer_total_cents" => cents}}
         when cents >= 9_500_00 and decline_code != "insufficient_funds" ->
           generate_slack_message(event, routing_key)
-      {"fraud", "approved", %{"mode" => "offer", "decline_code" => decline_code, "items_total_cents" => cents}}
+      {"fraud", "approved", %{"mode" => "offer", "decline_code" => decline_code, "buyer_total_cents" => cents}}
         when cents >= 9_500_00 and decline_code != "insufficient_funds" ->
           generate_slack_message(event, routing_key)
-      {"high_risk", verb, %{"items_total_cents" => cents}}
+      {"high_risk", verb, %{"buyer_total_cents" => cents}}
         when verb in ["approved", "processing_approval"] and cents >= 10_000_00 ->
           generate_slack_message(event, routing_key)
       # When subscription theme is not fraud it is nil, in this case we want to render all the messages
@@ -171,8 +171,8 @@ defmodule Apr.Views.CommerceOrderSlackView do
         short: true
       },
       %{
-        title: "Total Amount",
-        value: format_price(order_properties["items_total_cents"], order_properties["currency_code"]),
+        title: "Buyer Paid",
+        value: format_price(order_properties["buyer_total_cents"], order_properties["currency_code"]),
         short: true
       }
     ]
