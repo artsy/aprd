@@ -1,5 +1,5 @@
 {
   "extends": ["@artsy:app"],
-  "assignees": ["joeyAghion"],
+  "assignees": ["jpotts244"],
   "ignoreDeps": ["phoenix", "phoenix_html", "phoenix_live_view"]
 }
