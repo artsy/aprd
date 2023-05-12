@@ -44,9 +44,9 @@ defmodule Apr.Views.SellerSlackViewTest do
       }
     end
 
-    test "merchant_account event with external_deactivated routing_key" do
-      event = Apr.Fixtures.seller_event("external_deactivated")
-      slack_view = SellerSlackView.render(nil, event, "merchantaccount.external_deactivated")
+    test "merchant_account event with deactivated routing_key" do
+      event = Apr.Fixtures.seller_event("deactivated")
+      slack_view = SellerSlackView.render(nil, event, "merchantaccount.deactivated")
 
       assert slack_view == %{
         attachments: [
