@@ -44,6 +44,27 @@ defmodule Apr.Views.SellerSlackViewTest do
       }
     end
 
+    test "merchant_account event with external_deactivated routing_key" do
+      event = Apr.Fixtures.seller_event("external_deactivated")
+      slack_view = SellerSlackView.render(nil, event, "merchantaccount.external_deactivated")
+
+      assert slack_view == %{
+        attachments: [
+          %{
+            fields: [
+              %{
+                short: true,
+                title: "Stripe account ID",
+                value: "<https://dashboard.stripe.com/connect/accounts/stripe_account_id/activity|stripe_account_id>"
+              }
+            ]
+          }
+        ],
+        text: ":warning: Stripe account of Mocked Partner2 was disconnected from Stripe",
+        unfurl_links: true
+      }
+    end
+
     test "seller event with merchantaccount routing_key" do
       event = Apr.Fixtures.seller_event()
       slack_view = SellerSlackView.render(nil, event, "merchantaccount")
