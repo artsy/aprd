@@ -9,6 +9,9 @@ defmodule Apr.Views.SellerSlackView do
       routing_key == "merchantaccount.external_account_restricted_soon" ->
         external_account_restricted_soon_message(event, partner_data)
 
+      routing_key == "merchantaccount.deactivated" ->
+        external_account_deactivated_message(event, partner_data)
+
       routing_key =~ "merchantaccount" ->
         merchant_account_message(event, partner_data)
 
@@ -36,6 +39,24 @@ defmodule Apr.Views.SellerSlackView do
               value: Enum.join(event["properties"]["stripe_requirements"]["requirements"], ", "),
               short: true
             },
+            %{
+              title: "Stripe account ID",
+              value: formatted_stripe_account_link(event["properties"]["external_id"]),
+              short: true
+            }
+          ]
+        }
+      ],
+      unfurl_links: true
+    }
+  end
+
+  defp external_account_deactivated_message(event, partner_data) do
+    %{
+      text: ":warning: Stripe account of #{partner_data["name"]} was disconnected from Stripe",
+      attachments: [
+        %{
+          fields: [
             %{
               title: "Stripe account ID",
               value: formatted_stripe_account_link(event["properties"]["external_id"]),
