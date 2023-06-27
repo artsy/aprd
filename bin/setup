@@ -32,7 +32,7 @@ fi
 echo "Setup asdf, if required..."
 if (! grep 'asdf.sh' $PROFILE)
 then
-  echo -e "\n. $(brew --prefix asdf)/asdf.sh" >> $PROFILE
+  echo -e "\n. $(brew --prefix asdf)/libexec/asdf.sh" >> $PROFILE
   if [[ "$SHELL" = *"bash"* ]]; then
     source $PROFILE
   elif [[ "$SHELL" = *"zsh"* ]]; then
