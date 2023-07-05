@@ -37,6 +37,7 @@ defmodule Apr.MixProject do
       {:artsy_auth_ex, "~> 0.1"},
       {:ecto_sql, "~> 3.0"},
       {:gettext, "~> 0.11"},
+      {:hackney, "~> 1.17"},
       {:jason, "~> 1.0"},
       {:money, "~> 1.4"},
       {:neuron, "~> 1.1.1"},
