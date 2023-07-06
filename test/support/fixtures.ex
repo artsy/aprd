@@ -188,6 +188,26 @@ defmodule Apr.Fixtures do
     }
   end
 
+  def shipping_quote_disqualified_event(verb \\ "disqualified", properties \\ %{}) do
+    %{  
+      "object" => %{
+        "id" => "transaction123",
+        "display" => "Transaction(123)"
+      },
+      "subject" => %{
+        "id" => "user1",
+        "display" => "User LastName"
+      },
+      "verb" => verb,
+      "properties" => %{
+        "order" => %{
+          "id" => "order-id-hello"
+        },
+      }
+      |> Map.merge(properties)
+    }
+  end
+
   def auction_results_artist_change_event(old_artist_id \\ "old", artist_id \\ "new")
 
   def auction_results_artist_change_event(old_artist_id, nil) do
