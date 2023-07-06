@@ -29,4 +29,12 @@ defmodule Apr.Views.CommerceErrorSlackViewTest do
 
     assert slack_view[:unfurl_links] == true
   end
+
+  test "stripe account inactive error slack view" do
+    event = Apr.Fixtures.stripe_account_inactive_error_event()
+    slack_view = CommerceErrorSlackView.render(%Subscription{}, event, "commerce.stripe_account_inactive")
+
+    assert slack_view.text == "An order is blocked because the seller's stripe account is inactive."
+    assert Enum.map(List.first(slack_view.attachments).fields, fn field -> field.title end) == ["Order ID"]
+  end
 end
