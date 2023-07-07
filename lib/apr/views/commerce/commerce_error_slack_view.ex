@@ -10,6 +10,7 @@ defmodule Apr.Views.CommerceErrorSlackView do
   def render(_, event, _routing_key) do
     case event["properties"]["code"] do
       "tax_mismatch" -> tax_mismatch_message(event)
+      "stripe_account_inactive" -> stripe_account_inactive_message(event)
       _ -> default_message(event)
     end
   end
@@ -89,6 +90,25 @@ defmodule Apr.Views.CommerceErrorSlackView do
         }
       ],
       unfurl_links: true
+    }
+  end
+
+  defp stripe_account_inactive_message(event) do
+    order_id = event["properties"]["data"]["order_id"]
+
+    %{
+      text: "An order is blocked because the seller's stripe account is inactive.",
+      attachments: [
+        %{
+          fields: [
+            %{
+              title: "Order ID",
+              value: "<#{exchange_admin_link(order_id)}|#{order_id}>",
+              short: true
+            }
+          ]
+        }
+      ]
     }
   end
 end

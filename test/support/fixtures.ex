@@ -93,6 +93,22 @@ defmodule Apr.Fixtures do
     }
   end
 
+  def stripe_account_inactive_error_event() do
+    %{
+      "object" => %{
+        "id" => "FailedTransactionError",
+        "display" => "FailedTransactionError"
+      },
+      "properties" => %{
+        "type" => "processing",
+        "code" => "stripe_account_inactive",
+        "data" => %{
+          "order_id" => "order1"
+        }
+      }
+    }
+  end
+
   def commerce_offer_order(verb \\ "submitted", properties \\ %{}),
     do: commerce_order_event(verb, properties |> Map.merge(%{"mode" => "offer"}))
 
