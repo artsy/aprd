@@ -1,7 +1,7 @@
 defmodule Apr.Views.CommerceShippingQuoteDisqualifiedSlackView do
 # #   @payments Application.get_env(:apr, :payments)
 
-#   import Apr.Views.Helper
+  import Apr.Views.Helper
 
 #   alias Apr.Views.CommerceHelper
 #   alias Apr.Subscriptions.Subscription
@@ -10,13 +10,13 @@ defmodule Apr.Views.CommerceShippingQuoteDisqualifiedSlackView do
     # do we need this subscription arg?
     # what is in the event object at this time in the lifecycle?
     %{
-      text: ":warning: Shipping quotes cannot be generated for Artsy Shipping Order #{event["properties"]["id"]}",
+      text: ":warning: Shipping quotes cannot be generated for Artsy Shipping Order #{event["properties"]["order"]["id"]}",
       attachments: [
         %{
           fields: [
             %{
               title: "Shipping quotes cannot be generated for Order",
-              value: format_arta_dashboard_link, # add link to arta dash plus like to exchange admin
+              value: formatted_exchange_admin_link(event["properties"]["order"]["id"]), # add link to arta dash plus like to exchange admin
               short: true
             }
           ]
@@ -26,7 +26,7 @@ defmodule Apr.Views.CommerceShippingQuoteDisqualifiedSlackView do
     }
   end
 
-  defp format_arta_dashboard_link do
-    #   checkout external id from the event object 
+  defp formatted_exchange_admin_link(order_id) do
+    "<#{exchange_admin_link(order_id)}|#{order_id}>"
   end
 end
