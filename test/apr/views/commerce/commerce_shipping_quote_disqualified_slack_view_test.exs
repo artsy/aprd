@@ -10,13 +10,18 @@ defmodule Apr.Views.CommerceShippingQuoteDisqualifiedSlackViewTest do
     assert slack_view == %{
       attachments: [
           %{
-          fields: [
+            fields: [
               %{
-              short: true,
-              title: "Shipping quotes cannot be generated for Order",
-              value: "<https://exchange.artsy.net/admin/orders/order-id-hello|order-id-hello>"
+                title: "Exchange Admin Order",
+                value: "<https://exchange.artsy.net/admin/orders/order-id-hello|order-id-hello>",
+                short: true
+              },
+              %{
+                title: "ARTA Dashboard link for Order",
+                value: "<https://dashboard.arta.io/org/ARTSY/requests/123|123>",
+                short: true
               }
-          ]
+            ]
           }
       ],
       text: ":warning: :package: Shipping quotes cannot be generated for Artsy Shipping Order #{event["properties"]["order"]["id"]}",
