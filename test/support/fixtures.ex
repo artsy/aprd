@@ -208,7 +208,7 @@ defmodule Apr.Fixtures do
     %{  
       "object" => %{
         "id" => "shipping-quote-request-id",
-        "external_id" => "123"
+        "external_id" => "artsy-order-code"
       },
       "subject" => %{
         "id" => "user1",

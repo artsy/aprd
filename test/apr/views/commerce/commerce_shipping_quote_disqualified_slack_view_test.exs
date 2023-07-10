@@ -18,7 +18,7 @@ defmodule Apr.Views.CommerceShippingQuoteDisqualifiedSlackViewTest do
               },
               %{
                 title: "ARTA Dashboard link for Order",
-                value: "<https://dashboard.arta.io/org/ARTSY/requests/123|123>",
+                value: "<https://dashboard.arta.io/org/ARTSY/requests/shipping-quote-request-id|shipping-quote-request-id>",
                 short: true
               }
             ]
