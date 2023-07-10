@@ -8,8 +8,13 @@ defmodule Apr.Views.CommerceShippingQuoteDisqualifiedSlackView do
         %{
           fields: [
             %{
-              title: "Shipping quotes cannot be generated for Order",
+              title: "Exchange Admin Order",
               value: formatted_exchange_admin_link(event["properties"]["order"]["id"]),
+              short: true
+            },
+            %{
+              title: "ARTA Dashboard link for Order",
+              value: formatted_arta_dashboard_link(event["object"]["external_id"]),
               short: true
             }
           ]
@@ -21,5 +26,9 @@ defmodule Apr.Views.CommerceShippingQuoteDisqualifiedSlackView do
 
   defp formatted_exchange_admin_link(order_id) do
     "<#{exchange_admin_link(order_id)}|#{order_id}>"
+  end
+
+  defp formatted_arta_dashboard_link(external_id) do
+    "<https://dashboard.arta.io/org/ARTSY/requests/#{external_id}|#{external_id}>"
   end
 end
