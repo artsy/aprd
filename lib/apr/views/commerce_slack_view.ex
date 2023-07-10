@@ -4,7 +4,8 @@ defmodule Apr.Views.CommerceSlackView do
     CommerceTransactionCreatedSlackView,
     CommerceOfferSlackView,
     CommerceOrderSlackView,
-    CommerceErrorSlackView
+    CommerceErrorSlackView,
+    CommerceShippingQuoteDisqualifiedSlackView
   }
 
   def render(subscription, event, routing_key) do
@@ -20,6 +21,9 @@ defmodule Apr.Views.CommerceSlackView do
 
       routing_key =~ "order." ->
         CommerceOrderSlackView.render(subscription, event, routing_key)
+
+      routing_key == "shippingquoterequest.disqualified" ->
+        CommerceShippingQuoteDisqualifiedSlackView.render(subscription, event, routing_key)
 
       routing_key =~ "error." ->
         CommerceErrorSlackView.render(subscription, event, routing_key)
