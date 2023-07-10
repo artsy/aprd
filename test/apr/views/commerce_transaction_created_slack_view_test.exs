@@ -30,7 +30,7 @@ defmodule Apr.Views.CommerceTransactionCreatedSlackViewTest do
               %{
                 short: true,
                 title: "Order ID",
-                value: "<https://exchange.artsy.net/admin/orders/order123|order123>"
+                value: "<https://exchange-staging.artsy.net/admin/orders/order123|order123>"
               },
               %{
                 short: true,
