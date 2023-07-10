@@ -14,7 +14,7 @@ defmodule Apr.Views.CommerceShippingQuoteDisqualifiedSlackViewTest do
               %{
               short: true,
               title: "Shipping quotes cannot be generated for Order",
-              value: "<https://exchange.artsy.net/admin/orders/order-id-hello|order-id-hello>"
+              value: "<https://exchange-staging.artsy.net/admin/orders/order-id-hello|order-id-hello>"
               }
           ]
           }
