@@ -105,7 +105,8 @@ defmodule Apr.Views.CommerceSlackViewTest do
     test "Disqualified routing_key value" do
       event = Fixtures.shipping_quote_disqualified_event("disqualified")
 
-      slack_view = CommerceSlackView.render(nil, event, "disqualified")
+      slack_view = CommerceSlackView.render(nil, event, "shippingquoterequest.disqualified")
+
       assert slack_view.text == ":warning: :package: Shipping quotes cannot be generated for Artsy Shipping Order order-id-hello"
     end
   end

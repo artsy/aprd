@@ -22,7 +22,7 @@ defmodule Apr.Views.CommerceSlackView do
       routing_key =~ "order." ->
         CommerceOrderSlackView.render(subscription, event, routing_key)
 
-      routing_key == "disqualified" -> 
+      routing_key == "shippingquoterequest.disqualified" ->
         CommerceShippingQuoteDisqualifiedSlackView.render(subscription, event, routing_key)
 
       routing_key =~ "error." ->
