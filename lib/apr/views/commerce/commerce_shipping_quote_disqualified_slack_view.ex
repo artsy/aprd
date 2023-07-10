@@ -14,7 +14,7 @@ defmodule Apr.Views.CommerceShippingQuoteDisqualifiedSlackView do
             },
             %{
               title: "ARTA Dashboard link for Order",
-              value: formatted_arta_dashboard_link(event["object"]["id"]),
+              value: formatted_arta_dashboard_link(event["properties"]["id"]),
               short: true
             }
           ]

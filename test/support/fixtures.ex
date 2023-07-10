@@ -215,6 +215,7 @@ defmodule Apr.Fixtures do
       },
       "verb" => verb,
       "properties" => %{
+        "id" => "shipping-quote-request-id",
         "order" => %{
           "id" => "order-id-hello"
         },
