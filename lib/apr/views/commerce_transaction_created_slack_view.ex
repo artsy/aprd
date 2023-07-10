@@ -2,8 +2,8 @@ defmodule Apr.Views.CommerceTransactionCreatedSlackView do
   import Apr.Views.Helper
 
   def render(subscription, event, _routing_key) do
-    case {subscription.theme, event["properties"]["external_type"], event["verb"], event["properties"]["transaction_type"], event["properties"]["order"]["payment_method"]} do
-      {"dispute", "payment_intent", "created", "dispute", "us_bank_account"} ->
+    case {subscription.theme, event["verb"], event["properties"]} do
+      {"dispute", "created", %{"external_type" => "payment_intent", "transaction_type" => "dispute", "order" => %{"payment_method" => payment_method}}} when payment_method != "credit card" ->
         generate_slack_message(event)
       _ -> nil
     end
