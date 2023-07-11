@@ -1,5 +1,5 @@
 defmodule Apr.Views.Helper do
-  @exchange_url "https://exchange.artsy.net"
+  @exchange_url Application.get_env(:apr, :exchange)[:url]
   @stripe_search_url "https://dashboard.stripe.com/search"
   @gravity_api Application.get_env(:apr, :gravity_api)
 

@@ -13,7 +13,7 @@ defmodule Apr.Views.CommerceShippingQuoteDisqualifiedSlackViewTest do
             fields: [
               %{
                 title: "Exchange Admin Order",
-                value: "<https://exchange.artsy.net/admin/orders/order-id-hello|order-id-hello>",
+                value: "<https://exchange-staging.artsy.net/admin/orders/order-id-hello|order-id-hello>",
                 short: true
               },
               %{
