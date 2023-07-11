@@ -16,7 +16,15 @@ defmodule Apr.Views.CommerceShippingQuoteDisqualifiedSlackView do
               title: "ARTA Dashboard link for Order",
               value: formatted_arta_dashboard_link(event["properties"]["external_id"]),
               short: true
-            }
+            },
+            %{
+              title: "Artwork Listed Price",
+              value: formatted_list_price(
+                event["properties"]["order"]["currency_code"],
+                event["properties"]["order"]["total_list_price_cents"]
+              ),
+              short: true
+            },
           ]
         }
       ],
@@ -30,5 +38,11 @@ defmodule Apr.Views.CommerceShippingQuoteDisqualifiedSlackView do
 
   defp formatted_arta_dashboard_link(external_id) do
     "<https://dashboard.arta.io/org/ARTSY/requests/#{external_id}|#{external_id}>"
+  end
+
+  defp formatted_list_price(currency_code, list_price_cents) do
+    price = Decimal.new(list_price_cents)
+
+    "#{currency_code} #{Decimal.div(price, 100)}"
   end
 end
