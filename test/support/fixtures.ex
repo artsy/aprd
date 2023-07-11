@@ -207,8 +207,7 @@ defmodule Apr.Fixtures do
   def shipping_quote_disqualified_event(verb \\ "disqualified", properties \\ %{}) do
     %{  
       "object" => %{
-        "id" => "shipping-quote-request-id",
-        "external_id" => "artsy-order-code"
+        "id" => "shipping-quote-request-id"
       },
       "subject" => %{
         "id" => "user1",
@@ -216,6 +215,7 @@ defmodule Apr.Fixtures do
       "verb" => verb,
       "properties" => %{
         "id" => "shipping-quote-request-id",
+        "external_id" => "arta-request-id",
         "order" => %{
           "id" => "order-id-hello"
         },
