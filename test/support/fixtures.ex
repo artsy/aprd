@@ -217,7 +217,9 @@ defmodule Apr.Fixtures do
         "id" => "shipping-quote-request-id",
         "external_id" => "arta-request-id",
         "order" => %{
-          "id" => "order-id-hello"
+          "id" => "order-id-hello",
+          "total_list_price_cents" => "11000000",
+          "currency_code" => "USD"
         },
       }
       |> Map.merge(properties)

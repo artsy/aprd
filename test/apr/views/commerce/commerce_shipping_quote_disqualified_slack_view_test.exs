@@ -20,6 +20,11 @@ defmodule Apr.Views.CommerceShippingQuoteDisqualifiedSlackViewTest do
                 title: "ARTA Dashboard link for Order",
                 value: "<https://dashboard.arta.io/org/ARTSY/requests/arta-request-id|arta-request-id>",
                 short: true
+              },
+              %{
+                title: "Artwork Listed Price",
+                value: "USD 110000",
+                short: true
               }
             ]
           }
