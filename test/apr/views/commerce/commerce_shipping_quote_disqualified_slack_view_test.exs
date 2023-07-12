@@ -23,7 +23,7 @@ defmodule Apr.Views.CommerceShippingQuoteDisqualifiedSlackViewTest do
               },
               %{
                 title: "Artwork Listed Price",
-                value: "USD 110000",
+                value: "$110,000.00",
                 short: true
               }
             ]
