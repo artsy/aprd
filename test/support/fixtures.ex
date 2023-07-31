@@ -218,7 +218,29 @@ defmodule Apr.Fixtures do
         "external_id" => "arta-request-id",
         "order" => %{
           "id" => "order-id-hello",
-          "total_list_price_cents" => "11000000",
+          "total_list_price_cents" => 11000000,
+          "currency_code" => "USD"
+        },
+      }
+      |> Map.merge(properties)
+    }
+  end
+
+  def shipping_quote_disqualified_missing_data_event(verb \\ "disqualified", properties \\ %{}) do
+    %{  
+      "object" => %{
+        "id" => "shipping-quote-request-id"
+      },
+      "subject" => %{
+        "id" => "user1",
+      },
+      "verb" => verb,
+      "properties" => %{
+        "id" => "shipping-quote-request-id",
+        "external_id" => "arta-request-id",
+        "order" => %{
+          "id" => "order-id-hello",
+          "total_list_price_cents" => nil,
           "currency_code" => "USD"
         },
       }
