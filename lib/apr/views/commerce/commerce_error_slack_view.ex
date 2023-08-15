@@ -102,8 +102,18 @@ defmodule Apr.Views.CommerceErrorSlackView do
         %{
           fields: [
             %{
-              title: "Order ID",
+              title: "Order: #{order_id}",
               value: "<#{exchange_admin_link(order_id)}|#{order_id}>",
+              short: true
+            },
+            %{
+              title: "Partner",
+              value: event["properties"]["data"]["partner_name"],
+              short: true
+            },
+            %{
+              title: "Order Value",
+              value: event["properties"]["data"]["order_value"],
               short: true
             }
           ]
