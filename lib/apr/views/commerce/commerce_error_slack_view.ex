@@ -95,6 +95,7 @@ defmodule Apr.Views.CommerceErrorSlackView do
 
   defp stripe_account_inactive_message(event) do
     order_id = event["properties"]["data"]["order_id"]
+    partner_path = "partners/#{event["properties"]["data"]["partner_id"]}"
 
     %{
       text: "An order is blocked because the seller's stripe account is inactive.",
@@ -108,7 +109,7 @@ defmodule Apr.Views.CommerceErrorSlackView do
             },
             %{
               title: "Partner",
-              value: event["properties"]["data"]["partner_name"],
+              value: "<#{admin_partners_link(partner_path)}|#{event["properties"]["data"]["partner_name"]}>",
               short: true
             },
             %{

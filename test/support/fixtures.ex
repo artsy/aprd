@@ -104,9 +104,10 @@ defmodule Apr.Fixtures do
         "code" => "stripe_account_inactive",
         "data" => %{
           "order_id" => "order1",
-          "partner_name" => "Partner Name",
           "order_value" => 12345,
           "order_currency" => "USD",
+          "partner_id" => "partner1",
+          "partner_name" => "Partner Name"
         }
       }
     }
