@@ -103,7 +103,10 @@ defmodule Apr.Fixtures do
         "type" => "processing",
         "code" => "stripe_account_inactive",
         "data" => %{
-          "order_id" => "order1"
+          "order_id" => "order1",
+          "partner_name" => "Partner Name",
+          "order_value" => 12345,
+          "order_currency" => "USD",
         }
       }
     }
@@ -205,7 +208,7 @@ defmodule Apr.Fixtures do
   end
 
   def shipping_quote_disqualified_event(verb \\ "disqualified", properties \\ %{}) do
-    %{  
+    %{
       "object" => %{
         "id" => "shipping-quote-request-id"
       },
@@ -227,7 +230,7 @@ defmodule Apr.Fixtures do
   end
 
   def shipping_quote_disqualified_missing_data_event(verb \\ "disqualified", properties \\ %{}) do
-    %{  
+    %{
       "object" => %{
         "id" => "shipping-quote-request-id"
       },
