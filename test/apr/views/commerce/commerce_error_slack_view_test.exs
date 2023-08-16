@@ -36,7 +36,7 @@ defmodule Apr.Views.CommerceErrorSlackViewTest do
 
     assert slack_view.text == "An order is blocked because the seller's stripe account is inactive."
     assert Enum.map(List.first(slack_view.attachments).fields, fn field -> field.title end) == [
-      "Order: order1",
+      "Order",
       "Partner",
       "Order Value"
     ]

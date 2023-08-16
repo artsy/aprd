@@ -102,7 +102,7 @@ defmodule Apr.Views.CommerceErrorSlackView do
         %{
           fields: [
             %{
-              title: "Order: #{order_id}",
+              title: "Order",
               value: "<#{exchange_admin_link(order_id)}|#{order_id}>",
               short: true
             },
