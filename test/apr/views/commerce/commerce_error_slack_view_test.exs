@@ -40,5 +40,11 @@ defmodule Apr.Views.CommerceErrorSlackViewTest do
       "Partner",
       "Order Value"
     ]
+
+    assert Enum.map(List.first(slack_view.attachments).fields, fn field -> field.value end) == [
+      "<https://exchange.artsy.net/admin/orders/order1|order1>",
+      "<https://admin-partners.artsy.net/partners/partner1|Partner Name>",
+      "USD 12345"
+    ]
   end
 end
