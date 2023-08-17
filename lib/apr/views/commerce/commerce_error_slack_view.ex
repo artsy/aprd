@@ -114,7 +114,10 @@ defmodule Apr.Views.CommerceErrorSlackView do
             },
             %{
               title: "Order Value",
-              value: "#{event["properties"]["data"]["order_currency"]} #{event["properties"]["data"]["order_value"]}",
+              value: format_price(
+                event["properties"]["data"]["order_value"],
+                event["properties"]["data"]["order_currency"]
+              ),
               short: true
             }
           ]
