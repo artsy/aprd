@@ -115,7 +115,7 @@ defmodule Apr.Views.CommerceErrorSlackView do
             },
             %{
               title: "Stripe Account",
-              value: "<#{stripe_account_link(merchant_account_external_id)}|#{merchant_account_external_id}>",
+              value: stripe_merchant_account_link(merchant_account_external_id),
               short: true
             },
             %{
