@@ -97,7 +97,7 @@ defmodule Apr.Views.Helper do
   end
 
   def stripe_merchant_account_link(merchant_account_external_id) do
-    if merchant_account_external_id
+    if merchant_account_external_id do
       "<https://dashboard.stripe.com/connect/accounts/#{merchant_account_external_id}|#{merchant_account_external_id}>"
     else
       "Not found"
