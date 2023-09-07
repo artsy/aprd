@@ -96,6 +96,14 @@ defmodule Apr.Views.Helper do
     "#{@stripe_search_url}?#{URI.encode_query(query: query)}"
   end
 
+  def stripe_merchant_account_link(merchant_account_external_id) do
+    if merchant_account_external_id do
+      "<https://dashboard.stripe.com/connect/accounts/#{merchant_account_external_id}|#{merchant_account_external_id}>"
+    else
+      "Not found"
+    end
+  end
+
   def cleanup_name(nil), do: ""
 
   def cleanup_name(full_name) do
