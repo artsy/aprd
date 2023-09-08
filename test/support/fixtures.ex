@@ -107,7 +107,8 @@ defmodule Apr.Fixtures do
           "order_value" => 12345,
           "order_currency" => "USD",
           "partner_id" => "partner1",
-          "partner_name" => "Partner Name"
+          "partner_name" => "Partner Name",
+          "merchant_account_external_id" => "acct_123"
         }
       }
     }

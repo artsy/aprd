@@ -95,6 +95,7 @@ defmodule Apr.Views.CommerceErrorSlackView do
 
   defp stripe_account_inactive_message(event) do
     order_id = event["properties"]["data"]["order_id"]
+    merchant_account_external_id = event["properties"]["data"]["merchant_account_external_id"]
     partner_path = "partners/#{event["properties"]["data"]["partner_id"]}"
 
     %{
@@ -110,6 +111,11 @@ defmodule Apr.Views.CommerceErrorSlackView do
             %{
               title: "Partner",
               value: "<#{admin_partners_link(partner_path)}|#{event["properties"]["data"]["partner_name"]}>",
+              short: true
+            },
+            %{
+              title: "Stripe Account",
+              value: stripe_merchant_account_link(merchant_account_external_id),
               short: true
             },
             %{
