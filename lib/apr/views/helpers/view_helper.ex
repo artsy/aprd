@@ -16,6 +16,22 @@ defmodule Apr.Views.Helper do
     }
   end
 
+  def fetch_partner(partner_id) do
+    partner_response = @gravity_api.get!("/v1/partner/#{partner_id}").body
+
+    %{
+      name: partner_response["name"]
+    }
+  end
+
+  def fetch_merchant_account(partner_id) do
+    merchant_account_response = List.first(@gravity_api.get!("/v1/merchant_accounts?partner_id=#{partner_id}").body)
+
+    %{
+      external_id: merchant_account_response["external_id"]
+    }
+  end
+
   def artwork_link(artwork_id) do
     "https://www.artsy.net/artwork/#{artwork_id}"
   end

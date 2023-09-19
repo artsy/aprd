@@ -47,6 +47,15 @@ defmodule GravityMock do
     }
   end
 
+  def get!("/v1/merchant_accounts?partner_id=" <> partner_id) do
+    %{
+      body: [%{
+        "id" => partner_id,
+        "external_id" => "external-id"
+      }]
+    }
+  end
+
   def match_partners(_term, _token) do
     %{}
   end
