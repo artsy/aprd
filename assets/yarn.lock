@@ -12,10 +12,10 @@
   resolved "https://registry.yarnpkg.com/@artsy/palette-tokens/-/palette-tokens-5.0.0.tgz#d1e1917d8163d88e7a9f877cf06b609fa8c8178c"
   integrity sha512-nloC0ubH5XDVNiplehwTtDLEgY0vjeE3l8QUYppEIHFCgadntXm6aVlmEC79inO7L3lDYN7JckYlIYRrTJg3vw==
 
-"@artsy/palette@34.3.0":
-  version "34.3.0"
-  resolved "https://registry.yarnpkg.com/@artsy/palette/-/palette-34.3.0.tgz#e99269619ec807f11ff744e3277a4600190bf51d"
-  integrity sha512-og/BkXqAA6zBTXoIcmQz5Yh8lyvg4baD9SOF545kC7mm7uBtOfiRSqrdpBVtWeTm8VUcVNe8oMR9BysJnkTgbw==
+"@artsy/palette@36.3.2":
+  version "36.3.2"
+  resolved "https://registry.yarnpkg.com/@artsy/palette/-/palette-36.3.2.tgz#fa1d401cfd7c1ead1c482896ce6ae44a84e61128"
+  integrity sha512-3qjS8HK/se/EFdi8dczPYJQKOTWLG4lXrLZBcNvbMto5w7kwNtWa9yNnxOwRr5VYZND8cqxRflTNAH/0Pc771g==
   dependencies:
     "@artsy/icons" "^3.2.2"
     "@artsy/palette-tokens" "^5.0.0"
