@@ -81,7 +81,7 @@ cd assets && yarn install
 cd ..
 
 echo "Download .env.shared (for common local dev config)..."
-aws s3 cp s3://artsy-citadel/dev/.env.aprd .env.shared
+aws s3 cp s3://artsy-citadel/aprd/.env.shared ./
 
 if [ ! -e ".env" ]; then
   echo "Initialize .env from from .env.example (for any custom configuration)..."
@@ -113,7 +113,7 @@ brew --prefix <service>
 Your local dev environment is setup based on:
 
 - config files in ./config
-- common config in .env.shared (s3://artsy-citadel/dev/.env.aprd)
+- common config in .env.shared (s3://artsy-citadel/aprd/.env.shared)
 
 If those configs do not work for you, you can over-ride in .env.
 If your over-ride should be the default, please update those configs.
