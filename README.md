@@ -59,10 +59,10 @@ $ git clone git@github.com:artsy/aprd.git
   to fix an issue in erlang 23
 - Create and migrate your database with `mix ecto.setup`
 - Install Node.js dependencies with `cd assets && npm install`
-- `s3://artsy-citadel/dev/.env.aprd` contains common configuration values for local dev. Create a `.env.shared` file locally and copy using this command:
+- `s3://artsy-citadel/aprd/.env.shared` contains common configuration values for local dev. Create a `.env.shared` file locally and copy using this command:
 
 ```
-aws s3 cp s3://artsy-citadel/dev/.env.aprd .env.shared
+aws s3 cp s3://artsy-citadel/aprd/.env.shared ./
 ```
 
 - `.env` should contain configuration values specific to your local development. Create the file if it does not exist. See `.env.example` for suggestion on values you might want to customize.
