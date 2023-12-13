@@ -47,8 +47,8 @@ defmodule Apr.Views.ConversationSlackView do
                   short: false
                 },
                 %{
-                  title: "Radiation",
-                  value: "#{radiation_conversation_link(event["properties"]["radiation_conversation_id"])}",
+                  title: "Impulse",
+                  value: "#{impulse_email_conversation_link(event["properties"]["radiation_conversation_id"])}",
                   short: false
                 }
               ]
