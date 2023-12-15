@@ -50,10 +50,6 @@ defmodule Apr.Views.Helper do
     "<#{artist_link(artist_id)}|#{name}>"
   end
 
-  def radiation_link(path) do
-    "https://radiation.artsy.net/#{path}"
-  end
-
   def impulse_link(path) do
     "https://impulse.artsy.net/#{path}"
   end
@@ -66,9 +62,9 @@ defmodule Apr.Views.Helper do
     "https://www.artsy.net/auction/#{path}"
   end
 
-  def radiation_conversation_link(conversation_id) do
-    conversation_path = "admin/accounts/2/conversations/#{conversation_id}"
-    "<#{radiation_link(conversation_path)}|Conversation(#{conversation_id})>"
+  def impulse_email_conversation_link(email_conversation_id) do
+    email_conversation_path = "active_admin/email_conversations/#{email_conversation_id}"
+    "<#{impulse_link(email_conversation_path)}|EmailConversation(#{email_conversation_id})>"
   end
 
   def impulse_conversation_link(conversation_id) do

@@ -3,7 +3,7 @@ defmodule Apr.Views.RadiationMessageSlackView do
 
   def render(_subscription, event) do
     %{
-      text: ":sadbot: #{event["verb"]} event for #{radiation_link(event["object"]["link"])}",
+      text: ":sadbot: #{event["verb"]} event for #{impulse_link(event["object"]["link"])}",
       attachments: [
         %{
           fields: [
