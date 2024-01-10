@@ -7,18 +7,18 @@
   resolved "https://registry.yarnpkg.com/@artsy/icons/-/icons-3.8.1.tgz#21e23d9de7bdfdc3a01e88ba94f127329d43ad8e"
   integrity sha512-o2aRQuAGdbmKQQw06gM13/SanGS4Ep8bB8KlnjQ0GQm7SwkNffWG1HSVMgVpfbQHQJzYoPY6g7F84ABOLQ9K8A==
 
-"@artsy/palette-tokens@^5.0.0":
-  version "5.0.0"
-  resolved "https://registry.yarnpkg.com/@artsy/palette-tokens/-/palette-tokens-5.0.0.tgz#d1e1917d8163d88e7a9f877cf06b609fa8c8178c"
-  integrity sha512-nloC0ubH5XDVNiplehwTtDLEgY0vjeE3l8QUYppEIHFCgadntXm6aVlmEC79inO7L3lDYN7JckYlIYRrTJg3vw==
+"@artsy/palette-tokens@^5.1.0":
+  version "5.1.0"
+  resolved "https://registry.yarnpkg.com/@artsy/palette-tokens/-/palette-tokens-5.1.0.tgz#df546dda1aec2dbf631a816b047301333459aa2a"
+  integrity sha512-dBx1hkjTBQ460L8DTMou+vXNOaD1DAApt6UYGTSMVSfXX0/AE8ZJpPx0U3y2t20wNBPzIoYpDBusJ3vRFKrZzQ==
 
-"@artsy/palette@34.3.0":
-  version "34.3.0"
-  resolved "https://registry.yarnpkg.com/@artsy/palette/-/palette-34.3.0.tgz#e99269619ec807f11ff744e3277a4600190bf51d"
-  integrity sha512-og/BkXqAA6zBTXoIcmQz5Yh8lyvg4baD9SOF545kC7mm7uBtOfiRSqrdpBVtWeTm8VUcVNe8oMR9BysJnkTgbw==
+"@artsy/palette@37.3.4":
+  version "37.3.4"
+  resolved "https://registry.yarnpkg.com/@artsy/palette/-/palette-37.3.4.tgz#befa9a0440a67753cee225a7daed1bf10eb1cd8a"
+  integrity sha512-njFpXX1Rz7t6MDVQcY4DouhJXsE692Afb/9k36brUOMvD3S27NPNcMZx+UNRaLO5kBaUXKGqlY0g9J9LFUnsLA==
   dependencies:
     "@artsy/icons" "^3.2.2"
-    "@artsy/palette-tokens" "^5.0.0"
+    "@artsy/palette-tokens" "^5.1.0"
     "@seznam/compose-react-refs" "^1.0.6"
     "@styled-system/theme-get" "^5.1.2"
     lodash "^4.17.21"
