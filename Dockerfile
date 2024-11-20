@@ -12,8 +12,6 @@ WORKDIR /app
 EXPOSE 8080
 ENV PORT=8080 MIX_ENV=prod
 
-COPY ./scripts/load_secrets_and_run.sh load_secrets_and_run.sh
-
 # Cache elixir deps
 ADD mix.exs mix.lock ./
 RUN mix do deps.get, deps.compile
