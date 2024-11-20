@@ -52,6 +52,10 @@ spec:
             name: secrets-config
         - configMapRef:
             name: aprd-environment
+        volumeMounts:
+        - name: secrets
+          mountPath: /secrets
+          readOnly: true
         image: 585031190124.dkr.ecr.us-east-1.amazonaws.com/aprd:production
         imagePullPolicy: Always
         ports:
