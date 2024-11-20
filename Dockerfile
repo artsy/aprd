@@ -29,6 +29,6 @@ RUN cd assets/ && \
     cd - && \
     mix do compile, phx.digest
 
-ENTRYPOINT ["/usr/bin/dumb-init", "./load_secrets_and_run.sh"]
+ENTRYPOINT ["./load_secrets_and_run.sh"]
 
 CMD ["mix", "phx.server"]
