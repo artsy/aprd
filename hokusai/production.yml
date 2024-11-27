@@ -29,11 +29,33 @@ spec:
         app.kubernetes.io/version: production
       name: aprd-web
     spec:
+      initContainers:
+      - name: setenv
+        image: 585031190124.dkr.ecr.us-east-1.amazonaws.com/fortress:production
+        imagePullPolicy: Always
+        command:
+        - python
+        - src/load/load.py
+        - kubernetes
+        - production
+        - aprd
+        envFrom:
+        - configMapRef:
+            name: secrets-config
+        volumeMounts:
+        - name: secrets
+          mountPath: /secrets
       containers:
       - name: aprd-web
         envFrom:
         - configMapRef:
+            name: secrets-config
+        - configMapRef:
             name: aprd-environment
+        volumeMounts:
+        - name: secrets
+          mountPath: /secrets
+          readOnly: true
         image: 585031190124.dkr.ecr.us-east-1.amazonaws.com/aprd:production
         imagePullPolicy: Always
         ports:
@@ -49,6 +71,7 @@ spec:
         options:
         - name: ndots
           value: '1'
+      serviceAccountName: aprd
       affinity:
         nodeAffinity:
           requiredDuringSchedulingIgnoredDuringExecution:
@@ -58,6 +81,9 @@ spec:
                 operator: In
                 values:
                 - foreground
+      volumes:
+      - name: secrets
+        emptyDir: {}
 ---
 apiVersion: v1
 kind: Service
