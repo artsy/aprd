@@ -119,5 +119,32 @@ defmodule AprWeb.SlackCommandControllerTest do
       subscriber = Repo.preload(subscriber, :topics)
       assert Enum.count(subscriber.topics) == 1
     end
+
+    test "returns proper message when unsubscribing a topic with a routing key", %{ subscriber: subscriber } do
+      topic = Fixtures.create(:topic, %{name: "commerce"})
+      routing_key = "error.processing.tax_mismatch"
+      channel_id = "channel_id"
+
+      conn = receive_slack_message("token", "subscribe #{topic.name}:#{routing_key}", channel_id)
+      assert json_response(conn, 200) == %{
+        "text" => ":+1: Subscribed to *#{topic.name}*:#{routing_key}",
+        "response_type" => "in_channel"
+      }
+
+      subscriber = Repo.get_by(Subscriber, channel_id: channel_id)
+      subscriber = Repo.preload(subscriber, :topics)
+      assert Enum.count(subscriber.topics) == 1
+      assert List.first(subscriber.topics).name == topic.name
+
+      conn = receive_slack_message("token", "unsubscribe #{topic.name}:#{routing_key}", subscriber.channel_id)
+      assert json_response(conn, 200) == %{
+        "text" => ":+1: Unsubscribed from _#{topic.name}_",
+        "response_type" => "in_channel"
+      }
+
+      subscriber = Repo.get_by(Subscriber, channel_id: subscriber.channel_id)
+      subscriber = Repo.preload(subscriber, :topics)
+      assert Enum.count(subscriber.topics) == 1
+    end
   end
 end
