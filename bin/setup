@@ -11,7 +11,7 @@ brew update
 brew bundle --file=- <<EOF
 brew 'asdf'
 brew 'node'
-brew 'postgresql@12', restart_service: true
+brew 'postgresql@14', restart_service: true
 brew 'rabbitmq', restart_service: true
 brew 'yarn'
 EOF
