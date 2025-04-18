@@ -49,7 +49,6 @@ defmodule Apr.MixProject do
       {:plug_cowboy, "~> 2.0"},
       {:poison, "~> 3.1", override: true},
       {:postgrex, ">= 0.0.0"},
-      {:sentient, git: "https://github.com/rdalin82/sentient.git"},
       {:slack, "~> 0.15.0"},
       {:stripity_stripe, "~> 2.4"},
       {:mox, "~> 0.5", only: :test},

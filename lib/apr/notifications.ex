@@ -40,9 +40,6 @@ defmodule Apr.Notifications do
         "consignments" ->
           Apr.Views.ConsignmentsSlackView.render(subscription, event)
 
-        "feedbacks" ->
-          Apr.Views.FeedbacksSlackView.render(subscription, event)
-
         "sales" ->
           Apr.Views.SalesSlackView.render(subscription, event, routing_key)
 
