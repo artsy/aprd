@@ -11,7 +11,6 @@ defmodule Apr.Views.CommerceOfferSlackView do
     case routing_key do
       "offer.submitted" -> offer_submitted(event)
       "offer.pending_response" -> offer_pending_response(event)
-      "partner_offer.created" -> nil
     end
   end
 

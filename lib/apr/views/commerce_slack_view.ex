@@ -16,7 +16,7 @@ defmodule Apr.Views.CommerceSlackView do
       routing_key == "transaction.created" ->
         CommerceTransactionCreatedSlackView.render(subscription, event, routing_key)
 
-      routing_key =~ "offer." ->
+      routing_key =~ ~r/^offer\./ ->
         CommerceOfferSlackView.render(subscription, event, routing_key)
 
       routing_key =~ "order." ->
