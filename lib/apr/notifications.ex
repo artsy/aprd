@@ -13,9 +13,6 @@ defmodule Apr.Notifications do
   defp slack_message(subscription, event, topic_name, routing_key) do
     with topic when not is_nil(topic) <- Subscriptions.get_topic_by_name(topic_name) do
       case topic.name do
-        "auction_results" ->
-          Apr.Views.AuctionResultsSlackView.render(subscription, event)
-
         "subscriptions" ->
           Apr.Views.SubscriptionSlackView.render(subscription, event)
 
