@@ -101,7 +101,7 @@ Before a new topic can be subscribed to from Slack, the topic must exist in APR'
 
 ```bash
 $ hokusai staging run --tty 'iex -S mix'
-Apr.Subscriptions.create_topic(%{name: "auction_results"})
+Apr.Subscriptions.create_topic(%{name: "topic_name"})
 ```
 
 To add the APR integration to a _new_ channel:
@@ -115,7 +115,7 @@ In the channel, confirm the available topics and subscribe:
 ```
 /apr help
 /apr topics
-/apr subscribe auction_results
+/apr subscribe topic_name
 ```
 
 ### Recovering from a Slack connection disruption

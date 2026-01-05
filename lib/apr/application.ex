@@ -15,10 +15,6 @@ defmodule Apr.Application do
       # Starts a worker by calling: Apr.Worker.start_link(arg)
       # {Apr.Worker, arg},
       %{
-        id: :auction_results,
-        start: {Apr.AmqEventService, :start_link, [%{topic: "auction_results"}]}
-      },
-      %{
         id: :commerce,
         start: {Apr.AmqEventService, :start_link, [%{topic: "commerce", store: true}]}
       },
