@@ -50,17 +50,11 @@ asdf plugin update erlang
 asdf plugin update elixir
 
 echo "asdf install erlang..."
-# On Mojave (and possibly other Mac versions), you might encounter:
-# configure: error: cannot find required auxiliary files: install-sh config.guess config.sub
-# Installing autoconf 2.69 solves it.
-version=$(sw_vers -productVersion | cut -f1,2 -d'.')
-# if Mojave
-if [[ $version == '10.14.6' ]]
-then
-  brew install autoconf@2.69 && \
-  brew link --overwrite autoconf@2.69 && \
-  autoconf -V
-fi
+
+brew install autoconf@2.69 && \
+brew link --overwrite autoconf@2.69 && \
+autoconf -V
+
 asdf install erlang 23.1.1
 asdf local erlang 23.1.1
 
