@@ -14,11 +14,11 @@ $ARGUMENTS
 
 Read all of them in parallel before writing any code:
 
-- `~/Developer/pulse/app/workers/rabbit_orders_worker.rb` — to see the existing slack handlers chain
-- `~/Developer/pulse/app/services/slack_commerce_order_submitted_service.rb` — full example with SlackHelper, GravityV1 lookups, build_blocks pattern, seller/buyer URLs, section fields, line items, and theme-scoped subscriptions
-- `~/Developer/pulse/app/services/slack_commerce_tax_mismatch_error_service.rb` — simpler example with no Gravity lookups
-- `~/Developer/pulse/app/helpers/slack_helper.rb` — shared helpers used by all services
-- `~/Developer/pulse/spec/services/slack_commerce_order_submitted_service_spec.rb` — spec pattern to follow
+- `../pulse/app/workers/rabbit_orders_worker.rb` — to see the existing slack handlers chain
+- `../pulse/app/services/slack_commerce_order_submitted_service.rb` — full example with SlackHelper, GravityV1 lookups, build_blocks pattern, seller/buyer URLs, section fields, line items, and theme-scoped subscriptions
+- `../pulse/app/services/slack_commerce_tax_mismatch_error_service.rb` — simpler example with no Gravity lookups
+- `../pulse/app/helpers/slack_helper.rb` — shared helpers used by all services
+- `../pulse/spec/services/slack_commerce_order_submitted_service_spec.rb` — spec pattern to follow
 
 These files contain everything you need to implement any migration ticket. Do not use Explore agents or search the codebase beyond these reads.
 
@@ -169,7 +169,7 @@ SlackSubscription.where(topic: "commerce", routing_key: "order.submitted").dispu
 SlackSubscription.where(topic: "commerce", routing_key: "order.submitted").fraud_theme     # theme = "fraud"
 ```
 
-If the scope isn't defined yet on the model, add it to `~/Developer/pulse/app/models/slack_subscription.rb`:
+If the scope isn't defined yet on the model, add it to `../pulse/app/models/slack_subscription.rb`:
 ```ruby
 scope :fraud_theme, -> { where(theme: "fraud") }
 ```
@@ -188,7 +188,7 @@ Match what APRd sends — check the APRd view for the routing key being migrated
 
 ### 1. Service file
 
-**Path:** `~/Developer/pulse/app/services/slack_commerce_<descriptive_name>_service.rb`
+**Path:** `../pulse/app/services/slack_commerce_<descriptive_name>_service.rb`
 
 Name the class `SlackCommerce<DescriptiveName>Service`. Derive the name from the routing key or event description (e.g., `shippingquoterequest.disqualified` → `SlackCommerceArtaShippingQuoteDisqualifiedService`).
 
@@ -201,7 +201,7 @@ Name the class `SlackCommerce<DescriptiveName>Service`. Derive the name from the
 
 ### 2. Spec file
 
-**Path:** `~/Developer/pulse/spec/services/slack_commerce_<descriptive_name>_service_spec.rb`
+**Path:** `../pulse/spec/services/slack_commerce_<descriptive_name>_service_spec.rb`
 
 **Note on block structure in specs:** The blocks are serialized to JSON via `.to_json`, so string keys (`"type"`, `"text"`, etc.) are used in the expected value.
 
@@ -268,13 +268,73 @@ end
 
 ### 3. Worker routing
 
-**File:** `~/Developer/pulse/app/workers/rabbit_orders_worker.rb`
+**File:** `../pulse/app/workers/rabbit_orders_worker.rb`
 
 Find the "slack handlers" comment section and add an `elsif` branch, keeping the chain in alphabetical order by routing key:
 
 ```ruby
 elsif delivery_info.routing_key == "<routing_key_from_ticket>"
   SlackCommerce<Name>Service.delay.send_message(payload)
+```
+
+### 4. Worker spec
+
+**File:** `../pulse/spec/workers/rabbit_orders_worker_spec.rb`
+
+Two places need updating:
+
+**a) Stub the service in the existing handler-selection context.**
+
+Find the `context "<routing_key>"` block in the "event handler selection" section and add a `before` block. The shared example runs inline with a minimal payload (no `mode`, no seller/buyer), so the service must be stubbed to avoid a crash:
+
+```ruby
+context "order.fulfilled" do
+  let(:routing_key) { "order.fulfilled" }
+  let(:message) { order_message }
+  let(:expected_handlers) { [OrderFulfilledHandler] }
+
+  before do
+    # skip the slack handler since we're not testing it here
+    allow(SlackCommerce<Name>Service).to receive_message_chain(:delay, :send_message)
+  end
+
+  it_behaves_like "selects the expected handlers"
+end
+```
+
+**b) Add a slack message test in the `describe "slack messages"` section**, in alphabetical order by routing key, following the pattern of adjacent entries:
+
+```ruby
+describe "order.fulfilled" do
+  let(:routing_key) { "order.fulfilled" }
+
+  before do
+    # skip the email handler since we're not testing it here
+    allow(OrderFulfilledHandler).to receive_message_chain(:delay, :process)
+  end
+
+  it "sends a slack message" do
+    message = {
+      verb: "fulfilled",
+      object: {id: "order123", root_type: "Order"},
+      properties: {
+        # include all fields the service reads
+        code: "ORD123",
+        mode: "buy",
+        currency_code: "USD",
+        buyer_total_cents: 100000,
+        total_list_price_cents: 120000,
+        seller_id: "seller123",
+        seller_type: "gallery",
+        buyer_id: "buyer123",
+        buyer_type: "user",
+        line_items: [{artwork_id: "artwork-id"}]
+      }
+    }
+    expect(Slack::Web::Client).to receive(:new).and_return(double(chat_postMessage: nil))
+    described_class.new.work_with_params(JSON.generate(message), delivery_info, {})
+  end
+end
 ```
 
 ---
