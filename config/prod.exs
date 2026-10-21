@@ -19,8 +19,8 @@ config :apr, AprWeb.Endpoint,
     "//aprd-staging.artsy.net"
   ]
 
-# Do not print debug messages in production
-config :logger, level: :info
+# Only print warnings and errors in production
+config :logger, level: :warn
 
 config :apr, Apr.Repo,
   adapter: Ecto.Adapters.Postgres,
